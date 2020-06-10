@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import { TEST } from '../../globals';
+// import { TEST } from '../../globals';
 import './newLocal.scss';
 import StarRatings from 'react-star-ratings';
 import TagsInput from 'react-tagsinput';
@@ -51,7 +51,7 @@ export default class newLocal extends Component {
     async handleSubmit(event){
         event.preventDefault();
 
-        axios.post(`${TEST}`,{
+        axios.post(`locals/`,{
             name:        this.state.name,
             description: this.state.description,
             address: {

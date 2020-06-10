@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {TEST} from '../../globals';
+// import {TEST} from '../../globals';
 import ResultsCard from '../../Components/ResultsCard';
 import './results.scss';
 import queryString from 'query-string';
@@ -44,7 +44,7 @@ export default class Results extends Component {
         }
     }
     getData(){
-        axios.get(`${TEST}/hashtags/${this.state.what}/address/${this.state.where}`)
+        axios.get(`locals/hashtags/${this.state.what}/address/${this.state.where}`)
             .then((res)=>{
                     console.log("Postal courier has delivered your package!");
                     const data = res.data;

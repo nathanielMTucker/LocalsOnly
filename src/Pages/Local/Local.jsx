@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './Local.scss';
-import {TEST} from '../../globals';
+// import {TEST} from '../../globals';
 import queryString from 'query-string';
 export default class Local extends Component {
     constructor(props){
@@ -23,7 +23,7 @@ export default class Local extends Component {
         ,()=>{this.loadItems();})
     }
     async getData(){
-        await axios.get(`${TEST}/${this.state.id}`)
+        await axios.get(`/${this.state.id}`)
             .then((res)=>{
                     // console.log("Postal courier has delivered your package!");
                     const data = res.data;
