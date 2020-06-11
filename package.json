@@ -2,9 +2,9 @@
   "name": "localsonly",
   "version": "0.1.0",
   "private": true,
-  "engines":{
-    "node":"13.0.1",
-    "npm":"6.14.2"
+  "engines": {
+    "node": "13.0.1",
+    "npm": "6.14.2"
   },
   "homepage": "http://nathanielMTucker.github.io/LocalsOnly",
   "dependencies": {
@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "bulma": "^0.8.2",
+    "http": "0.0.1-security",
     "node-geocoder": "^3.27.0",
     "node-sass": "^4.14.1",
     "parse-address-string": "0.0.3",
@@ -30,9 +31,8 @@
     "tailwindcss": "^1.4.6",
     "us-zips": "^4.0.2"
   },
-  "proxy":"https://localsonly-server.herokuapp.com/",
+  "proxy": "https://localsonly-server.herokuapp.com/",
   "scripts": {
-    
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
