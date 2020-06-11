@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "bulma": "^0.8.2",
+    "core-util-is": "^1.0.2",
     "http": "0.0.1-security",
     "node-geocoder": "^3.27.0",
     "node-sass": "^4.14.1",
@@ -29,7 +30,8 @@
     "react-tagsinput": "^3.19.0",
     "reverse-geocode": "^1.3.3",
     "tailwindcss": "^1.4.6",
-    "us-zips": "^4.0.2"
+    "us-zips": "^4.0.2",
+    "webpack-cli": "^3.3.11"
   },
   "proxy": "https://localsonly-server.herokuapp.com/",
   "scripts": {
