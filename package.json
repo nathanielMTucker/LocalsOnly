@@ -2,6 +2,10 @@
   "name": "localsonly",
   "version": "0.1.0",
   "private": true,
+  "engines":{
+    "node":"13.0.1",
+    "npm":"6.14.2"
+  },
   "homepage": "http://nathanielMTucker.github.io/LocalsOnly",
   "dependencies": {
     "@emotion/core": "^10.0.28",
