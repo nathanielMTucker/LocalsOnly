@@ -23,9 +23,9 @@ export default class Local extends Component {
         ,()=>{this.loadItems();})
     }
     async getData(){
-        await axios.get(`/${this.state.id}`)
+        await axios.get(`locals/${this.state.id}`)
             .then((res)=>{
-                    // console.log("Postal courier has delivered your package!");
+                    console.log("Postal courier has delivered your package!");
                     const data = res.data;
 
                     this.setState({ 
@@ -36,7 +36,7 @@ export default class Local extends Component {
                     );
                 }
             )
-            // .catch(()=>{console.log("Postal courier has vanished!");});
+            .catch((err)=>{console.log(`Postal courier has vanished!: ${err}`);});
     }
     async loadItems(){
         await this.getData();
