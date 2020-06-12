@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './Local.scss';
-// import {TEST} from '../../globals';
 import queryString from 'query-string';
 export default class Local extends Component {
     constructor(props){

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-// import { TEST } from '../../globals';
 import './newLocal.scss';
 import StarRatings from 'react-star-ratings';
 import TagsInput from 'react-tagsinput';

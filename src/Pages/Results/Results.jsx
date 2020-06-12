@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-// import {TEST} from '../../globals';
 import ResultsCard from '../../Components/ResultsCard';
 import './results.scss';
 import queryString from 'query-string';

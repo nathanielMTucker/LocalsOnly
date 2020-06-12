@@ -7,19 +7,6 @@ import './Search.scss'
 const IOM = require('./LocalsOnly.png');
 const reverse = new require('reverse-geocode')
 
-// const NodeGeocoder = require('node-geocoder');
-// const options = {
-//   provider:'google',
-//   fetch: async (res)=>{console.log(res);},
-//   apiKey: "AIzaSyDOZ6d6M5cnuKqBL4IyYXKu7TU_Rt-POFw",
-//   formatter:null
-// }
-// const geocoder = NodeGeocoder(options);
-// const res = await geocoder.geocode('1150 W. University Dr., Tempe Az');
-
-
-
-
 
 class Search extends Component {
   
