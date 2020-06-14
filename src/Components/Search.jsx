@@ -108,7 +108,7 @@ class Search extends Component {
                   />
                 </div>
                 
-                <button className="button is-primary search">Submit</button>
+                <input className="button is-primary search" type="submit" value="Search"/>
               </div>
             </form>
             <Link className="button is-primary create" to="/create-local" > 
