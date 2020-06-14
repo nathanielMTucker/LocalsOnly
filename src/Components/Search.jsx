@@ -67,6 +67,8 @@ class Search extends Component {
         console.log("Submit button is pressed");
         
         if(this.state.city !== ''){
+          console.log(`inside if statement: ${this.state.city}`);
+          
           if (this.state.what !== '' && this.state.where !== '') 
             this.props.history.push(`/search?what=${this.state.what}&where=${this.state.where}`);
           else if (this.state.what !== '' && this.state.where === '') 
