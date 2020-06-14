@@ -64,6 +64,7 @@ class Search extends Component {
     
       handleSubmit(event){
         event.preventDefault();
+        console.log("Submit button is pressed");
         
         if(this.state.city !== ''){
           if (this.state.what !== '' && this.state.where !== '') 
