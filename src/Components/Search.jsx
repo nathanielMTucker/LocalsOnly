@@ -88,7 +88,7 @@ class Search extends Component {
         return (
           <nav>
             <Link to='/'><img src={IOM} alt="locals-only"/></Link>
-            <form onSubmit={this.handleSubmit} onTouchStart={this.handleSubmit}>
+            <form onSubmit={this.handleSubmit}>
               <div className="field">
                 <div className="control what">
                   <input 

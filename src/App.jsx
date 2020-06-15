@@ -16,15 +16,18 @@ class App extends Component {
   
   render(){
     return (
-      <Router>
-        <Search/>
-        <Switch>
-          <Route exact path={"/"} component={Home}/>
-          <Route path={"/search"} component={Results}/>
-          <Route path={"/local"} component={Local}/>
-          <Route path={"/create-local"} component={newLocal}/>
-        </Switch>
-      </Router>
+      
+        <Router>
+          <Search/>
+          <Switch>
+            <Route exact path={"/"} component={Home}/>
+            <Route path={"/search"} component={Results}/>
+            <Route path={"/local"} component={Local}/>
+            <Route path={"/create-local"} component={newLocal}/>
+            
+          </Switch>
+        </Router>
+      
     )
   }
 }

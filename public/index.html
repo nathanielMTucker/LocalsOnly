@@ -26,29 +26,7 @@
     <div id="root"></div>
     
   </body>
-  <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-analytics.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyDOZ6d6M5cnuKqBL4IyYXKu7TU_Rt-POFw",
-    authDomain: "localsonly-a3c68.firebaseapp.com",
-    databaseURL: "https://localsonly-a3c68.firebaseio.com",
-    projectId: "localsonly-a3c68",
-    storageBucket: "localsonly-a3c68.appspot.com",
-    messagingSenderId: "583296937791",
-    appId: "1:583296937791:web:59de121a0df2fa83eead8a",
-    measurementId: "G-RVH5R21C1C"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-</script>
+  
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
       $(window).on('beforeunload', function(){
@@ -56,10 +34,10 @@
 });
     </script>
     <script>
-      var loc = window.location.href+'';
-      if (loc.indexOf('http://')==0){
-          window.location.href = loc.replace('http://','https://');
-      }
+      // var loc = window.location.href+'';
+      // if (loc.indexOf('http://')==0){
+      //     window.location.href = loc.replace('http://','https://');
+      // }
     </script>
     
     <!-- Global site tag (gtag.js) - Google Analytics -->
