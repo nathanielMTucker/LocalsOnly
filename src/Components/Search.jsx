@@ -66,7 +66,7 @@ class Search extends Component {
         event.preventDefault();
         console.log("Submit button is pressed");
         
-        //if(this.state.city !== ''){
+        if(this.state.city !== ''){
           console.log(`inside if statement: ${this.state.city}`);
           
           if (this.state.what !== '' && this.state.where !== '') 
@@ -79,7 +79,7 @@ class Search extends Component {
             this.props.history.push(`search?what=all&where=${this.state.zip}`);
             
           this.forceUpdate();
-        //}
+        }
         
       }
       
