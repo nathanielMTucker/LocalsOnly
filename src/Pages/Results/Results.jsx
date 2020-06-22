@@ -3,7 +3,6 @@ import axios from 'axios';
 import ResultsCard from '../../Components/ResultsCard/ResultsCard';
 import './Results.scss'
 import queryString from 'query-string';
-import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 import MapContainer from '../../Components/MapContainer/MapContainer';
 
 export default class Results extends Component {
