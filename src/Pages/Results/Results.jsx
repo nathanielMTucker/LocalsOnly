@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import ResultsCard from '../../Components/ResultsCard';
-import './results.scss';
+import ResultsCard from '../../Components/ResultsCard/ResultsCard';
+import './Results.scss'
 import queryString from 'query-string';
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
+import MapContainer from '../../Components/MapContainer/MapContainer';
 
 export default class Results extends Component {
     constructor(props){
@@ -14,10 +15,20 @@ export default class Results extends Component {
             where: [],
             items: [],
             loading: true,
-            
+            map:{}
         }
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.componentDidUpdate = this.componentDidUpdate.bind(this);
+        this.getData = this.getData.bind(this);
+        this.displayItems = this.displayItems.bind(this);
+        this.initMap = this.initMap.bind(this);
     }
     
+    initMap(){
+        
+        
+    }
+
     componentDidMount(){
         let values = queryString.parse(this.props.location.search);
         
@@ -36,7 +47,12 @@ export default class Results extends Component {
             this.setState({ 
                     what:values.what,
                     where:values.where,
-                    loading:true
+                    loading:true,
+                    center:{
+                        lat:59.95,
+                        lng:30.33
+                    },
+                    zoom: 11
                 }
             )
             window.location.reload();
@@ -71,21 +87,19 @@ export default class Results extends Component {
     }
    
     render() {
-        
         return (
-            
-            <div className="results">
-                {this.state.loading? <div className="loading">
-                    <ClimbingBoxLoader
-                        size={30}
-                        color={"#000000"}
-                        loading={this.state.loading}
-                    />
-                    <p>Loading up good stuff</p>
-                </div>:
-                this.displayItems(this.state.items)}
+            <div className="results columns">
+                <div className="cards column is-two-fifths container side">
+                    {this.state.loading? <div className="loading">
+                        <progress class="progress is-large is-primary" max="100">15%</progress>
+                        <p>Wait while we search</p>
+                    </div>:
+                    this.displayItems(this.state.items)}
+                </div>
+                <div id="map" className="column container is-medium is-hidden-mobile">
+                    <MapContainer/>
+                </div>
             </div>
-            
         )
     }
 }

@@ -14,7 +14,7 @@ export default class Local extends Component {
         }
     }
     async componentDidMount() {
-        let id = await queryString.parse(this.props.location.search).id;
+        let id = queryString.parse(this.props.location.search).id;
 
         this.setState({ 
                 id:id,
@@ -42,9 +42,9 @@ export default class Local extends Component {
         var item = this.state.items;
         var address = this.state.address;
         
-        this.setState({page:<section>
-            <h1>{item.name}</h1>
-            <h3>{item.description}</h3>
+        this.setState({page:<section className="section">
+            <h1 className="title">{item.name}</h1>
+            <h3 className="subtitle">{item.description}</h3>
             <p>{address.street}</p>
             <p>{address.city}</p>
         </section>

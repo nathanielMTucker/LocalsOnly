@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import './newLocal.scss';
+import './NewLocal.scss';
 import StarRatings from 'react-star-ratings';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
-
-export default class newLocal extends Component {
+import Login from '../../Components/Login/Login';
+import fire from '../../config/fire'; 
+export default class NewLocal extends Component {
     constructor(props){
         super(props);
         this.state={
+            user:{},
             name:'', 
             description:'',
             street : '',
@@ -16,17 +18,32 @@ export default class newLocal extends Component {
             city:'',
             state:'',
             zip:'',
-            hashtags:[],
+            tags:[],
             rating:1,
         }
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleAddress = this.handleAddress.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleTag = this.handleTag.bind(this);
         this.changeRating = this.changeRating.bind(this);
+        this.isMobile = this.isMobile.bind(this);
+        this.isDesktop = this.isDesktop.bind(this);
+        this.authListener = this.authListener.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
-
+    
+    componentDidMount(){
+        this.authListener();
+    }
+    authListener(){
+        fire.auth().onAuthStateChanged((user)=>{
+          if(user){
+            this.setState({user});
+          } else {
+            this.setState({user:null});
+          }
+        });
+      }
     handleChange(event){
         let target = event.target;
         this.setState({
@@ -34,17 +51,8 @@ export default class newLocal extends Component {
         });
     }
 
-    
-
-    handleAddress(event){
-        let target = event.target;
-        this.setState({
-            [target.name]: target.value 
-        });
-    }
     handleTag(tags){
-        this.setState({hashtags:tags});
-        console.log(this.state.hashtags);
+        this.setState({tags});
     }
     
     async handleSubmit(event){
@@ -60,7 +68,7 @@ export default class newLocal extends Component {
                 state:   this.state.state,
                 zip:     this.state.zip
             },
-            hashtags:    this.state.hashtags,
+            hashtags:    this.state.tags,
             rating:      this.state.rating
         })
             .then((res)=>{
@@ -78,56 +86,80 @@ export default class newLocal extends Component {
         rating: newRating
       });
     }
-    render() {
-        return (
-            <div>
+    isMobile(){
+        return(
+            <div className="is-hidden-tablet">
+                
+            </div>
+        );
+    }
+    isDesktop(){
+        return(
+            <div className="is-hidden-mobile columns">
+            <div className="column is-one-third">
+                <input type="text" className="input" placeholder="Location Name*" value={this.state.name} onChange={this.handleChange} name="name" required/>
             
-                <form className="form-add" onSubmit={this.handleSubmit}>
-                    <div className="field">
-
-                        <label className="label">Local<span className="help is-danger">*</span></label>
-                        <div className="control">
-                            <input required={true} name="name" placeholder="Name of Local" type="text"  className="input" value={this.state.name} onChange={this.handleChange}/>
+                <div className="pt-6 pb-6">
+                    <div className="columns">
+                        <div className="column">
+                        <input type="text" className="input" placeholder="Street Address*" value={this.state.street} onChange={this.handleChange} name="street" required/>
                         </div>
-                   
-                            <div className="control addr">
-                                <label className="label">Street<span className="help is-danger">*</span></label>
-                                <input placeholder="123 Main Street" required={true} name="street" type="text" className="input" value={this.state.street} onChange={this.handleAddress}/>
-                                
-                                <label className="label">Apt/Bld #</label>
-                                <input placeholder="2A" name="apt" type="text" className="input" value={this.state.apt} onChange={this.handleAddress}/>
-                                
-                                <label className="label">City/Town<span className="help is-danger">*</span></label>
-                                <input placeholder="Pheonix" required={true} name="city" type="text" className="input" value={this.state.city} onChange={this.handleAddress}/>
-                                
-                                <label className="label">State<span className="help is-danger">*</span></label>
-                                <input placeholder="Arizona" required={true} name="state" type="text" className="input" value={this.state.state} onChange={this.handleAddress}/>
-                                
-                                <label className="label">Postal Code<span className="help is-danger">*</span></label>
-                                <input placeholder="85251" required={true} name="zip" type="text" className="input" value={this.state.zip} onChange={this.handleAddress}/>
-                            </div>
-            
-                        <label className="label">Description<span className="help is-danger">*</span></label>
-                        <div className="control">
-                            <textarea name="description" className="input" id="desc" value={this.state.description} onChange={this.handleChange}/>
-                        </div>
-
-                        <label className="label">Rating</label>
-                        <StarRatings
-                            rating={this.state.rating}
-                            starRatedColor="red"
-                            changeRating={this.changeRating}
-                            numberOfStars={5}
-                            name='rating'
-                        />
-                        <label className="label">Tags</label>
-                        <div className="hashtags">
-                            <TagsInput value={this.state.hashtags} onChange={this.handleTag} />
+                        <div className="column">
+                            <input type="text" className="input" placeholder="Apt. #" onChange={this.handleChange} name="apt"/>
                         </div>
                     </div>
-                    <button className="button is-success" type="submit">Submit</button>
-                    <small><span className="help is-danger">*</span> required items</small>
-                </form>
+                    <div className="columns">
+                        <div className="column">
+                            <input type="text" className="input" placeholder="City/Town*" value={this.state.city} onChange={this.handleChange} name="city" required/>
+                        </div>
+                        <div className="column">
+                            <input type="text" className="input" placeholder="State*" value={this.state.state} onChange={this.handleChange} name="state" required/>
+                        </div>
+                        <div className="column">
+                            <input type="text" className="input" placeholder="Postal Code*" value={this.state.zip} onChange={this.handleChange} name="zip" required/>
+                        </div>
+                    </div>
+                </div>
+                <textarea minLength="150" placeholder="Description*: Minumum of 150 characters" name="description" id="description" cols="30" rows="2" className="textarea column" value={this.state.description} onChange={this.handleChange}></textarea>
+                <div className="column">
+                    <StarRatings
+                        rating={this.state.rating}
+                        starRatedColor="red"
+                        changeRating={this.changeRating}
+                        name="rating"
+                        starDimension='40px'
+                    />
+                </div>
+                <div className="column">
+                    <TagsInput
+                        value={this.state.tags}
+                        onChange={this.handleTag}
+                        onlyUnique='true'
+                    />
+                </div>
+            </div>
+            
+            </div>
+        );
+    }
+    render() {
+    return (
+            <div>
+            {this.state.user ? 
+                (
+                    <div className="pt-6">
+                        <div className="section">
+                            <h1 className="title">Create New Local</h1>
+                            {this.isDesktop()}
+                            {this.isMobile()}
+                        </div>
+                    </div>
+                ):(
+                    <div>
+                        <Login/>
+                    </div>
+                )
+            }
             </div>
         )
     }
