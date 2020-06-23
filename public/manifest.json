@@ -1,6 +1,6 @@
 {
     "name": "LocalsOnly",
-    "description": "Find out what the locals are into. Discover new places and see what the locals think!",
+    "description": "Don't just be a tuorist, be a local! Discover what locals do, where locals go and what locals are up to. Learn what the locals think of a resturant, business or popular destination.",
     "version": "0.5.0",
     "manifest_version": 1,
     "icons": {
