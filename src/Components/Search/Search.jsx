@@ -122,7 +122,7 @@ class Search extends Component {
       handleSubmit(event){
         event.preventDefault();
         console.log("Submit button is pressed");
-        this.hideAll();
+        
         if(this.state.city !== ''){
           console.log(`inside if statement: ${this.state.city}`);
           
@@ -138,7 +138,7 @@ class Search extends Component {
             if(this.state.searchActive){this.setState({ searchActive:false });}
           this.forceUpdate();
         }
-        
+        this.hideAll();
       }
       //If user is in protected route, send home. Else, leave user on currect page.
       signout(){

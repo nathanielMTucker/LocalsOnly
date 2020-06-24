@@ -90,7 +90,7 @@ export default class Results extends Component {
             <div className="results columns">
                 <div className="cards column is-two-fifths container side">
                     {this.state.loading? <div className="loading">
-                        <progress class="progress is-large is-primary" max="100">15%</progress>
+                        <progress className="progress is-large is-primary" max="100">15%</progress>
                         <p>Wait while we search</p>
                     </div>:
                     this.displayItems(this.state.items)}

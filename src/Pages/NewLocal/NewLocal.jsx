@@ -6,6 +6,7 @@ import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css';
 import Login from '../../Components/Login/Login';
 import fire from '../../config/fire'; 
+import {STATES} from '../../globals';
 export default class NewLocal extends Component {
     constructor(props){
         super(props);
@@ -16,7 +17,7 @@ export default class NewLocal extends Component {
             street : '',
             apt : '',
             city:'',
-            state:'',
+            state:'alabama',
             zip:'',
             tags:[],
             rating:1,
@@ -30,6 +31,7 @@ export default class NewLocal extends Component {
         this.isDesktop = this.isDesktop.bind(this);
         this.authListener = this.authListener.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
+        this.stateOptions = this.stateOptions.bind(this);
     }
     
     componentDidMount(){
@@ -86,17 +88,16 @@ export default class NewLocal extends Component {
         rating: newRating
       });
     }
+    stateOptions(){
+        return STATES.map(state=>
+            <option key={state} value={state.toLowerCase()}>{state}</option>
+        )
+
+    }
     isMobile(){
         return(
-            <div className="is-hidden-tablet">
-                
-            </div>
-        );
-    }
-    isDesktop(){
-        return(
-            <div className="is-hidden-mobile columns">
-            <div className="column is-one-third">
+            <div className="is-hidden-tablet columns">
+            <form className="column" onSubmit={this.handleSubmit}>
                 <input type="text" className="input" placeholder="Location Name*" value={this.state.name} onChange={this.handleChange} name="name" required/>
             
                 <div className="pt-6 pb-6">
@@ -113,7 +114,64 @@ export default class NewLocal extends Component {
                             <input type="text" className="input" placeholder="City/Town*" value={this.state.city} onChange={this.handleChange} name="city" required/>
                         </div>
                         <div className="column">
-                            <input type="text" className="input" placeholder="State*" value={this.state.state} onChange={this.handleChange} name="state" required/>
+                            <div className="select">
+                                <select name="state" id="state" value={this.state.state} onChange={this.handleChange}>
+                                    {this.stateOptions()}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="column">
+                            <input type="text" className="input" placeholder="Postal Code*" value={this.state.zip} onChange={this.handleChange} name="zip" required/>
+                        </div>
+                    </div>
+                </div>
+                <textarea minLength="150" placeholder="Description*: Minumum of 150 characters" name="description" id="description" cols="30" rows="2" className="textarea column" value={this.state.description} onChange={this.handleChange}></textarea>
+                <div className="column">
+                    <StarRatings
+                        rating={this.state.rating}
+                        starRatedColor="red"
+                        changeRating={this.changeRating}
+                        name="rating"
+                        starDimension='30px'
+                    />
+                </div>
+                <div className="column">
+                    <TagsInput
+                        value={this.state.tags}
+                        onChange={this.handleTag}
+                        onlyUnique='true'
+                    />
+                </div>
+                <input type="submit" className="input button is-primary" value="Localize Me!"/>
+            </form>
+            </div>
+        );
+    }
+    isDesktop(){
+        return(
+            <div className="is-hidden-mobile columns">
+            <form className="column is-one-third" onSubmit={this.handleSubmit}>
+                <input type="text" className="input" placeholder="Location Name*" value={this.state.name} onChange={this.handleChange} name="name" required/>
+            
+                <div className="pt-6 pb-6">
+                    <div className="columns">
+                        <div className="column">
+                        <input type="text" className="input" placeholder="Street Address*" value={this.state.street} onChange={this.handleChange} name="street" required/>
+                        </div>
+                        <div className="column">
+                            <input type="text" className="input" placeholder="Apt. #" onChange={this.handleChange} name="apt"/>
+                        </div>
+                    </div>
+                    <div className="columns">
+                        <div className="column">
+                            <input type="text" className="input" placeholder="City/Town*" value={this.state.city} onChange={this.handleChange} name="city" required/>
+                        </div>
+                        <div className="column is-one-third">
+                            <div className="select">
+                                <select name="state" id="state" value={this.state.state} onChange={this.handleChange}>
+                                    {this.stateOptions()}
+                                </select>
+                            </div>
                         </div>
                         <div className="column">
                             <input type="text" className="input" placeholder="Postal Code*" value={this.state.zip} onChange={this.handleChange} name="zip" required/>
@@ -137,7 +195,8 @@ export default class NewLocal extends Component {
                         onlyUnique='true'
                     />
                 </div>
-            </div>
+                <input type="submit" className="input button is-primary" value="Localize Me!"/>
+            </form>
             
             </div>
         );
