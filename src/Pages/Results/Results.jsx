@@ -44,7 +44,7 @@ export default class Results extends Component {
         }
     }
     async getData(){
-        axios.get(`locals/hashtags/${this.state.what}/address/${this.state.where}`)
+        axios.get(`https://localsonly-server.herokuapp.com/locals/hashtags/${this.state.what}/address/${this.state.where}`)
             .then((res)=>{
                     console.log("Postal courier has delivered your package!");
                     const data = res.data;

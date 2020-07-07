@@ -44,7 +44,7 @@ const RegistrationBase = ({firebase})=>{
         firebase.createUserWithEmailAndPassword(user.email, user.passwordOne)
         .then((user)=>{
             const uid = user.user.uid;
-            axios.post('/user',{
+            axios.post('https://localsonly-server.herokuapp.com/user',{
                 authID: uid,
                 email:user.email,
                 name: user.name,
