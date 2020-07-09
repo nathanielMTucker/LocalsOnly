@@ -11,8 +11,8 @@ let STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","C
 ]
 const getAbbrs = state=>{
     for(let i = 0; i < STATES.length;i++){
-        if(state === STATES[i])
-            return ABBRS[i];
+        if(state.toLowerCase() === STATES[i].toLowerCase())
+            return ABBRS[i].toLowerCase();
     }
 }
 let API_KEY='AIzaSyAzL6UpXmTecGIQBO0HHMvFScNhiSmlzfM'

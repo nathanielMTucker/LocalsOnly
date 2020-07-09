@@ -26,10 +26,12 @@ const RegistrationBase = ({firebase})=>{
     let [user, setUser] = useState({
         name: '',
         email: '',
+        emailChanged: '',
         passwordOne: '',
         passwordTwo: '',
         error:null,
     })
+    
     let [status, setStatus] = useState({
         age:false,
         address:false,
@@ -42,19 +44,32 @@ const RegistrationBase = ({firebase})=>{
     const handleSubmit = ()=>{
         
         firebase.createUserWithEmailAndPassword(user.email, user.passwordOne)
-        .then((user)=>{
-            const uid = user.user.uid;
+        .then((u)=>{
+            const uid = u.user.uid;
+            const state = getAbbrs(address.state);
+            const city = address.city.toLowerCase()
+
             axios.post('https://localsonly-server.herokuapp.com/user',{
                 authID: uid,
                 email:user.email,
                 name: user.name,
-                localTo: `${getAbbrs(address.state).toLowerCase()}:${address.city.toLowerCase()}`,
-            }).then(res=>{console.log(res); history.push('/')}
-            ).catch(err => console)
+                localTo: `${state}:${city}`,
+            }).then(res=>{alert("Thank you for Signing Up!"); history.push('/')}
+            ).catch(err => console.log(err))
             
         })
         .catch(
-            err => console
+            err => {
+                const m = err.code;
+                switch (m){
+                    case "auth/email-already-in-use":
+                        alert(err.message)
+                        break
+                    default:
+                        console.log(err);
+                        break                        
+                }
+            }
         )
         
     }

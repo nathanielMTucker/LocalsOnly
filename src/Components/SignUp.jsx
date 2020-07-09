@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import { Link} from 'react-router-dom';
 import * as ROUTES from '../Constants/routes';
 import {buttons} from '../Constants/IDs';
@@ -11,28 +11,23 @@ export default props=> {
     let user = props.user;
     let status = props.status;
     let setStatus = props.setStatus;
-    let fb = props.firebase;
-    useEffect(()=>{
-      const get= async()=>{
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    
-        if(re.test(String(user.email).toLowerCase())){
-          let e = await fb.emailIsAvailable(user.email).length === 0;
-          if(e){
-            console.log(await fb.emailIsAvailable(user.email));
-            
-            document.getElementById('email').classList.add('is-success')
-            document.getElementById('email').classList.remove('is-danger')
-            setStatus({...status, user:true});
-          }else{
-            document.getElementById('email').classList.add('is-danger');
-            document.getElementById('email').classList.remove('is-success');
-            setStatus({...status, user:false})
-          }
-        }
+
+    const checkEmail = ()=>{
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      
+      if(re.test(String(user.email).toLowerCase())){
+        document.getElementById('email').classList.remove('is-danger')
+        document.getElementById('email').classList.add('is-success')
         
+        setStatus({...status, user:true});
+      }else{
+        document.getElementById('email').classList.remove('is-success');
+        document.getElementById('email').classList.add('is-danger');
+        
+        setStatus({...status, user:false})
       }
-      get();
+    }
+    const checkPassword = ()=>{
       if(user.passwordOne.length > 5){
         document.getElementById('passwordOne').classList.add('is-success')
         if(user.passwordTwo.length > 5){
@@ -47,12 +42,18 @@ export default props=> {
           }
         }
       }
-
-    },[user])
+    }
+  
     const onChange = event => {
       const {name, value} = event.target;
-      setUser({...user, [name]:value})
-      
+      if(name === "email") setUser({...user, [name]:value.replace(/\s/g, '')})
+      else setUser({...user, [name]:value})
+      if(name === "email"){
+        checkEmail();
+      }
+      if(name === "passwordOne" || name === "passwordTwo"){
+        checkPassword();
+      }
       event.preventDefault();
   }
 
