@@ -26,6 +26,9 @@ class SignInFormBase extends Component {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
+        if(this.props.history.location === '/registration'){
+          this.props.history.push('/')
+        }
       })
       .catch(error => {
         this.setState({ error });
@@ -47,24 +50,28 @@ class SignInFormBase extends Component {
       <form onSubmit={this.onSubmit} className="container is-centered">
         <div className="field">
           <div className="control">
+            <label htmlFor="email" className="label">
+              Email
+            </label>
             <input
             name="email"
             value={email}
             onChange={this.onChange}
             type="text"
-            placeholder="Email Address"
             className="input"
             />
           </div>
         </div>
         <div className="field">
           <div className="control">
+            <label htmlFor="password" className="label">
+              Password
+            </label>
             <input
             name="password"
             value={password}
             onChange={this.onChange}
             type="password"
-            placeholder="Password"
             className="input"
             />
           </div>

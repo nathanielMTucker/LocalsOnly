@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import queryString from 'query-string';
+import './Local.css';
+import MapContainer from '../Components/MapContainer';
+import Desc from '../Components/LocalDescription';
+import FileUpload from '../Components/FileUpload';
 export default class Local extends Component {
     constructor(props){
         super(props);
@@ -41,11 +45,22 @@ export default class Local extends Component {
         var item = this.state.items;
         var address = this.state.address;
         
-        this.setState({page:<section className="section">
-            <h1 className="title">{item.name}</h1>
-            <h3 className="subtitle">{item.description}</h3>
-            <p>{address.street}</p>
-            <p>{address.city}</p>
+        this.setState({page:
+        <section className="section">
+           <div className="columns">
+                <div className="column">
+                    <div className="">
+                        <Desc item={item}/>
+                    </div>
+                </div>
+                <div className="column">
+                    <MapContainer zoom={16} markers={[{lat:item.lat, lng: item.lng}]} style={{position:'relative',height:'50vh', width:'100%'}}/>
+                    <h1 className="subtitle">
+                        Address
+                    </h1>
+                    <p>{`${address.street}, ${address.city}`}</p>
+                </div>
+           </div>
         </section>
         })
     }

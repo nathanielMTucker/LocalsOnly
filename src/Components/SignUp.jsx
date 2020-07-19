@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useEffect} from 'react';
 import { Link} from 'react-router-dom';
 import * as ROUTES from '../Constants/routes';
 import {buttons} from '../Constants/IDs';
@@ -81,7 +81,7 @@ export default props=> {
               name="email"
               value={user.email}
               onChange={onChange}
-              type="text"
+              type="email"
               placeholder="Email Address"
               className="input"
             />
@@ -135,5 +135,5 @@ export const SignUpLink = () => {
     }})
     }
 })
-  return <small>Don't have an account? <Link id="signup-button" className="has-text-link" to={ROUTES.SIGNUP} >Sign Up!</Link></small>
+  return <small>Don't have an account, <Link id="signup-button" className="has-text-link" to={ROUTES.SIGNUP} >Sign Up!</Link></small>
 }

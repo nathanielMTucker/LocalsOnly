@@ -37,14 +37,11 @@ export default props => {
                 </section>
             </div>
             <div className="media-right">
-                <div className="columns">
-                    <div className="rows">
+                    
                         <Link className="content row button is-primary is-outlined" to={`/local?id=${props.id}`}>View</Link>
-                        <button className="button row is-dark">
-                            Order
-                        </button>
-                    </div>
-                </div>
+                        
+                    
+                
             </div>
         </article>
     )

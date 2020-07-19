@@ -1,210 +1,50 @@
-import React, { Component } from 'react'
-import axios from 'axios';
-import './NewLocal.scss';
-import StarRatings from 'react-star-ratings';
-import TagsInput from 'react-tagsinput';
-import 'react-tagsinput/react-tagsinput.css';
-import MapContainer from '../../Components/MapContainer';
-import SignIn from '../../Components/SignIn';
-import {STATES, API_KEY} from '../../globals';
-import { withFirebase } from '../../Authentication';
+import React, {useState} from 'react'
+import {withFirebase} from '../../Authentication';
+import PageOne from './PageOne';
+import PageTwo from './PageTwo';
+import PageThree from './PageThree';
 
-export default withFirebase(
-    class NewLocal extends Component {
-        constructor(props){
-            super(props);
-            this.state={
-                user:{},
-                name:'', 
-                description:'',
-                street : '',
-                apt : '',
-                city:'',
-                state:'alabama',
-                zip:'',
-                tags:[],
-                rating:1,
-                validate:false,
-                marker: {},
-                lat: '',
-                lng: ''
-            }
+const NewLocal = () => {
     
-            this.handleChange = this.handleChange.bind(this);
-            this.handleSubmit = this.handleSubmit.bind(this);
-            this.handleTag = this.handleTag.bind(this);
-            this.changeRating = this.changeRating.bind(this);
-            this.componentDidMount = this.componentDidMount.bind(this);
-            this.stateOptions = this.stateOptions.bind(this);
-        }
-        
-        componentDidMount(){
-            this.listener = this.props.firebase.auth.onAuthStateChanged(user=>{
-                user? this.setState({user:user}) : this.setState({ user:null })
-            })
-        }
-        componentWillUnmount() {
-            this.listener();
-          }
-        handleChange(event){
-            let target = event.target;
-            console.log(`${target.name}: ${target.value}`);
-            
-            this.setState({
-                [target.name]: target.value
-            });
-            if(!(this.state.street === '' && this.state.city === '' && this.state.state === '' && this.state.zip === '')){
-                const address = `${this.state.street}${this.state.apt === '' ? '+' :`,+${this.state.apt}`},+${this.state.city},+${this.state.state}+${this.state.zip}`
-            
-                axios.get(
-                    `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`
-                    )
-                    .then(res=>{
-                        const lat = res.data.results[0].geometry.location.lat;
-                        const lng = res.data.results[0].geometry.location.lng;
-                        this.setState({
-                            lat: lat,
-                            lng: lng
-                        })
-                        
-                    })
-                    .catch(err=>{console.log(err)})
-            }
-            event.preventDefault();
-        }
+    let [num, setNum] = useState(0);
     
-        handleTag(tags){
-            this.setState({tags});
-        }
+    const onClick = e =>{
+        console.log(e.target.value);
+        const value = e.target.value;
         
-        async handleSubmit(event){
-            event.preventDefault();
-            
-            axios.post(`https://localsonly-server.herokuapp.com/locals/`,{
-                name:        this.state.name,
-                description: this.state.description,
-                address: {
-                    street:  this.state.street,
-                    apt:     this.state.apt,
-                    city:    this.state.city,
-                    state:   this.state.state,
-                    zip:     this.state.zip
-                },
-                hashtags:    this.state.tags,
-                rating:      this.state.rating,
-                lat: this.state.lat,
-                lng: this.state.lng
-            })
-                .then((res)=>{
-                    alert(`${this.state.name} has been Localized\nThank you!`);
-                    this.props.history.push('/');
-                })
-                .catch(err=>{
-                    alert("Unable to create new local, please try again later");
-                    console.log(`In axio post newLocal: ${err}`);
-                    this.props.history.push('/');
-                });
+        if(value < 3){
+            setNum(value);
+        }else if(value === '3'){
+            setNum(num+1);
+        }else if(value === '4'){
+            setNum(num-1);
         }
-        changeRating( newRating, name ) {
-          this.setState({
-            rating: newRating
-          });
-        }
-        stateOptions(){
-            return STATES.map(state=>
-                <option key={state} value={state.toLowerCase()}>{state}</option>
-            )
-    
-        }
-        
-        render() {
-            const user = this.state.user;
-        return (
-            <div>
-                {
-                user? 
-                    <div className="pt-6">
-                    <div className="section">
-                        <h1 className="title">Create New Local</h1>
-                        <div className=" columns">
-                <form className="column is-one-third" onSubmit={this.handleSubmit}>
-                    <input type="text" className="input" placeholder="Location Name*" value={this.state.name} onChange={this.handleChange} name="name" required/>
-                
-                    <div className="pt-6 pb-6">
-                        <div className="columns">
-                            <div className="column">
-                            <input type="text" className="input" placeholder="Street Address*" value={this.state.street} onChange={this.handleChange} name="street" required/>
-                            </div>
-                            <div className="column">
-                                <input type="text" className="input" placeholder="Apt. #" onChange={this.handleChange} name="apt"/>
-                            </div>
-                        </div>
-                        <div className="columns">
-                            <div className="column">
-                                <input type="text" className="input" placeholder="City/Town*" value={this.state.city} onChange={this.handleChange} name="city" required/>
-                            </div>
-                            <div className="column is-one-third">
-                                <div className="select">
-                                    <select name="state" id="state" value={this.state.state} onChange={this.handleChange}>
-                                        {this.stateOptions()}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="column">
-                                <input type="text" className="input" placeholder="Postal Code*" value={this.state.zip} onChange={this.handleChange} name="zip" required/>
-                            </div>
-                        </div>
-                    </div>
-                    <textarea minLength="150" placeholder="Description*: Minumum of 150 characters" name="description" id="description" cols="30" rows="2" className="textarea column" value={this.state.description} onChange={this.handleChange}></textarea>
-                    <div className="column">
-                        <StarRatings
-                            rating={this.state.rating}
-                            starRatedColor="red"
-                            changeRating={this.changeRating}
-                            name="rating"
-                            starDimension='40px'
-                        />
-                    </div>
-                    <div className="column">
-                        <TagsInput
-                            value={this.state.tags}
-                            onChange={this.handleTag}
-                            onlyUnique='true'
-                        />
-                    </div>
-                    
-                    <input type="submit"  className="input button is-primary" value="Localize Me!"/>
-                    
-                </form> 
-                    
-                        {this.state.lat !== '' ? 
-                        <div id="map" className="column container is-medium is-hidden-mobile">
-                            <p>Check if location is correct</p>
-                            <MapContainer zoom={17} markers={[{lat: this.state.lat, lng: this.state.lng}]}/>
-                        </div>
-                            :''
-                        }
-                        
-                    
-                    
-                </div>
-                    </div>
-                </div> :
-                <div className="columns pt-7 is-centered">
-                    <div className="column is-half">
-                    <h2 className="title is-small has-text-centered">
-                        Sign In
-                    </h2>
-                    <p className="subtitle">
-                        You must be signed in to use this page
-                    </p>
-                    <SignIn/>
-                    
-                    </div>
-                </div>
-                }
-            </div>
-            )
-        }
+        e.preventDefault();
     }
-)
+    const pages =[<PageOne changePage={onClick}/>, <PageTwo changePage={onClick}/>, <PageThree changePage={onClick}/>]
+    return (
+        <div className="section columns  is-centered">
+            
+           <div className="column is-half">
+           <h1 className="title has-text-centered">
+                Create New Local
+            </h1>
+           
+            <div className="box has-background-primary-light">
+            <nav className="pagination is-rounded is-centered" role="navigation" aria-label="pagination">
+                
+                <ul className="pagination-list">
+                    <li><button id='one' value={0} onClick={onClick} className="pagination-link is-current" aria-label="Goto page 1">1</button></li>
+                    <li><button id='two' value={1} onClick={onClick} className="pagination-link" aria-label="Goto page 2">2</button></li>
+                    <li><button id='three' value={2} onClick={onClick} className="pagination-link" aria-label="Goto page 3">3</button></li>
+                </ul>
+            </nav>
+                {pages[num]}
+            </div>
+            
+           </div>
+        </div>
+    )
+}
+
+export default withFirebase(NewLocal);

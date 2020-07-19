@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import SignUp from '../Components/SignUp';
-import {withFirebase} from '../Authentication';
 import {withRouter, useHistory} from 'react-router-dom';
 import {compose} from 'recompose';
 import Birthday from '../Components/Birthday';
@@ -17,12 +16,7 @@ const RegistrationBase = ({firebase})=>{
         state:'',
         zip:'',
     })
-    let [signedIn, setSignedIn] = useState(false)
-    useEffect(()=>{
-        firebase.auth.onAuthStateChanged(user=>{
-            user? setSignedIn(true):setSignedIn(false)
-        })
-    })
+    
     let [user, setUser] = useState({
         name: '',
         email: '',
@@ -75,27 +69,8 @@ const RegistrationBase = ({firebase})=>{
     }
     return (
     <div className="registration">
-        {
-            signedIn ?(
-                <div className="section text-center">
-                    <p className="container subtitle">
-                        Looks like you already have an account
-                    </p>
-                    <div className="columns is-centered">
-                        <div className="column is-one-fifth">
-                            <p className="button">
-                                Profile
-                            </p>
-                        </div>
-                        <div className="column is-one-fifth">
-                            <p className="button">
-                                Home
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        
             
-        ):(
         
             <div className="container">
             <div className="section text-center">
@@ -129,12 +104,12 @@ const RegistrationBase = ({firebase})=>{
                 </div>
             </section>
             </div>
-        )
         
         
-        }
+        
+        
         </div>
     )
 }
-const Registration = compose(withRouter, withFirebase)(RegistrationBase);
-export default withFirebase(Registration);
+const Registration = compose(withRouter)(RegistrationBase);
+export default Registration;

@@ -10,7 +10,7 @@ export default props =>
     
     
     return (
-        <div className="box">
+        <div id={props.id} className="box">
             <Header 
                 id={props.id}
                 name={props.name} 
