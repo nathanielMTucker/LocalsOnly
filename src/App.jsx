@@ -60,7 +60,7 @@ class App extends Component{
     render() {
       return (
       <>
-      {this.state.authUser ? (
+      {!this.state.authUser ? (
         <Router>
         <Nav authUser={this.state.authUser} loc={this.state.location}/>
         <Switch>
