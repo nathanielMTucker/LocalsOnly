@@ -6,6 +6,7 @@ import Birthday from '../Components/Birthday';
 import Address from '../Components/Address';
 import axios from 'axios';
 import {getAbbrs} from '../globals';
+import { withFirebase } from '../Authentication';
 
 const RegistrationBase = ({firebase})=>{
     let history = useHistory();
@@ -33,7 +34,7 @@ const RegistrationBase = ({firebase})=>{
     })
     
     const isInvalid = ()=>{
-        return !(status.age && status.address && status.user)
+        return !(status.age && status.user)
     };
     const handleSubmit = ()=>{
         
@@ -69,9 +70,6 @@ const RegistrationBase = ({firebase})=>{
     }
     return (
     <div className="registration">
-        
-            
-        
             <div className="container">
             <div className="section text-center">
                 <div className="container">
@@ -104,12 +102,8 @@ const RegistrationBase = ({firebase})=>{
                 </div>
             </section>
             </div>
-        
-        
-        
-        
         </div>
     )
 }
-const Registration = compose(withRouter)(RegistrationBase);
+const Registration = compose(withRouter, withFirebase)(RegistrationBase);
 export default Registration;

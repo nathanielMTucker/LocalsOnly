@@ -11,17 +11,17 @@ let Hours = props => {
                     <div className="column">
                         <input 
                             type="time" 
-                            disabled={d.isClosed} 
-                            name={`${a}.openFrom`}
+                            disabled={d.closed} 
+                            name={`${a}.from`}
                             className="input" 
                             onChange={onChange} 
-                            value={d.openFrom}
+                            value={d.from}
                         />
                         <small className="help">
                     <input 
                         type="checkbox" 
-                        name={`${a}.isClosed`} 
-                        value={d.isClosed} 
+                        name={`${a}.closed`} 
+                        value={d.closed} 
                         onChange={onChange} 
                         className="checkbox pr-2"
                     /> 
@@ -34,11 +34,11 @@ let Hours = props => {
                     <div className="column">
                         <input 
                         type="time" 
-                        disabled={d.isClosed} 
-                        name={`${a}.openTo`} 
+                        disabled={d.closed} 
+                        name={`${a}.to`} 
                         className="input" 
                         onChange={onChange} 
-                        value={d.openTo}
+                        value={d.to}
                     />
                     </div>
                 </div>

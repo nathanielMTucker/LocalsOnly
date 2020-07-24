@@ -17,7 +17,7 @@ import axios from 'axios';
 import {fromLatLng} from './globals';
 import {compose} from 'recompose';
 import { geolocated } from "react-geolocated";
-import {Opening} from './Pages/Opening';
+import Opening from './Pages/Opening';
 const parseAddress = require('parse-address-string');
 
 class App extends Component{
@@ -60,7 +60,8 @@ class App extends Component{
     render() {
       return (
       <>
-      {!this.state.authUser ? (
+      {this.state.authUser ? (
+        <div className="section">
         <Router>
         <Nav authUser={this.state.authUser} loc={this.state.location}/>
         <Switch>
@@ -69,7 +70,9 @@ class App extends Component{
             <Route path={ROUTES.SEARCH} component={Results}/>
             <Route path={ROUTES.LOCAL} component={Local}/>
           </Switch>
-      </Router>):(
+       </Router>
+        </div>
+       ):(
         <Router>
         <Switch>
         <Route exact path={ROUTES.HOME} component={Opening}/>

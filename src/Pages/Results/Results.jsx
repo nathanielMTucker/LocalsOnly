@@ -46,7 +46,10 @@ export default class Results extends Component {
         }
     }
     async getData() {
-        axios.get(`${config.apiURL}/locals/hashtags/${this.state.what}/address/${this.state.where}`)
+        const where = this.state.where.replace(' ', '+');
+
+        console.log(where);
+        axios.get(`http://localhost:5000/locals/hashtags/${this.state.what}/address/${where}`)
             .then((res) => {
                 console.log("Postal courier has delivered your package!");
                 const data = res.data;
@@ -79,6 +82,8 @@ export default class Results extends Component {
                     description={local.description}
                     rating={local.rating}
                     reviewCount={local.reviewCount}
+                    hours={local.hours}
+                    address={local.address}
                 />
             });
     }
@@ -93,7 +98,7 @@ export default class Results extends Component {
 
     render() {
         return (
-            <div id="results" className="columns pt-1">
+            <div id="results" className="columns pt-1 section">
                 <R loading={this.state.loading}>
                     {this.displayItems(this.state.items)}
                 </R>

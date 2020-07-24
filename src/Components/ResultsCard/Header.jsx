@@ -11,8 +11,9 @@ export default props => {
         return r;
     }
     return (
-        <article className="media">
-            <div className="media-left">
+        <>
+        <article className="media is-hidden-mobile">
+            <div className="media-left ">
                 <figure className="image is-96x96">
                     <img src={props.image} alt="LocalsOnly"/>
                 </figure>
@@ -37,12 +38,25 @@ export default props => {
                 </section>
             </div>
             <div className="media-right">
-                    
-                        <Link className="content row button is-primary is-outlined" to={`/local?id=${props.id}`}>View</Link>
-                        
-                    
-                
+                <Link className="content row button is-primary is-outlined" to={`/local?id=${props.id}`}>View</Link>
             </div>
         </article>
+        <Link className="is-hidden-tablet" to={`/local?id=${props.id}`}>
+        <div className="columns is-mobile">
+            <div className="column">
+                <figure className="image is-96x96">
+                    <img src={props.image} alt="LocalsOnly"/>
+                </figure>
+            </div>
+            
+        </div>
+                <p>
+                        <strong>{props.name}</strong>
+                        <br/>
+                        {props.description}
+                    </p>
+                    
+        </Link>
+        </>
     )
 }

@@ -6,13 +6,9 @@ import {withFirebase} from '../Authentication';
 
 export const LogoutButton = withFirebase(({firebase})=>{
   const history = useHistory();
-  const to = ()=>{
-    if(window.location.pathname === ROUTES.NEWLOCAL){
-      history.push(ROUTES.HOME);
-    }
-  }
+  
     return (
-        <button className="button is-primary" onClick={()=>{firebase.signOut(); to();}}> 
+        <button className="button is-primary" onClick={()=>{firebase.signOut(); history.push(ROUTES.HOME);}}> 
           <i className="fas fa-door-open"></i>
         </button>
     )

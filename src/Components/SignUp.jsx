@@ -135,5 +135,5 @@ export const SignUpLink = () => {
     }})
     }
 })
-  return <small>Don't have an account, <Link id="signup-button" className="has-text-link" to={ROUTES.SIGNUP} >Sign Up!</Link></small>
+  return <small>Don't have an account? <Link id="signup-button" className="has-text-primary" to={ROUTES.SIGNUP} >Sign Up!</Link></small>
 }

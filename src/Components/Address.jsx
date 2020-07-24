@@ -1,49 +1,17 @@
 import React from 'react'
-import {fromAddress} from '../globals';
-import axios from 'axios';
 import {STATES} from '../globals';
 export default props=>{
     let address = props.address;
     let setAddress = props.setAddress;
-    let status = props.status;
-    let setStatus = props.setStatus;
 
     const onChange = event => {
         const {name, value} = event.target
         setAddress({...address, [name]: value });
-        if(!addressisNotFilled()){
-            verifyAddress();
-        }
+       
         event.preventDefault();
       }
-    const verifyAddress = ()=>{
-        
-        if(!addressisNotFilled()){
-            axios.get(fromAddress(address))
-            .then(res=>{
-                if(res.status === 200){
-                    setStatus({...status, address:true});
-                    
-            }
-                else {setStatus(
-                    { ...status, address: false }
-                )
-                
-                        
-            }})
-            .catch(err=>{
-                console.log(err)
-            })
-        }
-    }
-    const addressisNotFilled = ()=>
-    (
-        address.street === '' ||
-        address.city   === '' ||
-        address.state  === '' ||
-        address.zip    === '' || 
-        address.zip.length < 4
-    );
+    
+    
     const stateOptions=()=>{
         return STATES.map(state=>
             <option key={state} value={state.toLowerCase()}>{state}</option>

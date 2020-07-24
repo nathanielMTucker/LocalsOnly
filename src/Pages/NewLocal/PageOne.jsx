@@ -1,17 +1,7 @@
-import React,{useState} from 'react'
+import React from 'react'
 import {STATES} from '../../globals';
 
-export default props => {
-
-    let [address, setAddress] = useState({
-        name:'',
-        sttreet:'',
-        apt:'',
-        city:'',
-        state:'',
-        zip:''
-    });
-    
+export default ({address, setAddress}) => {
 
     const onChange = e =>{
         e.preventDefault();
@@ -25,13 +15,18 @@ export default props => {
             <option key={state} value={state.toLowerCase()}>{state}</option>
         )
     }
-    const onSubmit = e=>{
-        console.log('Submit');
-        
-    }
+   
+    
     return (
-        <form id='page-one' className="form" value='3' onSubmit={onSubmit}>
-            <label htmlFor="name" className="label  has-text-grey">
+        <>
+        <nav className="pagination is-rounded is-centered" role="navigation" aria-label="pagination">
+                        <ul className="pagination-list">
+                            <li><span id='0' className="pagination-link is-current" aria-label="Goto page 1">1</span></li>
+                            <li><span id='1' className="pagination-link" aria-label="Goto page 2">2</span></li>
+                            <li><span id='2' className="pagination-link" aria-label="Goto page 3">3</span></li>
+                        </ul>
+                    </nav>
+        <label htmlFor="name" className="label  has-text-grey">
                 Business/Location Name
                 <div className="control">
                     <input onChange={onChange} type="text" name="name" value={address.name} className="input" required/>
@@ -84,11 +79,8 @@ export default props => {
                 </div>
                 
             </div>
-            <div className="section is-pulled-right ">
-            <div className="">
-                <button type="submit" value={3} className="pagination-next">Next</button>
-            </div>
-            </div>
-        </form>
+            
+        
+        </>
     )
 }

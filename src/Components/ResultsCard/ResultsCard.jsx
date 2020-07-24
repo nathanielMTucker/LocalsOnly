@@ -21,6 +21,8 @@ export default props =>
             />
             
             <Footer
+                hours={props.hours}
+                address={props.address}
                 i={props.i}
             />
         </div>

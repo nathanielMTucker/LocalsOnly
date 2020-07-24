@@ -1,23 +1,34 @@
 import React from 'react' 
 
-export default props => {
-    const [rating, setRating] = React.useState(1)
-    const [price, setPrice] = React.useState(1)
+export default ({locals,setLocal,details, setDetails}) => {
+    let {description, rating, price, imageName} = details
     const [charCount, setCharCount] = React.useState(150);
-    const [desc, setDesc] = React.useState("");
-    const changeCharCount = e=>{
-        setDesc(e.target.value);
-        setCharCount(150 - e.target.value.length);
-    }
     
+    React.useEffect(() => {
+        setCharCount(150-description.length)
+        
+    }, [description])
+    const onChange = e=>{
+        const name = e.target.name;
+        const value = e.target.value;
+        setDetails({...details, [name]:value})
+    }
     return (
-        <form id='page-three' className="form ">
+        
+            <>
+            <nav className="pagination is-rounded is-centered" role="navigation" aria-label="pagination">
+                        <ul className="pagination-list">
+                            <li><span id='0' className="pagination-link " aria-label="Goto page 1">1</span></li>
+                            <li><span id='1' className="pagination-link " aria-label="Goto page 2">2</span></li>
+                            <li><span id='2' className="pagination-link is-current" aria-label="Goto page 3">3</span></li>
+                        </ul>
+                    </nav>
             <div className="columns">
             <div className="column">
             <label className="label has-text-grey">
                 Description
                 <div className="control">
-                    <textarea value={desc} onChange={changeCharCount} maxLength='150' rows='5' className="textarea" name="description" id="description" cols="30" required/>
+                    <textarea value={description} onChange={onChange} maxLength='150' rows='3' className="textarea" name="description" id="description" cols="30" required/>
                 </div>
                 <div className="level">
                     <div className="level-left"></div>
@@ -51,23 +62,22 @@ export default props => {
                 <label className="label has-text-grey">
                     Rating
                     <div className="control">
-                    <input type="number" value={rating} onChange={e=>{setRating(e.target.value)}} name="rating" min="1" max='5' className="input" required/>
+                    <input type="number" value={rating} onChange={onChange} name="rating" min="1" max='5' className="input" required/>
                     </div>
                 </label>
                 <label className="label has-text-grey">Price
                     <div className="control">
-                    <input type="number" value={price} onChange={e=>{setPrice(e.target.value)}} name="price" min="1" max='5' className="input" required/>
+                    <input type="number" value={price} onChange={onChange} name="price" min="1" max='5' className="input" required/>
                     </div>
                 </label>
                 <label className="label has-text-grey">Tags</label>
+                <label className="label checkbox has-text-grey">
+                    <small className="help checkbox">Only let locals see this page?</small>
+                    <input value={locals} onChange={(e)=>{setLocal(e.target.checked)}} type="checkbox"/>
+                </label>
             </div>
             </div>
-            <div className="section is-pulled-right ">
-            <div className="">
-                <button onClick={props.changePage} value='4' className="pagination-previous">Back</button>
-                <button name='next'  className="pagination-next">Finish</button>
-            </div>
-            </div>
-        </form>
+            </>
+            
     )
 }

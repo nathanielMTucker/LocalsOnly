@@ -18,18 +18,42 @@ export default props => {
             access.classList.add('fa-angle-down');
         }
     }
-
+    const isClosed =(d)=>{
+        const day = props.hours[d];
+        return ((day.closed || day.to==='') ? 'closed' : `${day.from} - ${day.to}`)
+    }
+    const {street, apt, city, state, zip} = props.address;
     return (
         <footer>
             <div id={`footer-${props.i}`} className="card-footer mt-1" style={{display : 'none'}}>
                 
-                <p>h</p>
-                <p>h</p>
-                <p>h</p>
-                <p>h</p>
-                <p>h</p>
-                <p>h</p>
-                <p>h</p>
+                <div className="columns">
+                    <div className="column">
+                        <h3>
+                            <strong>Hours:</strong>
+                        </h3>
+                        {props.hours.monday.from === undefined || props.hours === null ? 'No hours available':(
+                            <>
+                                <p>{`Monday:    ${isClosed('monday')}`}</p>
+                                <p>{`Tuesday:   ${isClosed('tuesday')}`}</p>
+                                <p>{`Wednesday: ${isClosed('wednesday')}`}</p>
+                                <p>{`Thursday:  ${isClosed('thursday')}`}</p>
+                                <p>{`Friday:    ${isClosed('friday')}`}</p>
+                                <p>{`Saturday:  ${isClosed('saturday')}`}</p>
+                                <p>{`Sunday:    ${isClosed('sunday')}`}</p>
+                            </>
+                        )}
+                    </div>
+                    <div className="column">
+                        <h3>
+                            <strong>Address:</strong>
+                        </h3>
+                        <div>
+                            <p>{`${street}, ${apt}`}</p>
+                            <p>{`${city}, ${state} ${zip}`}</p>
+                        </div>
+                    </div>
+                </div>
             
             </div>
             <div className="columns on-click" onClick={showDisplay}>
