@@ -1,21 +1,19 @@
 import  firebase from 'firebase/app';
 import 'firebase/auth';
 import React from 'react';
-require('dotenv').config();
-
+// require('dotenv').config({path: __dirname + '/.env'});
+// console.log(require('dotenv').config());
+console.log(process.env.FIREBASE_APIKEY);
 const firebaseConfig = {
-  apiKey: "AIzaSyDOZ6d6M5cnuKqBL4IyYXKu7TU_Rt-POFw",
-  authDomain: "localsonly-a3c68.firebaseapp.com",
+  apiKey: "AIzaSyDOZ6d6M5cnuKqBL4IyYXKu7TU_Rt-POFw" ,
+  authDomain: "localsonly-a3c68.firebaseapp.com" ,
   databaseURL: "https://localsonly-a3c68.firebaseio.com",
   projectId: "localsonly-a3c68",
   storageBucket: "localsonly-a3c68.appspot.com",
   messagingSenderId: "583296937791",
-  appId: "1:583296937791:web:59de121a0df2fa83eead8a",
+  appId: "1:583296937791:web:59de121a0df2fa83eead8a" ,
   measurementId: "G-RVH5R21C1C"
 };
-
-
-
 
 export const FirebaseContext = React.createContext(null);
 

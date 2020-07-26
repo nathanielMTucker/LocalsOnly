@@ -1,7 +1,7 @@
 import React from 'react' 
 
 export default ({locals,setLocal,details, setDetails}) => {
-    let {description, rating, price, imageName} = details
+    let {description, rating, price} = details
     const [charCount, setCharCount] = React.useState(150);
     
     React.useEffect(() => {

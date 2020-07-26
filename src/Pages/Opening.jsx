@@ -60,7 +60,8 @@ export default ()=>{
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
-          <img src="LocalsOnly.png" style={{height:'25vh',width: '70%'}} alt=""/>
+          <img src="LocalsOnly.png" className="is-hidden-mobile" style={{height:'25vh',width: '13vw'}} alt=""/>
+          <img src="LocalsOnly.png" className="is-hidden-tablet mb-1" style={{height:'25vh',width: '45vw'}} alt=""/>
           <SignIn/>
         </div>
         <Copyright/>
