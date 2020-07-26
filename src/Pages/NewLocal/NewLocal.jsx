@@ -68,7 +68,7 @@ const NewLocal = props => {
                  const lat = coors.lat;
                  const lng = coors.lng;
                 console.log(`${lat} ${lng}`);
-                axios.post('http://localhost:5000/locals',{
+                axios.post('https://localsonly-server.herokuapp.com/locals',{
                     name:address.name,
                     description:details.description,
                     address:{street:address.street, apt:address.apt, city:address.city, state:address.state, zip:address.zip}, 
@@ -87,6 +87,7 @@ const NewLocal = props => {
             })
             .catch(
                 err=>{
+                    // eslint-disable-next-line eqeqeq
                     if(err=="TypeError: res.data.results[0] is undefined"){
                         alert("Check that address is correct")
                     }

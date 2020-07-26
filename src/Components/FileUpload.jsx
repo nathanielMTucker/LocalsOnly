@@ -55,7 +55,7 @@ export default () => {
                 <button className="button" type="submit">Upload</button>
             </form>
             {uploadedFile ? <div className="container">
-                <img style={{ width: '100%' }} src={uploadedFile.filePath} />
+                <img style={{ width: '100%' }} src={uploadedFile.filePath} alt="User Upload" />
             </div> : null}
         </Fragment>
     )

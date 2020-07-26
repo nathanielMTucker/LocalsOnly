@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import MapContainer from '../../Components/MapContainer';
 import R from '../../Components/Results';
 import { Link } from 'react-router-dom';
-import config from '../../config';
+// import config from '../../config';
 
 export default class Results extends Component {
     constructor(props) {
@@ -49,7 +49,7 @@ export default class Results extends Component {
         const where = this.state.where.replace(' ', '+');
 
         console.log(where);
-        axios.get(`http://localhost:5000/locals/hashtags/${this.state.what}/address/${where}`)
+        axios.get(`https://localsonly-server.herokuapp.com/locals/hashtags/${this.state.what}/address/${where}`)
             .then((res) => {
                 console.log("Postal courier has delivered your package!");
                 const data = res.data;

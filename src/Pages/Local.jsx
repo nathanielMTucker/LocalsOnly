@@ -5,7 +5,6 @@ import './Local.css';
 import MapContainer from '../Components/MapContainer';
 import Desc from '../Components/LocalDescription';
 import Rating from '@material-ui/lab/Rating'
-import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
 
 const Dollar = withStyles({
@@ -31,7 +30,7 @@ export default class Local extends Component {
         ,()=>{this.loadItems();})
     }
     async getData(){
-        await axios.get(`http://localhost:5000/locals/${this.state.id}`)
+        await axios.get(`https://localsonly-server.herokuapp.com/locals/${this.state.id}`)
             .then((res)=>{
                     console.log("Postal courier has delivered your package!");
                     const data = res.data;
