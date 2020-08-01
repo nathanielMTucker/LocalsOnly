@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import SignUp from '../Components/SignUp';
 import {withRouter, useHistory, Link} from 'react-router-dom';
 import {compose} from 'recompose';
@@ -27,20 +27,20 @@ const RegistrationBase = props=>{
         emailChanged: '',
         passwordOne: '',
         passwordTwo: '',
-        error:null,
+        error: null,
     })
-    
+
     let [status, setStatus] = useState({
-        age:false,
-        address:false,
-        user:false
+        age: false,
+        address: false,
+        user: false
     })
     
     const isInvalid = ()=>{
         return !(status.age)
     };
-    const handleSubmit = ()=>{
-        
+    const handleSubmit = () => {
+        console.log("re ", user);
         firebase.createUserWithEmailAndPassword(user.email, user.passwordOne)
         .then((u)=>{
             const uid = u.user.uid;
@@ -72,7 +72,6 @@ const RegistrationBase = props=>{
                 }
             }
         )
-        
     }
     const stateOptions=()=>{
         return STATES.map(state=>
