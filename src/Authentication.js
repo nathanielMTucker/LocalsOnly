@@ -3,7 +3,7 @@ import 'firebase/auth';
 import React from 'react';
 // require('dotenv').config({path: __dirname + '/.env'});
 // console.log(require('dotenv').config());
-console.log(process.env.FIREBASE_APIKEY);
+
 const firebaseConfig = {
   apiKey: "AIzaSyDOZ6d6M5cnuKqBL4IyYXKu7TU_Rt-POFw" ,
   authDomain: "localsonly-a3c68.firebaseapp.com" ,

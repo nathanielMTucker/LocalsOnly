@@ -68,7 +68,7 @@ const NewLocal = props => {
                  const lat = coors.lat;
                  const lng = coors.lng;
                 console.log(`${lat} ${lng}`);
-                axios.post('https://localsonly-server.herokuapp.com/locals',{
+                axios.post(`${props.server}/locals`,{
                     name:address.name,
                     description:details.description,
                     address:{street:address.street, apt:address.apt, city:address.city, state:address.state, zip:address.zip}, 

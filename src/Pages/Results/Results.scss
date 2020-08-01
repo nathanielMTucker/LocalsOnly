@@ -1,4 +1,4 @@
-.results{
+#results{
     
     overflow: hidden;
 }
@@ -13,5 +13,7 @@
 }
 #map{
     padding: 0rem;
+    overflow: hidden;
+    height: 93vh;
 }
 

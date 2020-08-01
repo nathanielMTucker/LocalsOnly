@@ -12,21 +12,7 @@ export default props=> {
     let status = props.status;
     let setStatus = props.setStatus;
 
-    const checkEmail = ()=>{
-      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      
-      if(re.test(String(user.email).toLowerCase())){
-        document.getElementById('email').classList.remove('is-danger')
-        document.getElementById('email').classList.add('is-success')
-        
-        setStatus({...status, user:true});
-      }else{
-        document.getElementById('email').classList.remove('is-success');
-        document.getElementById('email').classList.add('is-danger');
-        
-        setStatus({...status, user:false})
-      }
-    }
+    
     const checkPassword = ()=>{
       if(user.passwordOne.length > 5){
         document.getElementById('passwordOne').classList.add('is-success')
@@ -48,9 +34,7 @@ export default props=> {
       const {name, value} = event.target;
       if(name === "email") setUser({...user, [name]:value.replace(/\s/g, '')})
       else setUser({...user, [name]:value})
-      if(name === "email"){
-        checkEmail();
-      }
+     
       if(name === "passwordOne" || name === "passwordTwo"){
         checkPassword();
       }
@@ -59,21 +43,23 @@ export default props=> {
 
     return (
       <section id="signup" className="container is-centered">
-      <div className="field">
+      <label className="label">
+        Full Name
+        <div className="field">
         <div className="control">
           <input
             name="name"
             value={user.name}
             onChange={onChange}
             type="text"
-            placeholder="Full Name"
             className="input"
             autoFocus={true}
           />
         </div>
       </div>
-      
-      
+      </label>
+        <label className="label">
+          Email
         <div className="field">
           <div className="control">
             <input
@@ -82,12 +68,15 @@ export default props=> {
               value={user.email}
               onChange={onChange}
               type="email"
-              placeholder="Email Address"
               className="input"
+              required
             />
           </div>
         </div>
-        <div className="field">
+        </label>
+        <label className="label">
+          Password
+          <div className="field">
           <div className="control">
             <input
             id="passwordOne"
@@ -95,12 +84,17 @@ export default props=> {
               value={user.passwordOne}
               onChange={onChange}
               type="password"
-              placeholder="Password"
               className="input"
+              minLength={8}
+              required
+              
             />
           </div>
         </div>
-        <div className="field">
+        </label>
+        <label className="label">
+          Confirm Password
+          <div className="field">
           <div className="control">
             <input
               id="passwordTwo"
@@ -108,14 +102,13 @@ export default props=> {
               value={user.passwordTwo}
               onChange={onChange}
               type="password"
-              placeholder="Confirm Password"
               className="input"
+              minLength={8}
+              required
             />
           </div>
         </div>
-        
-        
- 
+        </label>
         {user.error && <p className="help is-danger">{user.error.message}</p>}
       </section>
     );

@@ -30,7 +30,7 @@ export default class Local extends Component {
         ,()=>{this.loadItems();})
     }
     async getData(){
-        await axios.get(`https://localsonly-server.herokuapp.com/locals/${this.state.id}`)
+        await axios.get(`${this.props.server}/locals/${this.state.id}`)
             .then((res)=>{
                     console.log("Postal courier has delivered your package!");
                     const data = res.data;
@@ -55,7 +55,7 @@ export default class Local extends Component {
         var address = this.state.address;
          
         this.setState({page:
-        <section className="section">
+        <section className="pt-2">
            <div className="columns">
                 <div className="column">
                     <div className="">

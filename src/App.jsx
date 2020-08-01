@@ -18,6 +18,9 @@ import {fromLatLng} from './globals';
 import {compose} from 'recompose';
 import { geolocated } from "react-geolocated";
 import Opening from './Pages/Opening';
+import Profile from './Pages/Profile';
+const config = require('./config');
+let server;
 const parseAddress = require('parse-address-string');
 
 class App extends Component{
@@ -26,16 +29,28 @@ class App extends Component{
  
     this.state = {
       authUser: null,
+      userInfo: null,
       location:'Tempe, Az'
     };
   }
- 
+  componentWillMount(){
+    server = config[process.env.REACT_APP_ENVIRONMENT].server
+    console.log(server);
+  }
   componentDidMount() {
+   
     this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
-      authUser
-        ? this.setState({ authUser })
-        : this.setState({ authUser: null });
-    });
+      if(authUser){
+        this.setState({authUser:authUser})
+        axios.get(`${server}/user/${authUser.uid}`)
+          .then(res=>{
+            this.setState({userInfo:res.data[0]})
+          })
+      }else{
+        this.setState({authUser:null})
+      }
+      })
+    
     navigator.geolocation.getCurrentPosition(pos => {
       this.setLocation(pos);
     })
@@ -60,24 +75,25 @@ class App extends Component{
     render() {
       return (
       <>
-      {this.state.authUser ? (
+      {this.state.authUser && this.state.userInfo ? (
         <div className="section">
-        <Router>
-        <Nav authUser={this.state.authUser} loc={this.state.location}/>
-        <Switch>
-            <Route exact path={ROUTES.HOME} component={Home}/>
-            <Route exact path={ROUTES.NEWLOCAL} component={NewLocal}/>
-            <Route path={ROUTES.SEARCH} component={Results}/>
-            <Route path={ROUTES.LOCAL} component={Local}/>
-          </Switch>
-       </Router>
+          <Router>
+            <Nav authUser={this.state.authUser} loc={this.state.location}/>
+            <Switch>
+                <Route exact path={ROUTES.HOME} component={()=><Home server={server}/>}/>
+                <Route exact path={ROUTES.NEWLOCAL} component={()=><NewLocal server={server} />}/>
+                <Route path={ROUTES.SEARCH} component={(props)=><Results {...props} server={server} />}/>
+                <Route path={ROUTES.LOCAL} component={(props)=><Local {...props} server={server} />}/>
+                <Route path={ROUTES.PROFILE} component={()=><Profile server={server} user={this.state.userInfo}/>}/>
+              </Switch>
+        </Router>
         </div>
        ):(
         <Router>
-        <Switch>
-        <Route exact path={ROUTES.HOME} component={Opening}/>
-        <Route exact path={ROUTES.SIGNUP} component={Registration}/>
-        </Switch>
+          <Switch>
+            <Route exact path={ROUTES.HOME} component={Opening}/>
+            <Route exact path={ROUTES.SIGNUP} component={()=><Registration server={server}/>}/>
+          </Switch>
         </Router>
       )}
       </>

@@ -2,7 +2,7 @@ import React, { Component} from 'react'
 import { withRouter } from "react-router";
 import './Search.scss';
 import S from './Search';
-import {LogoLinkButton, LocalizeLinkButton, LogoutButton} from '../Buttons';
+import {LogoLinkButton, LocalizeLinkButton, LogoutButton, UserProfileButton} from '../Buttons';
 import {SearchDropdown} from '../Dropdowns';
 
 
@@ -44,17 +44,16 @@ class Nav extends Component {
                 <S click={null} loc={this.props.loc}/>
               </div>):''}
               <div className="level-right">
-                
-                
                   <div className="level-item">
-                  <LocalizeLinkButton/>
-                </div>
-                
-                <div className="level-item">
-                  
+                    <LocalizeLinkButton/>
+                  </div>
+                  <div className="level-item">
+                    <UserProfileButton/>
+                  </div>
+                  <div className="level-item">
                     <LogoutButton/>
+                  </div>
                   
-                </div>
               </div>
           </nav>
       )

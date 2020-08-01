@@ -34,3 +34,9 @@ export const LocalizeLinkButton = ()=>{
         </Link> 
     )
 }
+
+export const UserProfileButton = ()=>(
+    <Link className="button is-main" to={ROUTES.PROFILE}>
+    <i className="fas fa-user-astronaut"></i>
+    </Link>
+)

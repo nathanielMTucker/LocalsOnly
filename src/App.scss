@@ -19,3 +19,24 @@
     width: 50%;
     border-radius: 15%;
 }
+
+.fill-hero{
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: -20px;
+    border-radius: 0em;
+    border-bottom-width: 0.1em;
+    border-color: #FFE600;
+}
+
+.border-main{
+    border-color: #00d1b2;
+    border-width: 0.1em;
+    border-radius: 6px;
+}
+
+.is-main{
+    background: rgb(0,196,167);
+background: linear-gradient(45deg, rgba(0,196,167,1) 50%, rgba(255,230,0,1) 50%);
+    border-width: 0;
+}

@@ -1,22 +1,25 @@
 import React, {useState} from 'react'
 import SignUp from '../Components/SignUp';
-import {withRouter, useHistory} from 'react-router-dom';
+import {withRouter, useHistory, Link} from 'react-router-dom';
 import {compose} from 'recompose';
 import Birthday from '../Components/Birthday';
-import Address from '../Components/Address';
+import {STATES} from '../globals';
 import axios from 'axios';
 import {getAbbrs} from '../globals';
 import { withFirebase } from '../Authentication';
+import Alert from '../Components/Alert';
+import '../App.scss';
 
-const RegistrationBase = ({firebase})=>{
+const IOM = require('../img/LocalsOnly.png');
+const RegistrationBase = props=>{
+    const firebase = props.firebase;
+    const server = props.server;
     let history = useHistory();
-    let [address, setAddress] = useState({
-        street:'',
-        apt:'',
+    let [local, setLocal] = useState({
         city:'',
-        state:'',
-        zip:'',
+        state:'Alabama',
     })
+    let[,useUpdate]=useState();
     
     let [user, setUser] = useState({
         name: '',
@@ -34,24 +37,27 @@ const RegistrationBase = ({firebase})=>{
     })
     
     const isInvalid = ()=>{
-        return !(status.age && status.user)
+        return !(status.age)
     };
     const handleSubmit = ()=>{
         
         firebase.createUserWithEmailAndPassword(user.email, user.passwordOne)
         .then((u)=>{
             const uid = u.user.uid;
-            const state = getAbbrs(address.state);
-            const city = address.city.toLowerCase()
+            const state = getAbbrs(local.state);
+            const city = local.city.toLowerCase().replace(' ', '_');
 
-            axios.post('https://localsonly-server.herokuapp.com/user',{
+            axios.post(`${server}/user`,{
                 authID: uid,
                 email:user.email,
                 name: user.name,
                 localTo: `${state}:${city}`,
-            }).then(res=>{alert("Thank you for Signing Up!"); history.push('/')}
-            ).catch(err => console.log(err))
-            
+            }).then(res=>{
+                history.push('/');
+                
+                alert("Thank you for Signing Up!"); 
+                useUpdate({});
+            }).catch(err => console.log(err))
         })
         .catch(
             err => {
@@ -68,41 +74,73 @@ const RegistrationBase = ({firebase})=>{
         )
         
     }
+    const stateOptions=()=>{
+        return STATES.map(state=>
+            <option key={state} value={state.toLowerCase()}>{state}</option>
+        )
+
+    }
     return (
-    <div className="registration">
-            <div className="container">
-            <div className="section text-center">
-                <div className="container">
-                    <label className="title">Registration</label>
+    <div className="registration section">
+        <div className="columns is-centered">
+            <div className="is-half  ">
+                <div className="box border-main">
+                    <div className="hero fill-hero box is-primary">
+                        <div className="text-center level">
+                            <img className="" src={IOM} alt=""/>
+                            <label className="level-item title">Registration</label>
+                        </div>
+                        
+                    </div>
+                   
+                    <section className="column">
+                        <label className="label">
+                            <SignUp firebase={firebase} status={status} setUser={setUser} setStatus={setStatus} user={user}/>
+                        </label>
+                        <label className="label">
+                            <div className="is-mobile">
+                                <div className="level-left">
+                                    <div className="level-item">
+                                        Local
+                                        <Alert text="Changing Local will result in a 30 day waiting period" severity="info"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="columns">
+                                <div className="column">
+                                    <div className="select">
+                                        <select name="state" id="state" value={local.state} onChange={e=>{setLocal({...local, state:e.target.value}); e.preventDefault();}}>
+                                            {stateOptions()}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="column">
+                                    <input type="text" placeholder="City/Town" className="input" name="city" value={local.city} onChange={e=>{setLocal({...local, city:e.target.value}); e.preventDefault();}}/>
+                                </div>
+                            </div>
+                        </label>
+                        <label className="label">
+                            <div className="level-left">
+                                <div className="level-item">
+                                    Birthday
+                                    <Alert text="Must be 13 years of age or older" severity="info"/>
+                                </div>
+                            </div>
+                            <Birthday status={status} setStatus={setStatus}/>
+                            
+                        </label>
+                        <div className="level">
+                            <div className="level-left">
+                            <button className="level-item button is-primary" disabled={isInvalid}  onClick={handleSubmit}>Sign Up</button>
+                            <Link className="button is-info is-outlined" to="/">Back</Link>
+                            </div>
+                        </div>
+                        <small className="help is-info">*All fields are required</small>
+                    </section>
                 </div>
-            </div>
-            <section className="columns is-centered">
-                <div className="column is-4">
-                    <label className="label">
-                        Credentials
-                        <SignUp firebase={firebase} status={status} setUser={setUser} setStatus={setStatus} user={user}/>
-                    </label>
-                    <label className="label">
-                        Birthday
-                        <Birthday status={status} setStatus={setStatus}/>
-                        <small className={`help ${status.age ? 'is-success' : 'is-danger'}`}>
-                            Must be at least 13
-                        </small>
-                    </label>
-                </div>
-                <div className="column is-4">
-                    <label className="label">
-                        Address
-                        <Address address={address} status={status} setStatus={setStatus} setAddress={setAddress}/>
-                        <small className="help is-info">
-                            We only save the <u><b>city & state</b></u>, the rest is for verification.
-                        </small>
-                    </label>
-                    <button className="button" disabled={isInvalid()}  onClick={handleSubmit}>Sign Up</button>
-                </div>
-            </section>
             </div>
         </div>
+    </div>
     )
 }
 const Registration = compose(withRouter, withFirebase)(RegistrationBase);

@@ -1,8 +1,8 @@
-const port = 5000;
-const url = 'http://localhost';
-
 module.exports = {
-    apiURL:function(){
-        return url+':'+port;
+    develop:{
+        server:'http://localhost:5000',
+    },
+    production:{
+        server:'https://localsonly-server.herokuapp.com',
     }
 }

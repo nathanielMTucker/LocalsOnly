@@ -1,17 +1,28 @@
 import React from 'react' 
+import Rating from '@material-ui/lab/Rating'
+import { withStyles } from '@material-ui/core/styles';
+import TagsInput from 'react-tagsinput';
+import 'react-tagsinput/react-tagsinput.css'
 
+const Dollar = withStyles({})(Rating);
 export default ({locals,setLocal,details, setDetails}) => {
-    let {description, rating, price} = details
+    let {description, rating, price, tags} = details
     const [charCount, setCharCount] = React.useState(150);
-    
+    const [tagsCount, setTagsCount] = React.useState(6);
     React.useEffect(() => {
         setCharCount(150-description.length)
-        
-    }, [description])
+        setTagsCount(6-tags.length)
+    }, [description, tags])
     const onChange = e=>{
         const name = e.target.name;
         const value = e.target.value;
+        console.log(`Name: ${name}, Value: ${value}`);
         setDetails({...details, [name]:value})
+    }
+    const onTags=(t)=>{
+        console.log(t);
+        
+        setDetails({...details, tags:t})
     }
     return (
         
@@ -59,18 +70,31 @@ export default ({locals,setLocal,details, setDetails}) => {
             </label>
             </div>
             <div className="column">
+            <label className="label has-text-grey">Tags
+                    <div className="control">
+                        <TagsInput maxTags={6} className="input" value={tags} name="tags" onChange={onTags} onlyUnique={true}/>
+                    </div>
+                    <div className="level">
+                    <div className="level-left"></div>
+                    <div className="level-right">
+                        <div className="level-item">
+                            <small className="help">{`${tagsCount} tags remaining`}</small>
+                        </div>
+                    </div>
+                </div>
+                </label>
                 <label className="label has-text-grey">
                     Rating
                     <div className="control">
-                    <input type="number" value={rating} onChange={onChange} name="rating" min="1" max='5' className="input" required/>
+                    <Rating name="rating" value={rating} onChange={onChange}/>
                     </div>
                 </label>
                 <label className="label has-text-grey">Price
                     <div className="control">
-                    <input type="number" value={price} onChange={onChange} name="price" min="1" max='5' className="input" required/>
+                    <Dollar name="price" value={price} onChange={onChange} icon={<i className="fas fa-dollar-sign"></i>}/>
                     </div>
                 </label>
-                <label className="label has-text-grey">Tags</label>
+                
                 <label className="label checkbox has-text-grey">
                     <small className="help checkbox">Only let locals see this page?</small>
                     <input value={locals} onChange={(e)=>{setLocal(e.target.checked)}} type="checkbox"/>

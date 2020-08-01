@@ -80,7 +80,8 @@ class SignInFormBase extends Component {
  
     this.props.firebase
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then((u) => {
+        console.log(u);
         this.setState({ ...INITIAL_STATE });
         if(this.props.history.location === '/registration'){
           this.props.history.push('/')

@@ -49,7 +49,7 @@ export default class Results extends Component {
         const where = this.state.where.replace(' ', '+');
 
         console.log(where);
-        axios.get(`https://localsonly-server.herokuapp.com/locals/hashtags/${this.state.what}/address/${where}`)
+        axios.get(`${this.props.server}/locals/hashtags/${this.state.what}/address/${where}`)
             .then((res) => {
                 console.log("Postal courier has delivered your package!");
                 const data = res.data;
@@ -98,11 +98,11 @@ export default class Results extends Component {
 
     render() {
         return (
-            <div id="results" className="columns pt-1 section">
+            <div id="results" className="columns pt-2">
                 <R loading={this.state.loading}>
                     {this.displayItems(this.state.items)}
                 </R>
-                <div id="map" className="column container is-medium is-hidden-mobile">
+                <div id="map" className="column is-medium is-hidden-mobile">
                     <MapContainer
                         zoom={16} markers={this.getMarkers()}
                     />
