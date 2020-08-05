@@ -8,9 +8,12 @@ export const LogoutButton = withFirebase(({firebase})=>{
   const history = useHistory();
   
     return (
+        <React.Fragment>
         <button className="button is-primary" onClick={()=>{firebase.signOut(); history.push(ROUTES.HOME);}}> 
           <i className="fas fa-door-open"></i>
         </button>
+        
+        </React.Fragment>
     )
 })
 

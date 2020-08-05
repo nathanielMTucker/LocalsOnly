@@ -4,7 +4,7 @@
     "version": "0.5.0",
     "manifest_version": 1,
     "icons": {
-      "128": "LocalsOnly.png"
+      "128": ["LocalsOnly.png"]
     },
     "app": {
       "urls": [

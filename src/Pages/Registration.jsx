@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import SignUp from '../Components/SignUp';
-import {withRouter, useHistory, Link} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import {compose} from 'recompose';
 import Birthday from '../Components/Birthday';
 import {STATES} from '../globals';
@@ -10,16 +10,18 @@ import { withFirebase } from '../Authentication';
 import Alert from '../Components/Alert';
 import '../App.scss';
 
+
 const IOM = require('../img/LocalsOnly.png');
+
 const RegistrationBase = props=>{
+    const forceUpdate = useState()[0];
+
     const firebase = props.firebase;
     const server = props.server;
-    let history = useHistory();
     let [local, setLocal] = useState({
         city:'',
         state:'Alabama',
     })
-    let[,useUpdate]=useState();
     
     let [user, setUser] = useState({
         name: '',
@@ -35,14 +37,22 @@ const RegistrationBase = props=>{
         address: false,
         user: false
     })
-    
-    const isInvalid = ()=>{
-        return !(status.age)
-    };
-    const handleSubmit = () => {
-        console.log("re ", user);
-        firebase.createUserWithEmailAndPassword(user.email, user.passwordOne)
-        .then((u)=>{
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    React.useEffect(()=>{
+        return function cleanup(){
+            abortController.abort();
+        }
+    }, [])
+    // const isInvalid = ()=>{
+    //     return !(status.age)
+    // };
+    const handleSubmit = e => {
+        e.preventDefault();
+        
+        firebase.createUserWithEmailAndPassword(user.email, user.passwordOne, {signal: signal})
+        .then( u => {
             const uid = u.user.uid;
             const state = getAbbrs(local.state);
             const city = local.city.toLowerCase().replace(' ', '_');
@@ -52,11 +62,19 @@ const RegistrationBase = props=>{
                 email:user.email,
                 name: user.name,
                 localTo: `${state}:${city}`,
-            }).then(res=>{
-                history.push('/');
+            }
+                 
+            ).then(res=>{
+                firebase.signInWithEmailAndPassword(user.email, user.passwordOne)
+                .then(
+                    ()=>{
+                        props.history.push('/')
+                        window.location.reload(); 
+                    }
+                );
+               
+               
                 
-                alert("Thank you for Signing Up!"); 
-                useUpdate({});
             }).catch(err => console.log(err))
         })
         .catch(
@@ -72,6 +90,8 @@ const RegistrationBase = props=>{
                 }
             }
         )
+        
+        
     }
     const stateOptions=()=>{
         return STATES.map(state=>
@@ -93,6 +113,7 @@ const RegistrationBase = props=>{
                     </div>
                    
                     <section className="column">
+                        <form onSubmit={handleSubmit} className="form">
                         <label className="label">
                             <SignUp firebase={firebase} status={status} setUser={setUser} setStatus={setStatus} user={user}/>
                         </label>
@@ -130,11 +151,12 @@ const RegistrationBase = props=>{
                         </label>
                         <div className="level">
                             <div className="level-left">
-                            <button className="level-item button is-primary" disabled={isInvalid}  onClick={handleSubmit}>Sign Up</button>
+                            <button className="level-item button is-primary" type="submit">Sign Up</button>
                             <Link className="button is-info is-outlined" to="/">Back</Link>
                             </div>
                         </div>
                         <small className="help is-info">*All fields are required</small>
+                        </form>
                     </section>
                 </div>
             </div>

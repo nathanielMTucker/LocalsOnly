@@ -31,9 +31,6 @@ class SignInFormBase extends Component {
       .then((u) => {
         console.log(u);
         this.setState({ ...INITIAL_STATE });
-        if (this.props.history.location === '/registration') {
-          this.props.history.push('/')
-        }
       })
       .catch(error => {
         this.setState({ error });

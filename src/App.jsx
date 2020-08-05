@@ -33,16 +33,22 @@ class App extends Component{
       location:'Tempe, Az'
     };
   }
-  componentWillMount(){
+  
+   
+    
+    abortController = new AbortController();
+  
+  componentDidMount() {
+    const loc = window.location.href+'';
+    
+    if(process.env.REACT_APP_ENVIRONMENT === "production" && loc.indexOf('http://') === 0)
+      window.location.href = loc.replace('http://','https://');
     server = config[process.env.REACT_APP_ENVIRONMENT].server
     console.log(server);
-  }
-  componentDidMount() {
-   
     this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser){
         this.setState({authUser:authUser})
-        axios.get(`${server}/user/${authUser.uid}`)
+        axios.get(`${server}/user/${authUser.uid}`, {signal:this.abortController.signal})
           .then(res=>{
             this.setState({userInfo:res.data[0]})
           })
@@ -71,6 +77,7 @@ class App extends Component{
   }
   componentWillUnmount() {
     this.listener();
+    this.abortController.abort();
   }
     render() {
       return (
@@ -81,9 +88,9 @@ class App extends Component{
             <Nav authUser={this.state.authUser} loc={this.state.location}/>
             <Switch>
                 <Route exact path={ROUTES.HOME} component={()=><Home server={server}/>}/>
-                <Route exact path={ROUTES.NEWLOCAL} component={()=><NewLocal server={server} />}/>
-                <Route path={ROUTES.SEARCH} component={(props)=><Results {...props} server={server} />}/>
-                <Route path={ROUTES.LOCAL} component={(props)=><Local {...props} server={server} />}/>
+                <Route path={ROUTES.NEWLOCAL} component={()=><NewLocal server={server} />}/>
+                <Route path={ROUTES.SEARCH} component={props=><Results {...props} server={server} />}/>
+                <Route path={ROUTES.LOCAL} component={props=><Local {...props} server={server} />}/>
                 <Route path={ROUTES.PROFILE} component={()=><Profile server={server} user={this.state.userInfo}/>}/>
               </Switch>
         </Router>
@@ -92,7 +99,7 @@ class App extends Component{
         <Router>
           <Switch>
             <Route exact path={ROUTES.HOME} component={Opening}/>
-            <Route exact path={ROUTES.SIGNUP} component={()=><Registration server={server}/>}/>
+            <Route path={ROUTES.SIGNUP} component={()=><Registration auth={this.listener} server={server}/>}/>
           </Switch>
         </Router>
       )}
