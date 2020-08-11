@@ -7,6 +7,7 @@ import {STATES} from '../globals';
 import axios from 'axios';
 import {getAbbrs} from '../globals';
 import { withFirebase } from '../Authentication';
+import {withServer} from '../Server';
 import Alert from '../Components/Alert';
 import '../App.scss';
 
@@ -14,7 +15,7 @@ import '../App.scss';
 const IOM = require('../img/LocalsOnly.png');
 
 const RegistrationBase = props=>{
-    const forceUpdate = useState()[0];
+    
 
     const firebase = props.firebase;
     const server = props.server;
@@ -70,6 +71,7 @@ const RegistrationBase = props=>{
                     ()=>{
                         props.history.push('/')
                         window.location.reload(); 
+                        alert("Thank you for signing up!")
                     }
                 );
                
@@ -164,5 +166,5 @@ const RegistrationBase = props=>{
     </div>
     )
 }
-const Registration = compose(withRouter, withFirebase)(RegistrationBase);
+const Registration = compose(withRouter, withFirebase, withServer)(RegistrationBase);
 export default Registration;

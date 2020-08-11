@@ -6,9 +6,12 @@ import queryString from 'query-string';
 import MapContainer from '../../Components/MapContainer';
 import R from '../../Components/Results';
 import { Link } from 'react-router-dom';
-// import config from '../../config';
+import { withServer } from '../../Server';
+import { withUser } from '../../User';
+import { compose } from 'recompose';
 
-export default class Results extends Component {
+
+class Result extends Component {
     constructor(props) {
 
         super(props);
@@ -47,9 +50,13 @@ export default class Results extends Component {
     }
     async getData() {
         const where = this.state.where.replace(' ', '+');
+        const role = this.props.USER.role;
+        const localTo = this.props.USER.localTo;
 
-        console.log(where);
-        axios.get(`${this.props.server}/locals/hashtags/${this.state.what}/address/${where}`)
+        console.log(role + ',' + localTo);
+        console.log(`${this.props.server.server}/locals/h/${this.state.what}/a/${where}/r/${this.props.USER.role}/l/${this.props.USER.localTo}`);
+    
+        axios.get(`${this.props.server.server}/locals/h/${this.state.what}/a/${where}/r/${null}/l/az:gilbert`)
             .then((res) => {
                 console.log("Postal courier has delivered your package!");
                 const data = res.data;
@@ -111,4 +118,8 @@ export default class Results extends Component {
         )
     }
 }
+
+const Results = compose(withServer, withUser)(Result);
+
+export default Results;
 

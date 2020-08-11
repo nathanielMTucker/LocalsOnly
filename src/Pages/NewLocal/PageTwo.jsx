@@ -5,7 +5,7 @@ export default ({days,setDays}) => {
     
     const onChange = e =>{
         const [day,op] = e.target.name.split('.');
-        const value = op === 'isClosed' ? e.target.checked : e.target.value;
+        const value = op === 'closed' ? e.target.checked : e.target.value;
         
         const prev = days[day];
         setDays({...days, [day]:{

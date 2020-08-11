@@ -1,8 +1,15 @@
 import React from 'react'
 
 let Hours = props => {
+    
     let {day, d, onChange} = props;
     const a = day.toLowerCase();
+    const [enabled, setEnabled] = React.useState(false);
+
+    React.useEffect(()=>{
+        setEnabled(d.closed);
+    },[d.closed])
+    
     return (
         <label className="label has-text-grey">
             {day}
@@ -11,7 +18,7 @@ let Hours = props => {
                     <div className="column">
                         <input 
                             type="time" 
-                            disabled={d.closed} 
+                            disabled={enabled}
                             name={`${a}.from`}
                             className="input" 
                             onChange={onChange} 
@@ -34,7 +41,7 @@ let Hours = props => {
                     <div className="column">
                         <input 
                         type="time" 
-                        disabled={d.closed} 
+                        disabled={enabled} 
                         name={`${a}.to`} 
                         className="input" 
                         onChange={onChange} 

@@ -4,13 +4,11 @@ import queryString from 'query-string';
 import './Local.css';
 import MapContainer from '../Components/MapContainer';
 import Desc from '../Components/LocalDescription';
-import Rating from '@material-ui/lab/Rating'
-import { withStyles } from '@material-ui/core/styles';
 
-const Dollar = withStyles({
+import { withServer } from '../Server';
 
-})(Rating)
-export default class Local extends Component {
+
+class Local extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -30,7 +28,7 @@ export default class Local extends Component {
         ,()=>{this.loadItems();})
     }
     async getData(){
-        await axios.get(`${this.props.server}/locals/${this.state.id}`)
+        await axios.get(`${this.props.server.server}/locals/${this.state.id}`)
             .then((res)=>{
                     console.log("Postal courier has delivered your package!");
                     const data = res.data;
@@ -58,22 +56,7 @@ export default class Local extends Component {
         <section className="pt-2">
            <div className="columns">
                 <div className="column">
-                    <div className="">
-                        <Desc item={item}/>
-                    </div>
-                    <div className="columns is-centered">
-                        <div className="column">
-                                <h1 className="subtitle">Rating</h1>
-                                <Rating readOnly name="read-only" value={this.state.items.rating}/>
-                        </div>
-                        <div className="column">
-                        <h1 className="subtitle">Price</h1>
-                            
-                            <Dollar readOnly value={this.state.items.price} icon={<i className="fas fa-dollar-sign"></i>}/>
-                        </div>
-                    </div>
-                    
-                    
+                    <Desc item={item}/>
                 </div>
                 <div className="column">
                     <MapContainer zoom={16} markers={[{lat:item.lat, lng: item.lng}]} style={{position:'relative',height:'50vh', width:'100%'}}/>
@@ -115,3 +98,5 @@ export default class Local extends Component {
         )
     }
 }
+
+export default withServer(Local);

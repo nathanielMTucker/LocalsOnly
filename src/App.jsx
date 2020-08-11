@@ -19,6 +19,8 @@ import {compose} from 'recompose';
 import { geolocated } from "react-geolocated";
 import Opening from './Pages/Opening';
 import Profile from './Pages/Profile';
+import {withUser} from './User';
+import {withServer} from './Server';
 const config = require('./config');
 let server;
 const parseAddress = require('parse-address-string');
@@ -34,23 +36,23 @@ class App extends Component{
     };
   }
   
-   
-    
     abortController = new AbortController();
   
-  componentDidMount() {
+  async componentDidMount() {
     const loc = window.location.href+'';
     
     if(process.env.REACT_APP_ENVIRONMENT === "production" && loc.indexOf('http://') === 0)
       window.location.href = loc.replace('http://','https://');
+
     server = config[process.env.REACT_APP_ENVIRONMENT].server
-    console.log(server);
-    this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
+    this.props.server.setServer(server);
+
+    this.listener = await this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser){
         this.setState({authUser:authUser})
         axios.get(`${server}/user/${authUser.uid}`, {signal:this.abortController.signal})
           .then(res=>{
-            this.setState({userInfo:res.data[0]})
+            this.props.USER.setUser(res.data[0])
           })
       }else{
         this.setState({authUser:null})
@@ -61,37 +63,38 @@ class App extends Component{
       this.setLocation(pos);
     })
   }
-  setLocation = async (loc)=>{
+
+  setLocation = async loc =>{
     await axios.get(fromLatLng(`${loc.coords.latitude},${loc.coords.longitude}`))
          .then(
            res=>{
              parseAddress(res.data.results[0].formatted_address,
               (err, add)=>{
-                console.log(add.city);
-                
                 this.setState({location:`${add.city}, ${add.state}`})
               })
             }
           )
          .catch(error=>console.log(error))
   }
+  
   componentWillUnmount() {
     this.listener();
     this.abortController.abort();
   }
+  
     render() {
       return (
       <>
-      {this.state.authUser && this.state.userInfo ? (
+      {this.state.authUser ? (
         <div className="section">
           <Router>
             <Nav authUser={this.state.authUser} loc={this.state.location}/>
             <Switch>
-                <Route exact path={ROUTES.HOME} component={()=><Home server={server}/>}/>
-                <Route path={ROUTES.NEWLOCAL} component={()=><NewLocal server={server} />}/>
-                <Route path={ROUTES.SEARCH} component={props=><Results {...props} server={server} />}/>
-                <Route path={ROUTES.LOCAL} component={props=><Local {...props} server={server} />}/>
-                <Route path={ROUTES.PROFILE} component={()=><Profile server={server} user={this.state.userInfo}/>}/>
+                <Route exact path={ROUTES.HOME} component={Home}/>
+                <Route path={ROUTES.NEWLOCAL} component={NewLocal}/>
+                <Route path={ROUTES.SEARCH} component={Results}/>
+                <Route path={ROUTES.LOCAL} component={Local}/>
+                <Route path={ROUTES.PROFILE} component={Profile}/>
               </Switch>
         </Router>
         </div>
@@ -99,7 +102,7 @@ class App extends Component{
         <Router>
           <Switch>
             <Route exact path={ROUTES.HOME} component={Opening}/>
-            <Route path={ROUTES.SIGNUP} component={()=><Registration auth={this.listener} server={server}/>}/>
+            <Route path={ROUTES.SIGNUP} component={Registration}/>
           </Switch>
         </Router>
       )}
@@ -108,7 +111,7 @@ class App extends Component{
   }
 }
 
-const app = compose(withFirebase)(App);
+const app = compose(withFirebase, withUser, withServer)(App);
 
 export default geolocated({
   positionOptions: {

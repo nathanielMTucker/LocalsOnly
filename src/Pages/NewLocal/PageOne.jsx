@@ -1,6 +1,7 @@
 import React from 'react'
 import {STATES} from '../../globals';
 
+
 export default ({address, setAddress}) => {
 
     const onChange = e =>{
@@ -15,8 +16,7 @@ export default ({address, setAddress}) => {
             <option key={state} value={state.toLowerCase()}>{state}</option>
         )
     }
-   
-    
+
     return (
         <>
         <nav className="pagination is-rounded is-centered" role="navigation" aria-label="pagination">
@@ -77,10 +77,26 @@ export default ({address, setAddress}) => {
                         </div>
                     </label>
                 </div>
-                
             </div>
-            
-        
+            <div className="columns">
+            <div className="column">
+                <label htmlFor="formatted-text-mask-input" className="label has-text-grey">Phone Number
+                <input
+                value={address.tel}
+                onChange={onChange}
+                name="tel"
+                className='input'
+                id="formatted-text-mask-input"
+                />
+                </label>
+            </div>
+            <div className="column">
+                <label className="label has-text-grey">
+                    Website
+                    <input type="website" className="input" name="web" value={address.web} onChange={onChange}/>
+                </label>
+            </div>
+            </div>
         </>
     )
 }

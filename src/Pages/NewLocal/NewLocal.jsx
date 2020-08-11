@@ -5,13 +5,19 @@ import PageTwo from './PageTwo';
 import PageThree from './PageThree';
 import axios from 'axios';
 import {fromAddress} from '../../globals';
+import {withServer} from '../../Server';
+import {compose} from 'recompose';
+
+
+
 const hours = {
         from: '',
         to: '',
         closed: false
     }
 const NewLocal = props => {
-    const [localsOnly, setLocalsOnly] = useState(false)
+   
+
     const [days, setDays] = useState({
         monday:hours,
         tuesday:hours,
@@ -27,7 +33,9 @@ const NewLocal = props => {
         apt:'',
         city:'',
         state:'',
-        zip:''
+        zip:'',
+        tel:'',
+        web:'',
     });
     let [details, setDetails] = useState({
         description:'',
@@ -35,6 +43,13 @@ const NewLocal = props => {
         price:1,
         tags:[],
         imageName:[],
+        dinein:false,
+        takeout:false,
+        delivery:false,
+        family:false,
+        adult:false,
+        dog:false,
+        localsOnly:false
     })
     let [num, setNum] = useState(0);
     
@@ -54,30 +69,18 @@ const NewLocal = props => {
     const pages = [  
         <PageOne address={address} setAddress={setAddress}/>, 
         <PageTwo days={days} setDays={setDays}/>, 
-        <PageThree locals={localsOnly} setLocal={setLocalsOnly} details={details} setDetails={setDetails}/>
+        <PageThree details={details} setDetails={setDetails}/>
     ]
     const onSubmit = e=>{
         e.preventDefault();
-        console.log(address);
-        console.log(days);
-        console.log(details);
-        console.log(localsOnly);
+        console.log(props.server);
         axios.get(fromAddress(address))
              .then(res=>{
-                 const coors = res.data.results[0].geometry.location;
-                 const lat = coors.lat;
-                 const lng = coors.lng;
-                console.log(`${lat} ${lng}`);
-                axios.post(`${props.server}/locals`,{
-                    name:address.name,
-                    description:details.description,
-                    address:{street:address.street, apt:address.apt, city:address.city, state:address.state, zip:address.zip}, 
-                    hashtags:details.tags,
-                    rating:details.rating,
-                    lat:lat,
-                    lng:lng,
+                axios.post(`${props.server.server}/locals/`,{
+                    address:address,
+                    details:details,
                     hours:days,
-                    localsOnly:localsOnly
+                    coors:res.data.results[0].geometry.location
                 })
                 .then(res=>{
                     alert("Thank you!");
@@ -97,17 +100,14 @@ const NewLocal = props => {
             })
     }
     return (
-        <div className="section columns is-centered">
+        <div className="section columns is-centered" style={{marginBottom:"-2.75rem"}}>
             <div className="column is-half">
                 <h1 className="title has-text-centered">
                     Create New Local
                 </h1>
                 <div className="box has-background-primary-light">
-                    
                     <form onSubmit={onSubmit} className="form">
-                        
                         {pages[num]}
-                        
                         <div className="level">
                             <div className="level-left"></div>
                             <div className="level-right">
@@ -120,10 +120,9 @@ const NewLocal = props => {
                         </div>
                     </form>
                 </div>
-                
             </div>
         </div>
     )
 }
 
-export default withFirebase(NewLocal);
+export default compose(withFirebase, withServer)(NewLocal);

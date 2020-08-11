@@ -1,31 +1,37 @@
 import React from 'react' 
 import Rating from '@material-ui/lab/Rating'
-import { withStyles } from '@material-ui/core/styles';
+
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'
 
-const Dollar = withStyles({})(Rating);
-export default ({locals,setLocal,details, setDetails}) => {
+const Dollar = Rating;
+
+export default ({details, setDetails}) => {
+
     let {description, rating, price, tags} = details
     const [charCount, setCharCount] = React.useState(150);
     const [tagsCount, setTagsCount] = React.useState(6);
+
     React.useEffect(() => {
         setCharCount(150-description.length)
         setTagsCount(6-tags.length)
     }, [description, tags])
+
     const onChange = e=>{
         const name = e.target.name;
         const value = e.target.value;
-        console.log(`Name: ${name}, Value: ${value}`);
         setDetails({...details, [name]:value})
     }
+    const onCheck = e =>{
+        const name = e.target.name;
+        const check = e.target.checked;
+        setDetails({...details, [name]:check})
+    }
     const onTags=(t)=>{
-        console.log(t);
-        
         setDetails({...details, tags:t})
     }
+
     return (
-        
             <>
             <nav className="pagination is-rounded is-centered" role="navigation" aria-label="pagination">
                         <ul className="pagination-list">
@@ -68,6 +74,12 @@ export default ({locals,setLocal,details, setDetails}) => {
                 </label>
             </div>
             </label>
+            <label className="label has-text-grey">
+                   Locals Only: <input onChange={onCheck} name="localsOnly" type="checkbox"/>
+                   <small className="help has-text-info">
+                       Place will <strong><u className="has-text-info">only</u></strong> be viewed by locals
+                   </small>
+                </label>
             </div>
             <div className="column">
             <label className="label has-text-grey">Tags
@@ -95,11 +107,53 @@ export default ({locals,setLocal,details, setDetails}) => {
                     </div>
                 </label>
                 
-                <label className="label checkbox has-text-grey">
-                    <small className="help checkbox">Only let locals see this page?</small>
-                    <input value={locals} onChange={(e)=>{setLocal(e.target.checked)}} type="checkbox"/>
+                
+                <label className="label has-text-grey">
+                    Amenities
+                <div className="columns">
+                    <div className="column">
+                        <ul>
+                            <li>
+                                <label className="label">
+                                    Dine-In: <input onChange={onCheck} name="dinein" type="checkbox" className="checkbox"/>
+                                </label>
+                            </li>
+                            <li>
+                                <label className="label">
+                                    Take-Out: <input onChange={onCheck} name="takeout" type="checkbox" className="checkbox"/>
+                                </label>
+                            </li>
+                            <li>
+                                <label className="label">
+                                    Delivery: <input onChange={onCheck} name="delivery" type="checkbox" className="checkbox"/>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="column">
+                        <ul>
+                            <li>
+                                <label className="label">
+                                    Family Friendly: <input onChange={onCheck} name="family" type="checkbox" className="checkbox"/>
+                                </label>
+                            </li>
+                            <li>
+                                <label className="label">
+                                    21+: <input onChange={onCheck} name="adult" type="checkbox" className="checkbox"/>
+                                </label>
+                            </li>
+                            <li>
+                                <label className="label">
+                                    Dog Friendly: <input onChange={onCheck} name="dog" type="checkbox" className="checkbox"/>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 </label>
+                
             </div>
+            
             </div>
             </>
             
