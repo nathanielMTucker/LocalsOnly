@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 import { withFirebase } from '../Authentication';
 import { SignUpLink } from './SignUp';
 import { Checkbox } from '@material-ui/core';
+import { withUser } from '../User';
 
 const SignInPage = () => (<SignInForm />);
 
@@ -29,18 +30,19 @@ const SignInFormBase = props=>{
 
     const onSubmit = event => {
       const { email, password, rememberMe } = state;
-      if(rememberMe){
-        localStorage.setItem("rememberMe", true);
-        localStorage.setItem("email", email);
-      }
-      else if(!rememberMe && localStorage.getItem('email')){
-        localStorage.removeItem("email");
-        localStorage.rememberMe = false;
-        setState({...state, rememberMe: false})
-      }
+      
       props.firebase
         .signInWithEmailAndPassword(email, password)
         .then((u) => {
+          if(rememberMe){
+            localStorage.setItem("rememberMe", true);
+            localStorage.setItem("email", email);
+          }
+          else if(!rememberMe && localStorage.getItem('email')){
+            localStorage.removeItem("email");
+            localStorage.rememberMe = false;
+            setState({...state, rememberMe: false})
+          }
           setState({ ...INITIAL_STATE });
         })
         .catch(error => {
@@ -60,7 +62,7 @@ const SignInFormBase = props=>{
 
     const { email, password, error } = state;
 
-    const isInvalid = password === '' || email === '';
+    const isInvalid = password === '' && email === '';
 
     return (
       <form onSubmit={onSubmit} className="container">
@@ -96,7 +98,7 @@ const SignInFormBase = props=>{
           name="rememberMe"
           checked={state.rememberMe}
           onChange={onCheck}
-        />Remember Me
+        />Remember My Email
         <div className="field">
           <div className="control">
             <button className={`button  is-outlined ${isInvalid ? 'is-danger' : 'is-primary'}`} disabled={isInvalid} type="submit">
@@ -111,6 +113,7 @@ const SignInFormBase = props=>{
  }
 
 const SignInForm = compose(
+  withUser,
   withRouter,
   withFirebase,
 )(SignInFormBase);

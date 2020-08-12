@@ -18,7 +18,7 @@ const RegistrationBase = props=>{
     
 
     const firebase = props.firebase;
-    const server = props.server;
+    const server = props.server.server;
     let [local, setLocal] = useState({
         city:'',
         state:'Alabama',
