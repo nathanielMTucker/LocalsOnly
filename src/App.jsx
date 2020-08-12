@@ -8,6 +8,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  // Redirect,
 } from "react-router-dom";
 import './App.scss';
 import * as ROUTES from './Constants/routes';
@@ -111,6 +112,19 @@ class App extends Component{
   }
 }
 
+// const ProtectedRoute = ({auth, component:Component, ...rest})=>{
+//   return(
+//     <Route
+//     {...rest}
+//     render ={()=>auth?(
+//       <Component/>
+//     ):(
+//       <Redirect to={ROUTES.HOME}/>
+//     )}
+    
+//     />
+//   )
+// }
 const app = compose(withFirebase, withUser, withServer)(App);
 
 export default geolocated({

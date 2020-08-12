@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withFirebase } from '../Authentication';
@@ -11,49 +11,59 @@ const INITIAL_STATE = {
   email: '',
   password: '',
   error: null,
-  checked: false,
+  rememberMe: false,
 };
 
 
 
-class SignInFormBase extends Component {
-  constructor(props) {
-    super(props);
+const SignInFormBase = props=>{
+  
+    let [state, setState] = React.useState({...INITIAL_STATE});
 
-    this.state = { ...INITIAL_STATE };
-  }
+    React.useEffect(()=>{
+      if(Storage){
+        state.email = localStorage.email;
+        state.rememberMe = localStorage.rememberMe;
+      }
+    },[])
 
-  onSubmit = event => {
-    const { email, password } = this.state;
+    const onSubmit = event => {
+      const { email, password, rememberMe } = state;
+      if(rememberMe){
+        localStorage.setItem("rememberMe", true);
+        localStorage.setItem("email", email);
+      }
+      else if(!rememberMe && localStorage.getItem('email')){
+        localStorage.removeItem("email");
+        localStorage.rememberMe = false;
+        setState({...state, rememberMe: false})
+      }
+      props.firebase
+        .signInWithEmailAndPassword(email, password)
+        .then((u) => {
+          setState({ ...INITIAL_STATE });
+        })
+        .catch(error => {
+          setState({ ...state, error:error });
+        });
 
-    this.props.firebase
-      .signInWithEmailAndPassword(email, password)
-      .then((u) => {
-        console.log(u);
-        this.setState({ ...INITIAL_STATE });
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
+      event.preventDefault();
+    };
 
-    event.preventDefault();
-  };
+    const onChange = event => {
+      setState({...state, [event.target.name]: event.target.value });
+    };
 
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
+    const onCheck = (event) => {
+      setState({ ...state, rememberMe: event.target.checked });
+    }
 
-  onCheck = (event) => {
-    this.setState({ checked: event.target.checked });
-  }
-
-  render() {
-    const { email, password, error } = this.state;
+    const { email, password, error } = state;
 
     const isInvalid = password === '' || email === '';
 
     return (
-      <form onSubmit={this.onSubmit} className="container">
+      <form onSubmit={onSubmit} className="container">
         <div className="field">
           <div className="control">
             <label htmlFor="email" className="label">
@@ -62,7 +72,7 @@ class SignInFormBase extends Component {
             <input
               name="email"
               value={email}
-              onChange={this.onChange}
+              onChange={onChange}
               type="text"
               className="input"
             />
@@ -76,32 +86,29 @@ class SignInFormBase extends Component {
             <input
               name="password"
               value={password}
-              onChange={this.onChange}
+              onChange={onChange}
               type="password"
               className="input"
             />
           </div>
         </div>
         <Checkbox
-          name="checked"
-          checked={this.state.checked}
-          onChange={this.onCheck}
-        />Remeber Me
+          name="rememberMe"
+          checked={state.rememberMe}
+          onChange={onCheck}
+        />Remember Me
         <div className="field">
           <div className="control">
             <button className={`button  is-outlined ${isInvalid ? 'is-danger' : 'is-primary'}`} disabled={isInvalid} type="submit">
             Sign In
             </button>
-
           </div>
           <SignUpLink />
         </div>
-
         {error && <p>{error.message}</p>}
       </form>
     );
-  }
-}
+ }
 
 const SignInForm = compose(
   withRouter,
