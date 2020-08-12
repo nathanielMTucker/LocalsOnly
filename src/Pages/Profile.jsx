@@ -54,9 +54,9 @@ const Profile = ({USER, firebase, server}) => {
                         
                     </h1>
                     <div className="container">
-                        <p>Name: {user.name}</p>
-                        <p>Email:  {user.email}</p>
-                        <p>Local:  {`${city}, ${state}`}</p>
+                        <p>Name: {user.name === '' ? <a className="has-text-info" href="#">Add</a> : user.name}</p>
+                        <p>Email:  {user.email === '' ? <a className="has-text-info" href="#">Add</a> : user.email}</p>
+                        <p>Local:  {user.localTo === '' ? <a className="has-text-info" href="#">Add</a> : `${city}, ${state}`}</p>
                         <p>Soft Local: Feature still in development</p>
                     </div>
                     

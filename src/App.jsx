@@ -46,14 +46,24 @@ class App extends Component{
       window.location.href = loc.replace('http://','https://');
 
     server = config[process.env.REACT_APP_ENVIRONMENT].server
-    this.props.server.setServer(server);
+    this.props.server.set(server);
 
     this.listener = await this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser){
         this.setState({authUser:authUser})
         axios.get(`${server}/user/${authUser.uid}`, {signal:this.abortController.signal})
           .then(res=>{
-            this.props.USER.setUser(res.data[0])
+            if(!this.props.USER.isSet()){
+              this.props.USER.set(res.data[0])
+            }
+          }).catch(err=>{
+            alert("User Error: 404 - Please update info from dashboard");
+            axios.post(`${server}/user`,{
+              authID: authUser.uid,
+                email:'',
+                name: '',
+                localTo: '',
+            })
           })
       }else{
         this.setState({authUser:null})

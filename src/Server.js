@@ -13,7 +13,7 @@ export default class Server{
         this.server = ''
     }
 
-    setServer(server){
+    set(server){
       this.server = server;
     }
 }

@@ -16,8 +16,10 @@ export default class User{
         this.softLocalTo = [];
         this.role = "";
     }
-
-    setUser(user){
+    isSet(){
+      return !this.email === ""
+    }
+    set(user){
       this.email = user.email;
       this.name = user.name;
       this.localTo = user.localTo;
