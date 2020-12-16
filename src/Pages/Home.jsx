@@ -11,6 +11,7 @@ class Home extends Component {
     } 
 
     Welcome(){
+        console.log(this.props.USER);
         const hour = new Date().getHours();
         let greeting = ""
         if(hour < 12 && hour >= 5){

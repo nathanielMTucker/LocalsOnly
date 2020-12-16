@@ -4,7 +4,7 @@ import './Search/Search.scss';
 import {buttons} from '../Constants/IDs';
 import Search from './Search/Search';
 
-export const SearchDropdown = props=>{
+export const SearchDropdown = ({loc, handleInput, handleSubmit, zip})=>{
     const innerRef = useRef(null);
     useEffect(()=>{
         const sign = document.getElementById(buttons.SEARCH);
@@ -32,7 +32,7 @@ export const SearchDropdown = props=>{
             <div className="dropdown-menu is-left is-full-width" id="dropdown-menu" role="menu">
                 <div className="dropdown-content">
                     <div className="dropdown-item">
-                      <Search click={toggle} zip={props.zip}/>
+                      <Search loc={loc} handleInput={handleInput} handleSubmit={handleSubmit} click={toggle} zip={zip}/>
                     </div>
                 </div>
             </div>

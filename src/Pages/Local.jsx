@@ -1,102 +1,84 @@
-import React, { Component } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import queryString from 'query-string';
 import './Local.css';
 import MapContainer from '../Components/MapContainer';
 import Desc from '../Components/LocalDescription';
 
-import { withServer } from '../Server';
 
 
-class Local extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            id:'',
-            items:{},
-            address:{},
-            loading:true,
-            page:null
+ 
+export default ({location : {search}}) =>{
+   
+    const [item, setItem] = useState(null);
+
+    useEffect(()=>{
+        if(item === null){
+            getData()
         }
-    }
-    async componentDidMount() {
-        let id = queryString.parse(this.props.location.search).id;
-
-        this.setState({ 
-                id:id,
-            }
-        ,()=>{this.loadItems();})
-    }
-    async getData(){
-        await axios.get(`${this.props.server.server}/locals/${this.state.id}`)
-            .then((res)=>{
+    }, [])
+    
+    const getData = async ()=>{
+        
+        let {id} = queryString.parse(search);
+        console.log(id);
+        await axios.get(`/api/getLocal?id=${id}`)
+            .then(({data})=>{
                     console.log("Postal courier has delivered your package!");
-                    const data = res.data;
-                    console.log(data);
-                    this.setState({ 
-                            items:data, 
-                            address:data.address,
-                            loading: false 
-                        }
-                    );
-                }
-            )
+                    setItem(data)
+            })
             .catch((err)=>{console.log(`Postal courier has vanished!: ${err}`);});
     }
-    isClosed(d){
-        const day = this.state.items.hours[d];
-        return ((day.closed || day.to==='') ? 'closed' : `${day.from} - ${day.to}`)
+
+    const isClosed = d => {
+        const {closed, to, from} = item.hours[d];
+        return ((closed || to==='') ? 'closed' : `${from} - ${to}`)
     }
-    async loadItems(){
-        await this.getData();
-        var item = this.state.items;
-        var address = this.state.address;
-         
-        this.setState({page:
-        <section className="pt-2">
-           <div className="columns">
-                <div className="column">
-                    <Desc item={item}/>
-                </div>
-                <div className="column">
-                    <MapContainer zoom={16} markers={[{lat:item.lat, lng: item.lng}]} style={{position:'relative',height:'50vh', width:'100%'}}/>
-                    <div className="columns">
-                        <div className="column">
-                            <h1 className="subtitle">
-                                Address
-                            </h1>
-                            <p>{`${address.street},`}</p>
-                            <p>{` ${address.city}, ${address.state} ${address.zip}`}</p>
-                        </div>
-                        <div className="column">
-                            <h1 className="subtitle">
-                                Hours
-                            </h1>
-                            {this.state.items.hours === undefined || this.state.hours === null ? 'No hours available':(
-                                <>
-                                <p>{`Monday:    ${this.isClosed('monday')}`}</p>
-                            <p>{`Tuesday:   ${this.isClosed('tuesday')}`}</p>
-                            <p>{`Wednesday: ${this.isClosed('wednesday')}`}</p>
-                            <p>{`Thursday:  ${this.isClosed('thursday')}`}</p>
-                            <p>{`Friday:    ${this.isClosed('friday')}`}</p>
-                            <p>{`Saturday:  ${this.isClosed('saturday')}`}</p>
-                            <p>{`Sunday:    ${this.isClosed('sunday')}`}</p>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-           </div>
-        </section>
-        })
-    }
-    render() {
+    
         return (
             <div className="local">
-                {this.state.page}
+                {item && 
+                    <section className="pt-2">
+                        <div className="columns">
+                                <div className="column">
+                                    <Desc item={item}/>
+                                </div>
+                                <div className="column">
+                                    {item.geo && <MapContainer 
+                                        zoom={16} 
+                                        markers={[item.geo]} 
+                                            style={{position:'relative',height:'50vh', width:'100%'}}/>
+                                    }<div className="columns">
+                                        <div className="column">
+                                            <h1 className="subtitle">
+                                                Address
+                                            </h1>
+                                            <p>{`${item.address.street},`}</p>
+                                            <p>{` ${item.address.city}, ${item.address.state} ${item.address.zip}`}</p>
+                                        </div>
+                                        <div className="column">
+                                            <h1 className="subtitle">
+                                                Hours
+                                            </h1>
+                                            {item.hours === undefined || item.hours === null ? 'No hours available':(
+                                                <>
+                                                    <p>{`Monday:    ${isClosed('monday')}`}</p>
+                                                    <p>{`Tuesday:   ${isClosed('tuesday')}`}</p>
+                                                    <p>{`Wednesday: ${isClosed('wednesday')}`}</p>
+                                                    <p>{`Thursday:  ${isClosed('thursday')}`}</p>
+                                                    <p>{`Friday:    ${isClosed('friday')}`}</p>
+                                                    <p>{`Saturday:  ${isClosed('saturday')}`}</p>
+                                                    <p>{`Sunday:    ${isClosed('sunday')}`}</p>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </section>
+                }
             </div>
         )
-    }
+    
 }
 
-export default withServer(Local);

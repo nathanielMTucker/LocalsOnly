@@ -4,10 +4,9 @@ import {withRouter, Link} from 'react-router-dom';
 import {compose} from 'recompose';
 import Birthday from '../Components/Birthday';
 import {STATES} from '../globals';
-import axios from 'axios';
 import {getAbbrs} from '../globals';
 import { withFirebase } from '../Authentication';
-import {withServer} from '../Server';
+import axios from 'axios';
 import Alert from '../Components/Alert';
 import '../App.scss';
 
@@ -18,7 +17,7 @@ const RegistrationBase = props=>{
     
 
     const firebase = props.firebase;
-    const server = props.server.server;
+  
     let [local, setLocal] = useState({
         city:'',
         state:'Alabama',
@@ -38,6 +37,9 @@ const RegistrationBase = props=>{
         address: false,
         user: false
     })
+
+    const [birthday, setBirthday] = useState({});
+
     const abortController = new AbortController();
     const signal = abortController.signal;
 
@@ -53,19 +55,16 @@ const RegistrationBase = props=>{
         e.preventDefault();
         
         firebase.createUserWithEmailAndPassword(user.email, user.passwordOne, {signal: signal})
-        .then( u => {
-            const uid = u.user.uid;
-            const state = getAbbrs(local.state);
-            const city = local.city.toLowerCase().replace(' ', '_');
-
-            axios.post(`${server}/user`,{
+        .then( ({user : {uid}}) => {
+            
+            axios.post(`/api/createUser`,{
                 authID: uid,
                 email:user.email,
                 name: user.name,
-                localTo: `${state}:${city}`,
-            }
-                 
-            ).then(res=>{
+                localTo: `${getAbbrs(local.state)}:${local.city.toLowerCase().replace(' ', '_')}`,
+                birthday : birthday
+            })
+            .then(data=>{console.log(data);}).then(()=>{
                 firebase.signInWithEmailAndPassword(user.email, user.passwordOne)
                 .then(
                     ()=>{
@@ -74,10 +73,8 @@ const RegistrationBase = props=>{
                         alert("Thank you for signing up!")
                     }
                 );
-               
-               
-                
             }).catch(err => console.log(err))
+
         })
         .catch(
             err => {
@@ -148,12 +145,12 @@ const RegistrationBase = props=>{
                                     <Alert text="Must be 13 years of age or older" severity="info"/>
                                 </div>
                             </div>
-                            <Birthday status={status} setStatus={setStatus}/>
+                            <Birthday birthday = {birthday} setBirthday={setBirthday} status={status} setStatus={setStatus}/>
                             
                         </label>
                         <div className="level">
                             <div className="level-left">
-                            <button className="level-item button is-primary" type="submit">Sign Up</button>
+                            <button id="sign-up-button" className="level-item button is-primary" disabled="true" type="submit">Sign Up</button>
                             <Link className="button is-info is-outlined" to="/">Back</Link>
                             </div>
                         </div>
@@ -166,5 +163,5 @@ const RegistrationBase = props=>{
     </div>
     )
 }
-const Registration = compose(withRouter, withFirebase, withServer)(RegistrationBase);
+const Registration = compose(withRouter, withFirebase)(RegistrationBase);
 export default Registration;

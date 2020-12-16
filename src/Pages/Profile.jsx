@@ -1,10 +1,9 @@
 import React from 'react'
 import { withUser } from '../User'
 import {withFirebase} from '../Authentication';
-import {withServer} from '../Server';
 import {compose} from 'recompose';
 
-const Profile = ({USER, firebase, server}) => {
+const Profile = ({USER, firebase}) => {
     const user = USER;
     let [state, city] = user.localTo.split(':');
      
@@ -67,4 +66,4 @@ const Profile = ({USER, firebase, server}) => {
     )
 }
 
-export default compose(withFirebase, withUser, withServer)(Profile);
+export default compose(withFirebase, withUser)(Profile);

@@ -1,31 +1,39 @@
-import React,{useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 import {API_KEY} from '../globals';
 const DEF_CENTER = {lat: 33.421996, lng: -111.939935};
 //let MAP_ID = 2510fbdecdd41873;
-const MapContainer = props =>{
 
-    let [center, setCenter] = useState(DEF_CENTER)
-    useEffect(() => {
-    center = initialCenter();
-   }, [props.markers])
+export default GoogleApiWrapper({
+    apiKey: API_KEY
+  })( props =>{
+
+    useEffect(()=>{
+        
+    },[])
     const initialCenter=()=>{
+        let geo = DEF_CENTER 
+       console.log(props.markers);
         if(props.markers !== undefined && props.markers[0] !== undefined && props.markers[0].lat !== undefined){
             if(props.markers.length > 1){
                 let lat = 0
                 let lng = 0
                 props.markers.forEach(marker=>{
+                    console.log(marker);
                     lat += parseFloat(marker.lat)
                     lng += parseFloat(marker.lng)
                 })
                 lat /= props.markers.length;
                 lng /= props.markers.length;
-                setCenter({lat: lat, lng: lng});
+                geo = {lat: lat, lng: lng};
             }
             else if(props.markers.length === 1){
-                setCenter({lat: props.markers[0].lat, lng: props.markers[0].lng});
+                
+                geo = props.markers[0]
             }
+            
         }
+        return geo ;
     }
     
     const handleMarkers=()=>{
@@ -40,20 +48,20 @@ const MapContainer = props =>{
         }
         else return <Marker position={DEF_CENTER}/>
     }
-    const setStyle = ()=>{
-        if(props.style !== undefined){
-            return {...props.style}
-        }
-    }
+    
     return (
-        <div style={setStyle()}>
-        <Map google={props.google} zoom={props.zoom} center={center} style={{borderRadius:'6px'}}>
+        
+        <Map 
+            google={props.google} 
+            zoom={props.zoom} 
+            initialCenter={initialCenter()}
+            center={initialCenter()} 
+            containerStyle={props.style} 
+            style={{borderRadius:'6px'}}
+        >
             {handleMarkers()}
         </Map>
-        </div>
+        
     )
-}
+})
 
-export default GoogleApiWrapper({
-    apiKey: API_KEY
-  })(MapContainer)

@@ -21,9 +21,9 @@ import { geolocated } from "react-geolocated";
 import Opening from './Pages/Opening';
 import Profile from './Pages/Profile';
 import {withUser} from './User';
-import {withServer} from './Server';
-const config = require('./config');
-let server;
+
+
+
 const parseAddress = require('parse-address-string');
 
 class App extends Component{
@@ -42,28 +42,37 @@ class App extends Component{
   async componentDidMount() {
     const loc = window.location.href+'';
     
+   
     if(process.env.REACT_APP_ENVIRONMENT === "production" && loc.indexOf('http://') === 0)
       window.location.href = loc.replace('http://','https://');
 
-    server = config[process.env.REACT_APP_ENVIRONMENT].server
-    this.props.server.set(server);
+    
 
-    this.listener = await this.props.firebase.auth.onAuthStateChanged(authUser => {
+    this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
       if(authUser){
         this.setState({authUser:authUser})
-        axios.get(`${server}/user/${authUser.uid}`, {signal:this.abortController.signal})
-          .then(res=>{
-            if(!this.props.USER.isSet()){
-              this.props.USER.set(res.data[0])
-            }
-          }).catch(err=>{
-            alert("User Error: 404 - Please update info from dashboard");
-            axios.post(`${server}/user`,{
-              authID: authUser.uid,
-                email:'',
-                name: '',
-                localTo: '',
+        axios.get(`/api/getUsers?auth=${authUser.uid}`)
+          .then((res)=>{
+            const data = res.data;
+            this.props.USER.set({
+              ownerID : data._id,
+              name: data.name,
+              email: data.email,
+              localTo: data.localTo,
+              role : 'admin',
+              softLocalTo : data.softLocalTo
             })
+            console.log(data);
+            this.setState({userInfo:data});
+          })
+          .catch(err=>{
+            // alert("User Error: 404 - Please update info from dashboard");
+            // axios.post(`${0}/user`,{
+            //   authID: authUser.uid,
+            //     email:'',
+            //     name: '',
+            //     localTo: '',
+            // })
           })
       }else{
         this.setState({authUser:null})
@@ -88,15 +97,15 @@ class App extends Component{
          .catch(error=>console.log(error))
   }
   
-  componentWillUnmount() {
-    this.listener();
+  async componentWillUnmount() {
+    await this.listener();
     this.abortController.abort();
   }
   
     render() {
       return (
       <>
-      {this.state.authUser ? (
+      {this.state.authUser && this.state.userInfo ? (
         <div className="section">
           <Router>
             <Nav authUser={this.state.authUser} loc={this.state.location}/>
@@ -135,7 +144,7 @@ class App extends Component{
 //     />
 //   )
 // }
-const app = compose(withFirebase, withUser, withServer)(App);
+const app = compose(withFirebase, withUser)(App);
 
 export default geolocated({
   positionOptions: {

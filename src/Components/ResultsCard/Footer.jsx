@@ -26,13 +26,12 @@ export default props => {
     return (
         <footer>
             <div id={`footer-${props.i}`} className="card-footer mt-1" style={{display : 'none'}}>
-                
                 <div className="columns">
                     <div className="column">
                         <h3>
                             <strong>Hours:</strong>
                         </h3>
-                        {props.hours.monday.from === undefined || props.hours === null ? 'No hours available':(
+                        {props.hours.monday === undefined || props.hours.monday.from === undefined || props.hours === null ? 'No hours available':(
                             <>
                                 <p>{`Monday:    ${isClosed('monday')}`}</p>
                                 <p>{`Tuesday:   ${isClosed('tuesday')}`}</p>
@@ -54,12 +53,9 @@ export default props => {
                         </div>
                     </div>
                 </div>
-            
             </div>
-            <div className="columns on-click" onClick={showDisplay}>
-                <div className="column is-offset-half is-half">
-                <i id={`access-${props.i}`} className={`fas fa-angle-down level-item`} > </i>
-                </div>
+            <div className="on-click" onClick={showDisplay}>
+                <i id={`access-${props.i}`} className={`fas fa-angle-down  make-center`} > </i>
             </div>
         </footer>
     )

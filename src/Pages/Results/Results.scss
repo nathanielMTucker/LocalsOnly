@@ -1,5 +1,4 @@
 #results{
-    
     overflow: hidden;
 }
 
@@ -9,11 +8,20 @@
 
 .side{
     overflow-y: scroll;
-    height: 93vh;
+    height: 94vh;
 }
 #map{
-    padding: 0rem;
+    padding: auto 0 0;
+    margin: 0;
     overflow: hidden;
     height: 93vh;
 }
 
+.result-card{
+    &:first-child{
+        padding-top: 1.25rem;
+    }
+    &:last-child{
+        margin-bottom: 1.25rem;
+    }
+}

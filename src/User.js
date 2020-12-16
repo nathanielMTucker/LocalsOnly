@@ -10,6 +10,7 @@ export const withUser = Component => props => (
 
 export default class User{
     constructor(){
+        this.ownerID = "";
         this.email = "";
         this.name = "";
         this.localTo = "";
@@ -20,6 +21,7 @@ export default class User{
       return !this.email === ""
     }
     set(user){
+      this.ownerID = user.ownerID;
       this.email = user.email;
       this.name = user.name;
       this.localTo = user.localTo;

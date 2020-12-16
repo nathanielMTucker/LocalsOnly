@@ -5,7 +5,7 @@ import PageTwo from './PageTwo';
 import PageThree from './PageThree';
 import axios from 'axios';
 import {fromAddress} from '../../globals';
-import {withServer} from '../../Server';
+import {withUser} from '../../User';
 import {compose} from 'recompose';
 
 
@@ -15,8 +15,7 @@ const hours = {
         to: '',
         closed: false
     }
-const NewLocal = props => {
-   
+const NewLocal = ({history, USER : {ownerID} }) => {
 
     const [days, setDays] = useState({
         monday:hours,
@@ -73,18 +72,23 @@ const NewLocal = props => {
     ]
     const onSubmit = e=>{
         e.preventDefault();
-        console.log(props.server);
+        
         axios.get(fromAddress(address))
-             .then(res=>{
-                axios.post(`${props.server.server}/locals/`,{
-                    address:address,
-                    details:details,
-                    hours:days,
-                    coors:res.data.results[0].geometry.location
+             .then(async ({data : {results : [{geometry : { location}}]}})=>{
+                 
+                await axios.post(`/api/createLocal`,{
+                    
+                        owner : ownerID,
+                        address:address,
+                        details:details,
+                        hours:days,
+                        coors:location
+                    
                 })
-                .then(res=>{
-                    alert("Thank you!");
-                    props.history.push(`local?id=${res.data.id}`)
+                .then(({_id})=>{
+                    console.log(_id);
+                    alert("Thank You!");
+                    history.push(`local?id=${_id}`);
                 })
                 .catch(err=>console.error(`From Server: ${err}`))
             })
@@ -125,4 +129,4 @@ const NewLocal = props => {
     )
 }
 
-export default compose(withFirebase, withServer)(NewLocal);
+export default compose(withFirebase, withUser)(NewLocal);

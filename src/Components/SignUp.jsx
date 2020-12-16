@@ -5,29 +5,30 @@ import {buttons} from '../Constants/IDs';
 
 
  
-export default props=> {
+export default ({user, setUser})=> {
   
-    let setUser = props.setUser;
-    let user = props.user;
-    let status = props.status;
-    let setStatus = props.setStatus;
-
-    
-    const checkPassword = ()=>{
-      if(user.passwordOne.length > 5){
-        document.getElementById('passwordOne').classList.add('is-success')
-        if(user.passwordTwo.length > 5){
-          if(user.passwordOne === user.passwordTwo){
-            document.getElementById('passwordOne').classList.add('is-success')
-            document.getElementById('passwordOne').classList.remove('is-danger')
-            setStatus({...status, user:true});
+    const checkPasswordMatch = ()=>{
+      const pass = document.getElementById('password');
+      const passMatch = document.getElementById('password_match');
+      const validateString = str => (/[a-zA-Z]+[@!#$%^&*]{0,}/.test(str))
+      
+        
+          if(pass.value === passMatch.value && (pass.value.length > 7 && passMatch.value.length > 7)){
+            if(validateString(pass.value) && validateString(passMatch.value)){
+              console.log("passcode mathces");
+              passMatch.classList.add('is-success')
+              passMatch.classList.remove('is-danger')
+              document.getElementById("sign-up-button").disabled = false
+              return;
+            }else{
+              console.log("no special char"); 
+            }
           }else{
-            document.getElementById('passwordOne').classList.add('is-danger');
-            document.getElementById('passwordOne').classList.remove('is-success');
-            setStatus({...status, user:false})
+            console.log("passcode mismatch");
           }
-        }
-      }
+          passMatch.classList.add('is-danger');
+          passMatch.classList.remove('is-success');
+          document.getElementById("sign-up-button").disabled = true
     }
   
     const onChange = event => {
@@ -35,8 +36,8 @@ export default props=> {
       if(name === "email") setUser({...user, [name]:value.replace(/\s/g, '')})
       else setUser({...user, [name]:value})
      
-      if(name === "passwordOne" || name === "passwordTwo"){
-        checkPassword();
+      if(name === "passwordTwo" || name === "passwordOne"){
+        checkPasswordMatch();
       }
       event.preventDefault();
   }
@@ -74,12 +75,16 @@ export default props=> {
           </div>
         </div>
         </label>
-        <label className="label">
-          Password
+        <label className="label level">
+          <span className="level-left">
+            <span className="level-item">Password</span> 
+            <small className="help level-item"> must contain a-z, A-Z, 0-9 and !@#$%^&*</small>
+          </span>
+        </label>
           <div className="field">
           <div className="control">
             <input
-            id="passwordOne"
+            id="password"
               name="passwordOne"
               value={user.passwordOne}
               onChange={onChange}
@@ -91,13 +96,13 @@ export default props=> {
             />
           </div>
         </div>
-        </label>
+        
         <label className="label">
           Confirm Password
           <div className="field">
           <div className="control">
             <input
-              id="passwordTwo"
+              id="password_match"
               name="passwordTwo"
               value={user.passwordTwo}
               onChange={onChange}
