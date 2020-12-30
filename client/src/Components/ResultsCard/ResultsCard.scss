@@ -1,0 +1,21 @@
+.access{
+    width: 100%;
+}
+
+button:focus {
+    outline: none;
+}
+
+.rows{
+    display: flex;
+    flex-direction: column;
+}
+
+.on-click{
+    cursor: pointer;
+}
+
+.make-center {
+    padding : 0 50%;
+    width : 50%;
+}
