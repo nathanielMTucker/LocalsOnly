@@ -2,11 +2,11 @@
   "name": "localsonly",
   "version": "0.5.1-alpha",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -21,10 +21,17 @@
   "dependencies": {
     "axios": "^0.21.0",
     "concurrently": "^5.3.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "countrycitystatejson": "^20.8.9-a",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "nodemon": "^2.0.6"
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.4.0",
+    "graphql-import": "^1.0.2",
+    "graphql-tools": "^7.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.6",
+    "ws": "^7.4.2"
   }
 }

@@ -72,13 +72,13 @@ const NewLocal = ({history, USER : {ownerID} }) => {
     ]
     const onSubmit = e=>{
         e.preventDefault();
-        
+        console.log(ownerID.toString()); 
         axios.get(fromAddress(address))
              .then(async ({data : {results : [{geometry : { location}}]}})=>{
-                 
+                
                 axios.post(`/api/createLocal`,{
                     
-                        owner : ownerID,
+                        owner : ownerID.toString(),
                         address:address,
                         details:details,
                         hours:days,

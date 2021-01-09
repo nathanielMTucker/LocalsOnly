@@ -21,7 +21,7 @@ export default class User{
       return !this.email === ""
     }
     set(user){
-      this.ownerID = user.ownerID;
+      this.ownerID = user.ownerID.toString();
       this.email = user.email;
       this.name = user.name;
       this.localTo = user.localTo;

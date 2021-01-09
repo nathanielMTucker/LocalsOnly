@@ -28,7 +28,7 @@ export default class Firebase {
     if(!firebase.apps.length){
       firebase.initializeApp(firebaseConfig);
     }
-
+    this.Auth = firebase.auth.Auth;
     this.auth = firebase.auth();
     }
 

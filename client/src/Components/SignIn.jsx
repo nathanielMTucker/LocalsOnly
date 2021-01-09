@@ -12,52 +12,66 @@ const INITIAL_STATE = {
   email: '',
   password: '',
   error: null,
-  rememberMe: false,
+  rememberMe: false
 };
 
 
 
 const SignInFormBase = props=>{
   
-    let [state, setState] = React.useState({...INITIAL_STATE});
+    let [state, setState] = React.useState({INITIAL_STATE});
 
     React.useEffect(()=>{
-      if(Storage){
-        state.email = localStorage.email;
-        state.rememberMe = localStorage.rememberMe;
-      }
+      
     },[])
 
     const onSubmit = event => {
-      const { email, password, rememberMe } = state;
-      
-      props.firebase
-        .signInWithEmailAndPassword(email, password)
-        .then((u) => {
-          if(rememberMe){
-            localStorage.setItem("rememberMe", true);
-            localStorage.setItem("email", email);
-          }
-          else if(!rememberMe && localStorage.getItem('email')){
-            localStorage.removeItem("email");
-            localStorage.rememberMe = false;
-            setState({...state, rememberMe: false})
-          }
-          setState({ ...INITIAL_STATE });
-        })
-        .catch(error => {
-          setState({ ...state, error:error });
-        });
-
       event.preventDefault();
+      
+      const { email, password } = state;
+      
+      if(state.rememberMe){
+       props.firebase.auth.setPersistence(props.firebase.Auth.Persistence.LOCAL)
+      .then(() => {
+        props.firebase
+          .signInWithEmailAndPassword(email, password)
+          .then((u) => {
+  
+            setState({INITIAL_STATE });
+          })
+          .catch(error => {
+            setState({ ...state, error:error });
+          });
+
+      })
+      .catch((error) => {
+      
+      }); 
+      }
+      else{
+      if(Storage){
+        localStorage.clear();
+      }
+       props.firebase.auth.setPersistence(props.firebase.Auth.Persistence.SESSION)
+        .then(() => (
+          props.firebase
+            .signInWithEmailAndPassword(email, password)
+            .then((u) => {
+    
+              setState({INITIAL_STATE });
+            })
+            .catch(error => {
+              setState({ ...state, error:error });
+            })
+      ))
+    }}
+
+    const onChange = ({target: {name, value}}) => {
+      setState({...state, [name]: value });
     };
 
-    const onChange = event => {
-      setState({...state, [event.target.name]: event.target.value });
-    };
-
-    const onCheck = (event) => {
-      setState({ ...state, rememberMe: event.target.checked });
+    const onRememberMe = ( {target : checked}) => {
+     setState({...state, rememberMe : checked}) 
     }
 
     const { email, password, error } = state;
@@ -97,7 +111,7 @@ const SignInFormBase = props=>{
         <Checkbox
           name="rememberMe"
           checked={state.rememberMe}
-          onChange={onCheck}
+          onChange={onRememberMe}
         />Remember My Email
         <div className="field">
           <div className="control">

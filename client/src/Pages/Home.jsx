@@ -1,37 +1,33 @@
-import React, { Component } from 'react'
- import {withUser} from '../User';
+import React from 'react'
+import {withUser} from '../User';
+import Weather from "../Components/Weather/Weather";
 
 
+export default withUser( ({USER : {name}})=>{
 
-class Home extends Component {
-    constructor(props){
-        super(props);
-
-        this.Welcome = this.Welcome.bind(this);
-    } 
-
-    Welcome(){
+   const Welcome = ()=>{
        
         const hour = new Date().getHours();
-        let greeting = ""
-        if(hour < 12 && hour >= 5){
+        let greeting
+        if(hour < 12 && hour >= 0){
             greeting = "Morning";
         }else if(hour >= 12 && hour <= 16){
             greeting = "Afternoon"
         }else{
             greeting = "Evening"
         }
-        return `Good ${greeting}, ${this.props.USER.name}!`
+        return `Good ${greeting}, ${name}!`
     }
-    render() {
-        return (
-            <div className="">
-                <span className="container">
-                    {this.Welcome()}
-                </span>
+    return (
+        <div className="columns">
+            <span className="column container">
+                {Welcome()}
+            </span>
+            <div className="column"></div>
+            <div className="column">
+                <Weather/>
             </div>
-        )
-    }
-}
-
-export default withUser(Home);
+        </div>
+    )
+    
+})

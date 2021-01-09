@@ -26,7 +26,7 @@ export default withRouter(geolocated({
   const updateDimensions = ()=>{setWidth(window.innerWidth)}
   const history = useHistory();
   const [search, setSearch] = useState('');
-  //const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
     
   useEffect(()=>{
    
@@ -57,16 +57,17 @@ export default withRouter(geolocated({
   }
   
   const getLocation = async loc =>{
-    // axios.get(fromLatLng(`${loc.coords.latitude},${loc.coords.longitude}`))
-    //      .then(
-    //        res=>{
-    //          parseAddress(res.data.results[0].formatted_address,
-    //           (err, add)=>{
-    //             setUserLocation(`${add.city}, ${add.state}`)
-    //           })
-    //         }
-    //       )
-    //      .catch(error=>console.log(error))
+    axios.get(fromLatLng(`${loc.coords.latitude},${loc.coords.longitude}`))
+         .then(
+           res=>{
+             parseAddress(res.data.results[0].formatted_address,
+              (err, add)=>{
+                console.log(add.city);
+                setUserLocation(`${add.city}, ${add.state}`)
+              })
+            }
+          )
+         .catch(error=>console.log(error))
   }
   const handleSubmit = event=>{
     event.preventDefault();

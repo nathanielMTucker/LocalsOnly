@@ -8,27 +8,21 @@ import { withUser } from '../../User';
 import {compose} from 'recompose';
 import {withRouter} from 'react-router';
 import axios from 'axios';
-export default compose(withUser, withRouter)(({location:{search}, madeSearch, setMadeSearch})=> {
+export default compose(withUser, withRouter)(({USER:{localTo}, location:{search}, madeSearch, setMadeSearch})=> {
     
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(()=>{  
-        
-            getData()
-        
+        getData()
     },[madeSearch]);
 
     const getData = async ()=>{
         
         let {what, where} = queryString.parse(search);
-
-        console.log(what);
-        console.log(where);
         
         axios.get(`/api/getLocals?what=${what}&where=${where}`)
         .then(res=>{
-            console.log(res.data);
             setItems(res.data);
             setLoading(false);
             setMadeSearch(false)  
