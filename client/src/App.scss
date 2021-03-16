@@ -7,13 +7,23 @@
 .loading{
     height: 50%;
     min-width: 100%;
-    img{
-        height: 20vh;
-        min-width: 10vw;
-    }
 }
 
-
+.title-container{
+    position: relative;
+    img{
+        width: 30%;
+        height: 30%;
+        border-radius: 0;
+    }
+    .center{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+    }
+}
 
 #profile-page{
     a{
@@ -74,9 +84,7 @@
     margin: -2vh -0.3vw 1.5vh 0;
     box-shadow: rgba(211, 211, 211, 0.2) 0 5px 0 0;
 }
-#amenities{
 
-}
 .side{
     overflow-y: scroll;
     height: 93vh;

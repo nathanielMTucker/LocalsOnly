@@ -1,11 +1,12 @@
-const {CREATE_LOCAL, UPDATE_USER_OWNS, GET_USER_OWNS} = require('./utils/localQueries');
+const {CREATE_LOCAL} = require('./utils/localQueries');
+const {UPDATE_USER_OWNS, GET_USER_OWNS} = require('./utils/userQueries')
 const sendQuery = require('./utils/sendQueries');
 const router = require('express').Router();
 
 router.route('/createLocal').post(async (req, res)=>{
             
-            const {owner : id, address, details, hours, coors} = req.body;
-            
+            const {owner : id, address, details, hours, coors, images} = req.body;
+            console.log(images);
             
             let variables = {
                 name : address.name,
@@ -39,17 +40,24 @@ router.route('/createLocal').post(async (req, res)=>{
                 },
                 owner : id,
                 reviewCount : 1,
-                hashtags : details.tags
+                hashtags : details.tags,
+                images : images
         };
     
         try {        
-                // const {createLocal: createdLocal} = await sendQuery(CREATE_LOCAL, variables);
+                const {createLocal: createdLocal} = await sendQuery(CREATE_LOCAL, variables);
                 // console.log(createdLocal);
-                // const {_id} = createdLocal;
-                console.log(id);
+                const {_id} = createdLocal;
+                
                 const {findUserByID} = await sendQuery(GET_USER_OWNS, {id});
-                console.log(findUserByID);
-                // res.status(200).json(createdLocal);
+                let {owns} = findUserByID;
+                // console.log(owns);
+                owns = [...owns, _id];
+                // console.log(owns);
+                // const {updateUser : {owns : updatedOwns}} = 
+                await sendQuery(UPDATE_USER_OWNS, {id, data : {owns}})
+                // console.log(updatedOwns);
+                res.status(200).json(createdLocal);
                 
         }catch(err){
             console.error(err);

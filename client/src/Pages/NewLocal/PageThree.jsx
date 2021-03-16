@@ -1,20 +1,20 @@
-import React from 'react' 
+import React, {useState} from 'react' 
 import Rating from '@material-ui/lab/Rating'
 
-import TagsInput from 'react-tagsinput';
+// import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'
+import ImageUpload from '../../Components/ImageUpload';
+// const cloudinary = require('cloudinary');
 
 const Dollar = Rating;
 
-export default ({details, setDetails}) => {
+export default ({details, setDetails, setImage ,image ,setLoading}) => {
 
     let {description, rating, price, tags} = details
-    const [charCount, setCharCount] = React.useState(150);
-    const [tagsCount, setTagsCount] = React.useState(6);
+    const [charCount, setCharCount] = useState(150);
 
     React.useEffect(() => {
         setCharCount(150-description.length)
-        setTagsCount(6-tags.length)
     }, [description, tags])
 
     const onChange = e=>{
@@ -27,9 +27,7 @@ export default ({details, setDetails}) => {
         const check = e.target.checked;
         setDetails({...details, [name]:check})
     }
-    const onTags=(t)=>{
-        setDetails({...details, tags:t})
-    }
+    
 
     return (
             <>
@@ -45,7 +43,12 @@ export default ({details, setDetails}) => {
             <label className="label has-text-grey">
                 Description
                 <div className="control">
-                    <textarea value={description} onChange={onChange} maxLength='150' rows='3' className="textarea" name="description" id="description" cols="30" required/>
+                    <textarea 
+                        value={description} onChange={onChange} 
+                        maxLength='150' rows='3' 
+                        className="textarea" name="description" 
+                        id="description" cols="30" required
+                    />
                 </div>
                 <div className="level">
                     <div className="level-left"></div>
@@ -57,22 +60,11 @@ export default ({details, setDetails}) => {
                 </div>
             </label>
             <label className="label has-text-grey">Photos
-            <div className="file has-name is-boxed">
-                <label className="file-label">
-                    <input className="file-input" type="file" name="resume"/>
-                    <span className="file-cta">
-                    <span className="file-icon">
-                        <i className="fas fa-upload"></i>
-                    </span>
-                    <span className="file-label">
-                        Choose a file…
-                    </span>
-                    </span>
-                    <span className="file-name">
-                    Screen Shot 2017-07-29 at 15.54.25.png
-                    </span>
-                </label>
-            </div>
+                <div className="file has-name is-boxed">
+                    <label className="file-label">
+                        <ImageUpload setImage={setImage} image={image} setLoading={setLoading}/>
+                    </label>
+                </div>
             </label>
             <label className="label has-text-grey">
                    Locals Only: <input onChange={onCheck} name="localsOnly" type="checkbox"/>
@@ -82,19 +74,7 @@ export default ({details, setDetails}) => {
                 </label>
             </div>
             <div className="column">
-            <label className="label has-text-grey">Tags
-                    <div className="control">
-                        <TagsInput maxTags={6} className="input" value={tags} name="tags" onChange={onTags} onlyUnique={true}/>
-                    </div>
-                    <div className="level">
-                    <div className="level-left"></div>
-                    <div className="level-right">
-                        <div className="level-item">
-                            <small className="help">{`${tagsCount} tags remaining`}</small>
-                        </div>
-                    </div>
-                </div>
-                </label>
+            
                 <label className="label has-text-grey">
                     Rating
                     <div className="control">

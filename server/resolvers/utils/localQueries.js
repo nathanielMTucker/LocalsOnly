@@ -78,7 +78,8 @@ fragment hourRange on Day{
                 dogFriendly 
             }
             city 
-            state 
+            state
+            images
         }
     }
 `
@@ -146,6 +147,7 @@ fragment hourRange on Day{
           delivery 
           dogFriendly 
         }
+        images
       }
     }
   }
@@ -168,7 +170,8 @@ const CREATE_LOCAL = `
         $quick:QuickInput,
         $owner:ID!,
         $reviewCount:Int,
-        $hashtags: [String!]
+        $hashtags: [String!],
+        $images : [String!]
     ){
         createLocal(data:{
             name:$name , 
@@ -184,9 +187,11 @@ const CREATE_LOCAL = `
             localsOnly:$localsOnly,
             address:$address,
             quick:$quick,
-            owner:$owner,
+            owner:{connect:$owner},
             reviewCount:$reviewCount,
-            hashtags:$hashtags}){
+            hashtags:$hashtags
+            images:$images
+        }){
             _id
         }
     }

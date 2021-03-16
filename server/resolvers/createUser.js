@@ -12,6 +12,7 @@ router.route('/createUser').post(async (req, res)=>{
         name : name,
         email : email,
         localTo : localTo,
+        role : "user",
         authID : authID,
         birthday : birthday
     }

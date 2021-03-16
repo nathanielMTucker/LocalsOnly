@@ -17,7 +17,7 @@ export default props =>
                 id={props.id}
                 name={props.name} 
                 description={props.description} 
-                image={IOM} 
+                image={props.image} 
                 rating={isNull(props.rating)}
                 reviewCount={isNull(props.reviewCount)}
             />

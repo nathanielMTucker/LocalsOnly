@@ -11,7 +11,7 @@ const SignInPage = () => (<SignInForm />);
 const INITIAL_STATE = {
   email: '',
   password: '',
-  error: null,
+  error: '',
   rememberMe: false
 };
 
@@ -19,7 +19,7 @@ const INITIAL_STATE = {
 
 const SignInFormBase = props=>{
   
-    let [state, setState] = React.useState({INITIAL_STATE});
+    let [state, setState] = React.useState(INITIAL_STATE);
 
     React.useEffect(()=>{
       

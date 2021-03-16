@@ -1,70 +1,81 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { withUser } from '../User'
 import {withFirebase} from '../Authentication';
 import {compose} from 'recompose';
+import axios from 'axios';
 
-const Profile = ({USER, firebase}) => {
-    const user = USER;
+const Profile = ({USER : user, firebase}) => {
+    
     let [state, city] = user.localTo.split(':');
-     
+    const [edit, setEdit] = useState(false);
+    const [userInfo, setUserInfo] = useState({
+        id : user.ownerID,
+        name : user.name,
+        email : user.email,
+        localTo : user.localTo
+    })
+
+    const updateUserInto = (e)=>{
+        e.preventDefault();
+        const {target : {name, value}} = e;
+        setUserInfo({...userInfo, [name] : value})
+    }
+
     return (
-        <div id="profile-page" className="pt-5 pl-0">
-            <div className="columns">
-                <aside className="menu column is-2" style={{height:"87vh",borderRightWidth: "medium", borderRightColor:'#FFE600', overflowY:'hidden'}}>
-                    <p className="menu-label">
-                        General
-                    </p>
-                    <ul className="menu-list">
-                        <li>Dashboard</li>
-                    </ul>
-                    <p className="menu-label">
-                        Account
-                    </p>
-                    <ul className="menu-list">
-                        <li>
-                            Update Info
-                            <ul>
-                                <li>Change Name</li>
-                                <li>Change Local</li>
-                            </ul>
-                        </li>
-                        <li>Upgrade Account</li>
-                    </ul>
-                    <p className="menu-label">
-                        Authentication
-                    </p>
-                    <ul className="menu-list">
-                        <li>
-                        Update Login
-                        <ul>
-                            <li>Update Email Address</li>
-                            <li>Update Password</li>
-                        </ul>
-                        </li>
-                        <li><a href='/' onClick={()=>firebase.signOut()}>Sign Out</a></li>
-                        <li ><span className="has-background-error">Delete Account</span></li>
-                    </ul>
-                    
-                </aside>
+        <div id="profile-page" className="pt-5 pl-0 container">
+            <h1 className="title">
+                    Profile { edit ? 
+                    <div>
+                        <button className="button is-danger" onClick={e=>{
+                                e.preventDefault();
+                                setEdit(false)
+                            }}>
+                                <small className="help">
+                                    cancel
+                                </small>
+                            </button>
+                        <button className="button is-primary" onClick={e=>{
+                            e.preventDefault();
+                            axios.put('/api/updateUser',{
+                                id : userInfo.id,
+                                name : userInfo.name,
+                                email : userInfo.email,
+                                localTo : userInfo.localTo
+                            }).then(res=>{
+                                {/* console.log(res); */}
+                                setEdit(false);
+                            }).catch(err=>{
+                                console.log(err);
+                            })
+                            }}
                         
-                <div className="column">
-                    <h1 className="title">
-                        Your Info
-                        
-                    </h1>
-                    <div className="container">
-                        <p>Name: {user.name === '' ? <a className="has-text-info" href="#">Add</a> : (<p></p>)}</p>
-                        <p>Email:  {user.email === '' ? <a className="has-text-info" href="#">Add</a> : user.email}</p>
-                        <p>Local:  {user.localTo === '' ? <a className="has-text-info" href="#">Add</a> : `${city}, ${state}`}</p>
-                        <p>Soft Local: Feature still in development. Learn about upcoming features <a href="/upcoming-features">here.</a></p>
+                        >
+                            <small className="help">submit</small>
+                        </button>
                     </div>
-                    
-                </div>
+                    :
+                        <button onClick={(e)=>{
+                        e.preventDefault();
+                        setEdit(true);
+                        }}><small className="help is-info">edit</small></button>}
+            </h1>
+            <div className="">
+                <p>Name: {
+                    user.name === '' ? <a className="has-text-info" href="#">Add</a> : 
+                    edit ? <input className="input" type="text" value={userInfo.name} onChange={updateUserInto} name="name"/> : 
+                    user.name}</p>
+                <p>Email:  {
+                    user.email === '' ? <a className="has-text-info" href="#">Add</a> : 
+                    edit ? <input className="input" type="text" value={userInfo.email} onChange={updateUserInto} name="email"/> :
+                    user.email}</p>
+                <p>Local:  {
+                    user.localTo === '' ? <a className="has-text-info" href="#">Add</a> :
+                    edit ? <input className="input" type="" value={userInfo.localTo} onChange={updateUserInto} name="localTo"/> :
+                    `${city}, ${state}`}</p>
+                {/* <p>Soft Local: Feature still in development. Learn about upcoming features <a href="/upcoming-features">here.</a></p> */}
             </div>
             <footer>
-                <small className="help">This is all the info we store. If you would like to see how it is used, click 
-                    <a href="/how-data-is-used"> here.</a>
-                </small>
+                <button className="button is-danger is-outlined is-small">Delete Account</button>
             </footer>
         </div>
     )
