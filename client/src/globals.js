@@ -29,4 +29,8 @@ const fromAddress = address => {
     return `https://maps.googleapis.com/maps/api/geocode/json?address=${a}&key=${API_KEY}`;
 }
 
+const imageURL = image =>{
+    return `https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${image}`;
+}
+
 module.exports = {STATES, API_KEY, fromLatLng, fromAddress, getAbbrs};

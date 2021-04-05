@@ -19,14 +19,36 @@ import {compose} from 'recompose';
 import Opening from './Pages/Opening';
 import Profile from './Pages/Profile';
 import {withUser} from './User';
-import WelcomeAnimation from './Components/WelcomeAnimation'
-
+import Upcoming from './Pages/Upcoming';
 
 export default compose(withFirebase, withUser)((props)=>{
   const [madeSearch, setMadeSearch] = useState(true);
   const [authUser, setAuthUser] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const abortController = new AbortController();
+
+  const setUser = res =>{
+    const data = res.data
+    props.USER.set({
+      ownerID : data._id,
+      name: data.name,
+      email: data.email,
+      localTo: data.localTo,
+      role : 'admin',
+      softLocalTo : data.softLocalTo
+    })
+    setUserInfo(data);
+  }
+
+  const setAuth = auth => {
+    setAuthUser(auth);
+    if(auth){
+      axios.get(`/api/getUser?auth=${auth.uid}`)
+           .then(setUser).catch(err=>{
+          setUserInfo(null)
+        })
+    }
+  }
   
   useEffect(()=>{
     const loc = window.location.href+'';
@@ -34,30 +56,7 @@ export default compose(withFirebase, withUser)((props)=>{
     if(!loc.includes('localhost') && loc.includes('http://'))
       window.location.href = loc.replace('http://','https://');
 
-    const listener = props.firebase.auth.onAuthStateChanged(auth => {
-      if(auth){
-        setAuthUser(auth);
-        axios.get(`/api/getUser?auth=${auth.uid}`)
-          .then((res)=>{
-            const data = res.data
-            
-            
-            props.USER.set({
-              ownerID : data._id,
-              name: data.name,
-              email: data.email,
-              localTo: data.localTo,
-              role : 'admin',
-              softLocalTo : data.softLocalTo
-            })
-            setUserInfo(data);
-          }).catch(err=>{
-            setUserInfo(null)
-          })
-      }else{
-        setAuthUser(null)
-      }
-      })
+    const listener = props.firebase.auth.onAuthStateChanged(setAuth)
     return async function cleanup(){
       await listener();
       abortController.abort();
@@ -65,9 +64,8 @@ export default compose(withFirebase, withUser)((props)=>{
     
   },[])
 
+    if(authUser && userInfo)
       return (
-      <>
-      {authUser && userInfo ?(
         <div className="section pb-0">
           <Router>
             <Nav setMadeSearch={setMadeSearch}/>
@@ -77,35 +75,22 @@ export default compose(withFirebase, withUser)((props)=>{
                 <Route path={ROUTES.SEARCH} component={()=><Results setMadeSearch={setMadeSearch} madeSearch={madeSearch}/>}/>
                 <Route path={ROUTES.LOCAL} component={Local}/>
                 <Route path={ROUTES.PROFILE} component={Profile}/>
+                <Route path={'/upcoming-features'} component={Upcoming}/>
                 <Route render={() => <Redirect to={ROUTES.HOME}/>}/>
-              </Switch>
-        </Router>
+            </Switch>
+          </Router>
         </div>
-       ):(
-        <Router>
-          <Switch>
-            <Route exact path={ROUTES.HOME} component={Opening}/>
-            <Route path={ROUTES.SIGNUP} component={Registration}/>
-          </Switch>
-        </Router>
-      )}
-      </>
+      )
+  
+    return(
+      <Router>
+        <Switch>
+          <Route exact path={ROUTES.HOME} component={Opening}/>
+          <Route path={ROUTES.SIGNUP} component={Registration}/>
+        </Switch>
+      </Router>
     )
   }
-  )
-
-// const ProtectedRoute = ({auth, component:Component, ...rest})=>{
-//   return(
-//     <Route
-//     {...rest}
-//     render ={()=>auth?(
-//       <Component/>
-//     ):(
-//       <Redirect to={ROUTES.HOME}/>
-//     )}
-    
-//     />
-//   )
-// }
+)
 
 

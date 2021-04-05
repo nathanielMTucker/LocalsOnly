@@ -8,7 +8,8 @@ import { withUser } from '../../User';
 import {compose} from 'recompose';
 import {withRouter} from 'react-router';
 import axios from 'axios';
-export default compose(withUser, withRouter)(({USER:{localTo}, location:{search}, madeSearch, setMadeSearch})=> {
+import { userInfo } from 'os';
+export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{search}, madeSearch, setMadeSearch})=> {
     
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -20,10 +21,18 @@ export default compose(withUser, withRouter)(({USER:{localTo}, location:{search}
     const getData = async ()=>{
         
         let {what, where} = queryString.parse(search);
-        
+        // console.log(role);
+        // console.log(localTo);
         axios.get(`/api/getLocals?what=${what}&where=${where}`)
         .then(res=>{
-            setItems(res.data);
+            console.log(res.data);
+            res.data.forEach(local =>{
+                const localTo = `${local.state}:${local.city}`
+                // if(role === "admin" || !local.isLocalOnly || (local.isLocalOnly && localTo === userInfo.localTo)){
+                    setItems([...items, local]);
+                // }
+            })
+           
             setLoading(false);
             setMadeSearch(false)  
         })
@@ -45,8 +54,8 @@ export default compose(withUser, withRouter)(({USER:{localTo}, location:{search}
                 <p>You can help by adding new locals <Link className="is-text is-focused" to='/createNewLocal'>here</Link>.</p>
                 </div>
             </div>)
-            ;
-        else if(items[0].message !== undefined){
+            
+        else if(items[0].message){
             return (
                 <div>
                     <p>{items[0].message}</p>
@@ -68,6 +77,7 @@ export default compose(withUser, withRouter)(({USER:{localTo}, location:{search}
                     reviewCount={local.reviewCount}
                     hours={local.hours}
                     address={local.address}
+                    image={local.images[0]}
                 />
             );
     }

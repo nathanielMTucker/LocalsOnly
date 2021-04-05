@@ -11,6 +11,15 @@ query ($auth : String!) {
     }
   }
 `
+const GET_USER_FOR_UPDATE = `
+  query ($id : ID!){
+    findUserByID(id:$id){
+      name
+      email
+      localTo
+    }
+  }
+  `
 const CREATE_USER = `
 mutation($name : String!, $email : String!, $localTo : String!, $authID : String!, $birthday : BirthdayInput){
     createUser(data:{
@@ -29,7 +38,9 @@ mutation($name : String!, $email : String!, $localTo : String!, $authID : String
 const GET_USER_OWNS = `
 query($id:ID!){
   findUserByID(id:$id){
-    owns
+    owns:{
+      _id
+    }
   }
 }
 `
@@ -46,4 +57,6 @@ module.exports = {
   CREATE_USER,
   UPDATE_USER_OWNS,
   GET_USER_OWNS,
+  GET_USER_FOR_UPDATE, 
+  
 }

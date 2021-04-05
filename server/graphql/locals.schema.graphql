@@ -1,13 +1,15 @@
 
 
-type User @collection(name: "users") {
+type User @collection(name: "users") @relation {
     name : String
     authID : String
     email : String
     localTo : String
     softLocalTo : [String]
-    owns : [ID]
+    owns : [Local]
     birthday : Birthday
+    updateLocalTo : String,
+    dateUpdateLocalTo : Date 
 }
 
 type Birthday @embedded {
@@ -17,9 +19,9 @@ type Birthday @embedded {
 }
 
 
-type Local @collection(name: "locals"){
+type Local @collection(name: "locals") @relation {
     name : String!
-    owner : ID!
+    owner : User!
     description : String!
     reviews : [Reviews!]
     reviewCount : Int
@@ -36,7 +38,7 @@ type Local @collection(name: "locals"){
     quick : Quick
     city : String!
     state : String!
-
+    images : [String!]
 }
 
 
@@ -71,9 +73,15 @@ type Day @embedded{
     to : String
     closed : Boolean
 }
-type Reviews @embedded {
-    rating : Int!
+type Reviews @relation {
+    local : Local!
+    reviewer : User!
     review : String
+    rating : Int
+    upvote : Int
+    downvote : Int
+    shares : Int
+    actual : Int
 }
 
 type Geo @embedded{

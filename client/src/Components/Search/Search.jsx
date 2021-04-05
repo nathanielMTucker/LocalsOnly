@@ -1,25 +1,18 @@
 import React from 'react'
-import {STATES} from '../../globals'
 
-export default ({loc, handleSubmit, handleInput,getCities,  className}) => {
+
+export default ({loc, handleSubmit, handleInput, className}) => {
   
-  const [cityOption, setCityOption] = React.useState([])
+  
   const [showResults, setShowResults] = React.useState(false);
 
-  React.useEffect(()=>{
-    setCityOption(getCities('US', loc.state).map((city, i)=>(
-      <option key={i} value={city}>{city}</option>
-    )))
-  },[loc.state])
+  
 
   const toggle = ()=>{
       if(document.getElementById('search'))
         document.getElementById('search').classList.toggle('is-active')
     }
-  const StateOptions = ()=> STATES.map((state, i)=>(
-    <option key={i} value = {state}>{state}</option>
-  ))
-  const CityOptions = ()=>cityOption.map(city=>city)
+  
 
   return (
     
@@ -30,19 +23,10 @@ export default ({loc, handleSubmit, handleInput,getCities,  className}) => {
       <input type="text" className="input" placeholder="What to do?" name="what" value={loc.search} onChange={handleInput} />
     </p>
     <div className="control">
-      <input className="input" type="text" name="state" value={loc.state} onChange={handleInput} list="statelist"/>
-      <datalist  id="statelist">
-        {StateOptions()}
-      </datalist>
-    </div>
-    <p className="control">
-    <input className="input" type="text" name="city" value={loc.city} onChange={handleInput} list="citylist"/>
-    <datalist id="citylist">
-     
-        {CityOptions()}
+      <input className="input" type="text" name="state" value={loc.state} onChange={handleInput}/>
       
-      </datalist>
-    </p>
+    </div>
+    
     <p className="control">
       <button type="submit" className="button is-primary" onClick={toggle}>
         <i className="fas fa-search"/>
