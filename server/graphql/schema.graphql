@@ -1,0 +1,346 @@
+directive @embedded on OBJECT
+directive @collection(name: String!) on OBJECT
+directive @index(name: String!) on FIELD_DEFINITION
+directive @resolver(
+  name: String
+  paginated: Boolean! = false
+) on FIELD_DEFINITION
+directive @relation(name: String) on FIELD_DEFINITION
+directive @unique(index: String) on FIELD_DEFINITION
+type Address {
+  city: String
+  zip: String
+  state: String
+  apt: String
+  street: String
+}
+
+# 'Address' input values
+input AddressInput {
+  street: String
+  apt: String
+  city: String
+  state: String
+  zip: String
+}
+
+type Birthday {
+  day: Int
+  month: Int
+  year: Int
+}
+
+# 'Birthday' input values
+input BirthdayInput {
+  day: Int
+  month: Int
+  year: Int
+}
+
+scalar Date
+
+type Day {
+  from: String
+  to: String
+  closed: Boolean
+}
+
+# 'Day' input values
+input DayInput {
+  from: String
+  to: String
+  closed: Boolean
+}
+
+type Geo {
+  lat: String!
+  lng: String!
+}
+
+# 'Geo' input values
+input GeoInput {
+  lat: String!
+  lng: String!
+}
+
+type Hours {
+  sunday: Day
+  tuesday: Day
+  wednesday: Day
+  monday: Day
+  friday: Day
+  thursday: Day
+  saturday: Day
+}
+
+# 'Hours' input values
+input HoursInput {
+  monday: DayInput
+  tuesday: DayInput
+  wednesday: DayInput
+  thursday: DayInput
+  friday: DayInput
+  saturday: DayInput
+  sunday: DayInput
+}
+
+type Local {
+  website: String
+  city: String!
+  name: String!
+  searchTags: [String!]
+  phoneNumber: String
+  state: String!
+  description: String!
+  # The document's ID.
+  _id: ID!
+  geo: Geo
+  price: Int
+  hours: Hours
+  rating: Int
+  reviews: [Reviews!]
+  localsOnly: Boolean
+  address: Address
+  quick: Quick
+  owner: ID!
+  reviewCount: Int
+  images: [String!]
+  hashtags: [String!]
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Local' input values
+input LocalInput {
+  name: String!
+  owner: ID!
+  description: String!
+  reviews: [ID!]
+  reviewCount: Int
+  rating: Int
+  hashtags: [String!]
+  searchTags: [String!]
+  address: AddressInput
+  price: Int
+  hours: HoursInput
+  localsOnly: Boolean
+  website: String
+  phoneNumber: String
+  geo: GeoInput
+  quick: QuickInput
+  city: String!
+  state: String!
+  images: [String!]
+}
+
+# The pagination object for elements of type 'Local'.
+type LocalPage {
+  # The elements of type 'Local' in this page.
+  data: [Local]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+
+# The `Long` scalar type
+ represents non-fractional signed whole numeric values.
+# Long can represent values between -(2^63) and 2^63 - 1.
+scalar Long
+
+type Mutation {
+  # Update an existing document in the collection of 'User'
+  updateUser(
+    # The 'User' document's ID
+    id: ID!
+    # 'User' input values
+    data: UserInput!
+  ): User
+  # Create a new document in the collection of 'User'
+  createUser(
+    # 'User' input values
+    data: UserInput!
+  ): User!
+  # Create a new document in the collection of 'Local'
+  createLocal(
+    # 'Local' input values
+    data: LocalInput!
+  ): Local!
+  # Delete an existing document in the collection of 'Local'
+  deleteLocal(
+    # The 'Local' document's ID
+    id: ID!
+  ): Local
+  # Create a new document in the collection of 'Reviews'
+  createReviews(
+    # 'Reviews' input values
+    data: ReviewsInput!
+  ): Reviews!
+  # Update an existing document in the collection of 'Reviews'
+  updateReviews(
+    # The 'Reviews' document's ID
+    id: ID!
+    # 'Reviews' input values
+    data: ReviewsInput!
+  ): Reviews
+  # Delete an existing document in the collection of 'User'
+  deleteUser(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  # Delete an existing document in the collection of 'Reviews'
+  deleteReviews(
+    # The 'Reviews' document's ID
+    id: ID!
+  ): Reviews
+  # Update an existing document in the collection of 'Local'
+  updateLocal(
+    # The 'Local' document's ID
+    id: ID!
+    # 'Local' input values
+    data: LocalInput!
+  ): Local
+}
+
+type Query {
+  # Find a document from the collection of 'Local' by its id.
+  findLocalByID(
+    # The 'Local' document's ID
+    id: ID!
+  ): Local
+  localByLocation(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+    city: String!
+    state: String!
+  ): LocalPage!
+  allUsers(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): UserPage!
+  # Find a document from the collection of 'User' by its id.
+  findUserByID(
+    # The 'User' document's ID
+    id: ID!
+  ): User
+  userAuth(authID: String!): User
+  # Find a document from the collection of 'Reviews' by its id.
+  findReviewsByID(
+    # The 'Reviews' document's ID
+    id: ID!
+  ): Reviews
+  allLocals(
+    # The number of items to return per page.
+    _size: Int
+    # The pagination cursor.
+    _cursor: String
+  ): LocalPage!
+}
+
+type Quick {
+  dogFriendly: Boolean
+  twentyOnePlus: Boolean
+  takeout: Boolean
+  familyFriendly: Boolean
+  dineIn: Boolean
+  delivery: Boolean
+}
+
+# 'Quick' input values
+input QuickInput {
+  twentyOnePlus: Boolean
+  familyFriendly: Boolean
+  takeout: Boolean
+  dineIn: Boolean
+  delivery: Boolean
+  dogFriendly: Boolean
+}
+
+type Reviews {
+  review: String
+  downvote: Int
+  # The document's ID.
+  _id: ID!
+  local: Local!
+  shares: Int
+  rating: Int
+  reviewer: User!
+  actual: Int
+  upvote: Int
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'Reviews' input values
+input ReviewsInput {
+  local: ReviewsLocalRelation
+  reviewer: ReviewsReviewerRelation
+  review: String
+  rating: Int
+  upvote: Int
+  downvote: Int
+  shares: Int
+  actual: Int
+}
+
+# Allow manipulating the relationship between the types 'Reviews' and 'Local' using the field 'Reviews.local'.
+input ReviewsLocalRelation {
+  # Create a document of type 'Local' and associate it with the current document.
+  create: LocalInput
+  # Connect a document of type 'Local' with the current document using its ID.
+  connect: ID
+}
+
+# Allow manipulating the relationship between the types 'Reviews' and 'User' using the field 'Reviews.reviewer'.
+input ReviewsReviewerRelation {
+  # Create a document of type 'User' and associate it with the current document.
+  create: UserInput
+  # Connect a document of type 'User' with the current document using its ID.
+  connect: ID
+}
+
+scalar Time
+
+type User {
+  birthday: Birthday
+  name: String
+  email: String
+  # The document's ID.
+  _id: ID!
+  owns: [ID]
+  localTo: String
+  dateUpdateLocalTo: Date
+  authID: String
+  updateLocalTo: String
+  softLocalTo: [String]
+  # The document's timestamp.
+  _ts: Long!
+}
+
+# 'User' input values
+input UserInput {
+  name: String
+  authID: String
+  email: String
+  localTo: String
+  softLocalTo: [String]
+  owns: [ID]
+  birthday: BirthdayInput
+  updateLocalTo: String
+  dateUpdateLocalTo: Date
+}
+
+# The pagination object for elements of type 'User'.
+type UserPage {
+  # The elements of type 'User' in this page.
+  data: [User]!
+  # A cursor for elements coming after the current page.
+  after: String
+  # A cursor for elements coming before the current page.
+  before: String
+}
+

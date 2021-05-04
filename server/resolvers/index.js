@@ -3,6 +3,7 @@ const getLocal = require('./getLocal');
 const getLocals = require('./getLocals');
 const getUser = require('./getUser');
 const createUser = require('./createUser');
+const updateUser = require('./updateUser');
 
 
 module.exports = {
@@ -10,5 +11,6 @@ module.exports = {
      getLocal,
      getLocals,
      getUser,
-     createUser   
+     createUser ,
+     updateUser
 }

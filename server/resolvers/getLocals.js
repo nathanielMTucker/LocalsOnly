@@ -1,8 +1,8 @@
-const {GET_LOCALS_WHAT_AND_WHERE, QUICK_LOOK_LOCAL} = require('./utils/localQueries');
+const {QUICK_LOOK_LOCAL} = require('./utils/localQueries');
 const sendQuery = require('./utils/sendQueries');
 const response = require('./utils/response');
 const router = require('express').Router();
-const getCities = require('countrycitystatejson').getCities;
+// const getCities = require('countrycitystatejson').getCities;
 const ABBRS = [
     "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS",
     "KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY",
@@ -27,15 +27,16 @@ const getAbbrs = state=>{
     return state
 }
 router.route('/getLocals').get(async (req, res)=>{
-    try {        
+        // console.log("Entered");
         let {what, where} = req.query;
-        
+
         what = what.replace(',','')
         what = what.split(' ')
-        
+        console.log(what);
+        console.log(where);
         let [city, state] = where.split(' ');
        
-        state = getAbbrs(state)
+        state = state.toLowerCase();
         city = city.toLowerCase();
         
         const query = QUICK_LOOK_LOCAL;
@@ -43,9 +44,11 @@ router.route('/getLocals').get(async (req, res)=>{
             city ,
             state 
         }
+    try { 
         let {localByLocation : {data}} = await sendQuery(query, variables);
-        
+        // console.log(localByLocation);
         if(what[0] === 'all' && what.length === 1){
+            // console.log(data);
             res.status(200).json(data)
         }else{
             const regex = new RegExp(what.join("|"), "i")
@@ -53,11 +56,11 @@ router.route('/getLocals').get(async (req, res)=>{
         
             data.forEach(local=>{
                 if(regex.test(local.name) || regex.test(local.description)){
-                    filtered.push(local)
+                    filtered = [...filtered, local];
                 }
             })
           
-
+            console.log(filtered);
             res.status(200).json(filtered)
         }
 

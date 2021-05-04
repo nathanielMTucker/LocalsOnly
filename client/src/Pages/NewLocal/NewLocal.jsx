@@ -9,7 +9,6 @@ import {withUser} from '../../User';
 import {compose} from 'recompose';
 
 
-
 const hours = {
         from: '',
         to: '',
@@ -51,6 +50,8 @@ const NewLocal = ({history, USER : {ownerID} }) => {
         localsOnly:false
     })
     let [num, setNum] = useState(0);
+    const [image, setImage] = useState([]);
+    const [loadingImage, setLoadingImages] = useState(false);
     
     const onClick = e =>{
         e.preventDefault();
@@ -68,11 +69,14 @@ const NewLocal = ({history, USER : {ownerID} }) => {
     const pages = [  
         <PageOne address={address} setAddress={setAddress}/>, 
         <PageTwo days={days} setDays={setDays}/>, 
-        <PageThree details={details} setDetails={setDetails}/>
+        <PageThree details={details} setDetails={setDetails} loading={loadingImage} setLoading={setLoadingImages} setImage={setImage} image={image}/>
     ]
     const onSubmit = e=>{
         e.preventDefault();
-        console.log(ownerID.toString()); 
+        // console.log(ownerID.toString()); 
+        for(let i = 0; i < image.length; i++){
+            console.log(image[i]);
+        }
         axios.get(fromAddress(address))
              .then(async ({data : {results : [{geometry : { location}}]}})=>{
                 
@@ -82,8 +86,8 @@ const NewLocal = ({history, USER : {ownerID} }) => {
                         address:address,
                         details:details,
                         hours:days,
-                        coors:location
-                    
+                        coors:location,
+                        images : image
                 })
                 .then(res=>{
                    
@@ -110,7 +114,7 @@ const NewLocal = ({history, USER : {ownerID} }) => {
                     Create New Local
                 </h1>
                 <div className="box has-background-primary-light">
-                    <form onSubmit={onSubmit} className="form">
+                    <form method="POST" encType="multipart/form-data" onSubmit={onSubmit} className="form">
                         {pages[num]}
                         <div className="level">
                             <div className="level-left"></div>
@@ -119,7 +123,7 @@ const NewLocal = ({history, USER : {ownerID} }) => {
                                 {num === 1 ? <button onClick={onClick} value='4' className="button">Back</button>:''}
                                 {num === 1 ? <button onClick={onClick} value='3' name='skip'  className="button">Next</button> :''}
                                 {num === 2 ? <button onClick={onClick} value='4' className="button">Back</button>:''}
-                                {num === 2 ? <button type="submit" className="button">Submit</button>:''}
+                                {num === 2 ? <button type="submit" disabled={loadingImage} className="button">Submit</button>:''}
                             </div>
                         </div>
                     </form>

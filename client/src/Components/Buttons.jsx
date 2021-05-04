@@ -4,25 +4,23 @@ import {useHistory} from 'react-router-dom'
 import * as ROUTES from '../Constants/routes';
 import {withFirebase} from '../Authentication';
 
-export const LogoutButton = withFirebase(({firebase})=>{
-  const history = useHistory();
-  
-    return (
-        <React.Fragment>
-        <button title="Logout" className="button is-primary" onClick={()=>{firebase.signOut(); history.push(ROUTES.HOME);}}> 
-          <i className="fas fa-door-open"></i>
+export const LogoutButton = withFirebase(({firebase}) => {
+    const history = useHistory();
+   return <React.Fragment>
+        <button title="Logout" className="button is-primary" 
+            onClick={()=>{
+                firebase.signOut(); history.push(ROUTES.HOME);
+        }}> 
+            <i className="fas fa-door-open"/>
         </button>
-        
-        </React.Fragment>
-    )
+    </React.Fragment>
 })
 
 export const LogoLinkButton = ()=>(
     <Link to={ROUTES.HOME}>
-        <img src={require('../img/LocalsOnly.png')} alt="localsonly-logo"/>
+        <img src="../LocalsOnly.png" alt="localsonly"/>
     </Link>
 )
-
 
 export const LocalizeLinkButton = ()=>{
     const toggle = ()=>{
@@ -33,13 +31,13 @@ export const LocalizeLinkButton = ()=>{
     }
     return (
         <Link title="New Local" className="button has-background-primary-light" to={ROUTES.NEWLOCAL} onClick={toggle}>
-            <i className="fas fa-plus-circle"></i>
+            <i className="fas fa-plus-circle"/>
         </Link> 
     )
 }
 
 export const UserProfileButton = ()=>(
     <Link title="Profile" className="button is-main" to={ROUTES.PROFILE}>
-    <i className="fas fa-user-astronaut"></i>
+        <i className="fas fa-user-astronaut"/>
     </Link>
 )

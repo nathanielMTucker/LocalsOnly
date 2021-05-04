@@ -14,7 +14,7 @@ export default GoogleApiWrapper({
     const initialCenter=()=>{
         let geo = DEF_CENTER 
       
-        if(props.markers !== undefined && props.markers[0] !== undefined && props.markers[0].lat !== undefined){
+        if( props.markers !== undefined && props.markers[0] !== undefined && props.markers[0] !== null && props.markers[0].lat !== undefined){
             if(props.markers.length > 1){
                 let lat = 0
                 let lng = 0
@@ -36,8 +36,8 @@ export default GoogleApiWrapper({
         return geo ;
     }
     
-    const handleMarkers=()=>{
-        if(props.markers !== undefined && props.markers[0] !== undefined && props.markers[0].lat !== undefined ){
+    const handleMarkers= ()=>{
+        if(props.markers !== undefined && props.markers[0] !== undefined && props.markers[0] !== null && props.markers[0].lat !== undefined ){
             if(props.markers.length > 1){
                 var m = []
                 props.markers.forEach((marker, id)=>{

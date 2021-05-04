@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom';
+const IOM = require('../../img/LocalsOnly.png')
 export default props => {
     const rating = ()=>{
         var r = [];
@@ -10,12 +11,18 @@ export default props => {
         }
         return r;
     }
+    // const getImage = ()=>{
+    //     if(item.images && item.images.length > 0){
+    //         return 
+    //     }
+    //     else return IOM
+    // }
     return (
         <>
         <article className="media is-hidden-mobile">
             <div className="media-left ">
                 <figure className="image is-96x96">
-                    <img src={props.image} alt="LocalsOnly"/>
+                    <img src={`https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${props.image}` || IOM} alt="LocalsOnly"/>
                 </figure>
             </div>
             <div className="media-content">
