@@ -4,13 +4,7 @@ import App from './App';
 import Firebase, {FirebaseContext} from './Authentication';
 import User, {UserContext} from './User';
 import axios from 'axios';
-
-const getVars = async ()=>{
-  await axios.get('env/var?auth=Ro9JFA:4Su~%p@M7hnDTLpQfZ4j')
-  .then(({data})=> data)
-}
-
-
+// import {register} from "./serviceWorker";
 
 ReactDOM.render(
     <FirebaseContext.Provider value={new Firebase(async ()=>{
@@ -24,4 +18,4 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-
+// register();

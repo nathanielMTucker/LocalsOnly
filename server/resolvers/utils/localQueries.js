@@ -41,7 +41,9 @@ fragment hourRange on Day{
     query($id:ID!){
         findLocalByID(id:$id){
             name
-            owner
+            owner{
+                _id
+            }
             description 
             reviews{
                 rating
@@ -116,7 +118,9 @@ fragment hourRange on Day{
     localByLocation(city : $city, state : $state){
       data{
         _id
-        owner
+        owner{
+            _id
+        }
         description
         name
         address{

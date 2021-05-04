@@ -1,13 +1,6 @@
 import React from 'react'
 
-
-export default ({loc, handleSubmit, handleInput, className}) => {
-  
-  
-  const [showResults, setShowResults] = React.useState(false);
-
-  
-
+const Search = ({loc, handleSubmit, handleInput, className}) => {
   const toggle = ()=>{
       if(document.getElementById('search'))
         document.getElementById('search').classList.toggle('is-active')
@@ -16,7 +9,6 @@ export default ({loc, handleSubmit, handleInput, className}) => {
 
   return (
     
-    <>
     <form className={`field has-addons ${className}`} onSubmit={handleSubmit}>
     
     <p className="control">
@@ -32,14 +24,9 @@ export default ({loc, handleSubmit, handleInput, className}) => {
         <i className="fas fa-search"/>
       </button>
     </p>
-    <p className="control">
-      <button type="button" className="button" onClick={()=>{setShowResults(!showResults)}}>
-        <i className="fas fa-filter"/>
-      </button>
-
-    </p>
+    
   </form>
-    {showResults && <div id="filter-search">I am a filter :D</div>}
-    </>
   )
 }
+
+export default Search;

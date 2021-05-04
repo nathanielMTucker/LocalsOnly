@@ -7,7 +7,6 @@ import axios from 'axios';
 import {fromAddress} from '../../globals';
 import {withUser} from '../../User';
 import {compose} from 'recompose';
-const shortid = require('shortid');
 
 
 const hours = {

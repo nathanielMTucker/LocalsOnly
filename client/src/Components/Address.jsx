@@ -1,5 +1,7 @@
 import React from 'react'
 import {STATES} from '../globals';
+import Input, {SelectInput} from './Input';
+
 export default props=>{
     let address = props.address;
     let setAddress = props.setAddress;
@@ -18,40 +20,40 @@ export default props=>{
         )
 
     }
+
+    const StreetInput = () => (
+        <Input placeholder="Street" name="street" value={address.street} onChange={onChange}/>
+    )
+
+    const AptInput = () => (
+        <Input placeholder="Apt." name="apt" value={address.apt} onChange={onChange}/>
+    )
+
+    const CityInput = () => (
+        <Input placeholder="City/Town" name="city" value={address.city} onChange={onChange}/>
+    )
+
+    const ZipInput = () => (
+        <Input placeholder="Zip Code" name="zip" value={address.zip} onChange={onChange}/>
+    )
+
+    const StateSelectInput = () => (
+        <SelectInput name="state" value={address.state} onChange={onChange}>
+            {stateOptions()}
+        </SelectInput>
+    )
+
     return (
          <div className="form">
-            <div className="field">
-                <div className="control">
-                    <input type="text" placeholder="Street" className="address input" name="street" value={address.street} onChange={onChange}/>
-                </div>
-            </div>
-            <div className="field">
-                <div className="control">
-                    <input type="text" placeholder="Apt." className="address input" name="apt" value={address.apt} onChange={onChange}/>
-                </div>
-            </div>
-            <div className="field">
-                <div className="control">
-                    <input type="text" placeholder="City/Town" className="address input" name="city" value={address.city} onChange={onChange}/>
-                </div>
-            </div>
+            <StreetInput/>
+            <AptInput/>
+            <CityInput/>
             <div className="columns">
                 <div className="column">
-                    <div className="field select is-full">
-                        <div className="">
-                            <select className="control" name="state" id="state" value={address.state} onChange={onChange}>
-                                {stateOptions()}
-                            </select>
-                        </div>
-                    </div>
-            
+                    <StateSelectInput/>
                 </div>
-                    <div className="column">
-                        <div className="field">
-                            <div className="control">
-                                <input type="text" placeholder="Zipcode" className="address input" name="zip" value={address.zip} onChange={onChange}/>
-                            </div>
-                        </div>
+                <div className="column">
+                    <ZipInput/>
                 </div>
             </div>
         </div>

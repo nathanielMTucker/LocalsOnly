@@ -3,7 +3,7 @@ const app = express();
 const path = require('path')
 const cors = require('cors');
 const {createLocal, createUser, getLocal, getLocals, getUser, updateUser} = require('./resolvers');
-const {getVars} = require('./env_routes');
+
 
 app.use(express.static("public"))
 app.use(express.json());
@@ -26,5 +26,5 @@ app.use((req, res)=>{
     res.sendFile(path.join(__dirname+'/public/index.html'))
 })
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 app.listen(port, ()=>console.log(`Listening on port ${port}`));

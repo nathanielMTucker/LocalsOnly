@@ -1,7 +1,37 @@
+$main : rgba(255,230,0,1);
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+
+    .flex-row-item:not(:first-child){
+        padding: 0 0.5em;
+    }
+}
+
+.hours{
+    &.columns{
+        &.column{
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
+
+.icon-display{
+    padding: 0 0.75em 0.75em 1em;
+}
+
+amenity-items{
+    border-width: 1em;
+    border-color: black
 }
 
 .loading{
@@ -63,9 +93,7 @@
 }
 
 .is-main{
-    background: rgb(0,196,167);
-    background: linear-gradient(45deg, rgba(0,196,167,1) 50%, rgba(255,230,0,1) 50%);
-    border-width: 0;
+    background: $main;
 }
 
 #results{
@@ -91,12 +119,6 @@
     padding-left: 0;
     padding-top: 0;
 }
-#map{
-    padding: auto 0 0;
-    margin: 0;
-    overflow: hidden;
-    height: 93vh;
-}
 
 .result-card{
     &:first-child{
@@ -105,4 +127,16 @@
     &:last-child{
         margin-bottom: 1.25rem;
     }
+}
+
+#nav-logo{
+    height: 1em;
+    width: 1em;
+}
+
+.business-details > .details{
+    padding : 1em;
+    border: solid 1px;
+    
+    box-shadow: 5px black;
 }
