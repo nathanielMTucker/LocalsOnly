@@ -5,12 +5,12 @@ import {buttons} from '../Constants/IDs';
 
 
  
-export default ({setStatus, user, setUser})=> {
+const SignUp = ({setStatus, user, setUser})=> {
   
     const checkPasswordMatch = ()=>{
       const pass = document.getElementById('password');
       const passMatch = document.getElementById('password_match');
-      const validateString = str => (/[a-z]+[@!#$%^&*]+[0-9]+/i.test(str))
+      const validateString = str => (/[a-z0-9!#$%^&\*]/gi.test(str))
       
         
           if(pass.value === passMatch.value && (pass.value.length > 7 && passMatch.value.length > 7)){
@@ -73,7 +73,7 @@ export default ({setStatus, user, setUser})=> {
         <label className="label level">
           <span className="level-left">
             <span className="level-item">Password</span> 
-            <small className="help level-item is-info"> must be atleast 8 characters and contain a-z, A-Z, 0-9 and !@#$%^&*</small>
+            <small className="help level-item is-info"> must be at least 8 characters and contain a-z, A-Z, 0-9 and !#$%^&*</small>
           </span>
         </label>
           <div className="field">
@@ -87,7 +87,6 @@ export default ({setStatus, user, setUser})=> {
               className="input"
               minLength={8}
               required
-              
             />
           </div>
         </div>
@@ -130,3 +129,5 @@ export const SignUpLink = () => {
 })
   return <small>Don't have an account? <Link id="signup-button" className="has-text-primary" to={ROUTES.SIGNUP} >Sign Up!</Link></small>
 }
+
+export default SignUp;
