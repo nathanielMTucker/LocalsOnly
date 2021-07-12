@@ -30,7 +30,10 @@ const Local = ({location : {search}}) =>{
         if(item.images && item.images.length > 0){
             return <img src={`https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${item.images[0]}`} alt="localsonly"/>
         }
-        return null
+        return <img src="./img/tempelake.jpeg"/>
+        // <div className="local-image-backdrop">
+            
+        {/* </div> */}
     }
     const getData = async ()=>{
         
@@ -64,11 +67,11 @@ const Local = ({location : {search}}) =>{
         to = getAnteMeridiem(to);
 
         return (
-            <div className="columns">
-                <div className="column is-one-third">
+            <div className="level">
+                <div className="level-item">
                     {day}
                 </div>
-                <div className="column">
+                <div className="level-item">
                     {(closed || to === '') ? 'closed' : `${from} - ${to}`}
                 </div>
             </div>
@@ -177,7 +180,7 @@ const Local = ({location : {search}}) =>{
         <>
             <div className="level-item"><p>Rating</p></div>
             <div className="level-item"><StarRating rating={item.rating}/></div>
-            <div className="level-item">{`${item.reviewCount} review${item.reviewCount === 1 ? null : 's'}`}</div> 
+            <div className="level-item">{`${item.reviewCount} review${item.reviewCount === 1 ? '' : 's'}`}</div> 
             <div className="level-item"></div>
             <div className="level-item"><p>Price</p></div>
             <div className="level-item"><Price/></div>
@@ -189,27 +192,30 @@ const Local = ({location : {search}}) =>{
             {item && 
                 <article>
                     <header id="local-header" className="content level">
-                        <div className="level-left">
-                            <h1 className="level-item is-size-1-tablet">{item.name}</h1>
-                            <div className="level is-hidden-mobile">
-                                <DisplayPriceAndRating/>
+                        <Images/>
+                        <div className="info">
+                            <div className="level-left">
+                                <h1 className="level-item is-size-1-tablet has-text-white">{item.name}</h1>
+                                <div className="level is-hidden-mobile has-text-white">
+                                    <DisplayPriceAndRating/>
+                                </div>
+                            </div>
+                            <div className="level-item is-hidden-tablet">
+                                <div className="level is-mobile">
+                                    <DisplayPriceAndRating/>
+                                </div>
                             </div>
                         </div>
-                        <div className="level-item is-hidden-tablet">
-                            <div className="level is-mobile">
-                                <DisplayPriceAndRating/>
-                            </div>
-                        </div>
-                        <div className="level-right">
-                            <div className="level is-mobile">
-                                <button disabled title="Not available" className="level-item button">Contact</button>
-                                <button disabled title="Not available" className="level-item button">Share</button>
-                            </div>
+                        <div className=" local-actions level-right">
+                                <div className="level is-mobile">
+                                    {/* <button disabled title="Not available" className="level-item button">Contact</button>
+                                    <button disabled title="Not available" className="level-item button">Share</button> */}
+                                    <button className="button is-inverted">Add photos</button>
+                                </div>
                         </div>
                     </header>
-                    <section>
-                        <Images/>
-                    </section>
+                    
+                    <section className="section container">
                     <section className="columns">
                         <section className="column">
                             <map>
@@ -231,9 +237,7 @@ const Local = ({location : {search}}) =>{
                                     <button className="level-item button is-outlined is-primary">Street View</button>
                                 </div>
                             </div>
-                        </section>
-                        <section className="column is-one-quarter">
-                        <h4 className="is-size-4">Hours</h4>
+                            <h4 className="is-size-4">Hours</h4>
                             <Hours/>
                             <h4 className="is-size-4">Amenities & Info</h4>
                             <div className="columns">
@@ -245,12 +249,13 @@ const Local = ({location : {search}}) =>{
                                     <DisplayAmenitiesBusiness/>
                                     </div>
                             </div>
-                                    
                         </section>
+                        
                         <section className="column">
                             <h4 className="is-size-4">Reviews</h4>
                             <Reviews localID={queryString.parse(search).id}/>
                         </section>
+                    </section>
                     </section>
                 </article>
             }

@@ -31,7 +31,7 @@ const Review = withUser(({localID, USER : {ownerID : userID}}) => {
     return (
         <section>
             <Post localID={localID} userID={userID}/>
-            {reviews ? displayReviews():"is Loading"}
+            <div className="reviews">{reviews ? displayReviews():"is Loading"}</div>
         </section>
     )
 })
@@ -83,7 +83,7 @@ const Post = ({userID, localID})=>{
                     <textarea placeholder="What are your thoughts?" className="textarea" name="comment" id="comment" cols="10" rows="5" onChange={onComment}/>
                 </div>
                 
-                    <button className="button is-pulled-right" type="submit">Submit</button>
+                    <button className="button is-success is-pulled-right mt-1" type="submit">Submit</button>
                     
                     
                 
@@ -175,7 +175,7 @@ const ReviewCard = ({review, user}) =>{
       <nav className="is-mobile">
         <div className="buttons are-small ">
           <button className={`button is-success  ${active}`} onClick={onLike}>
-            <span className="icon is-small "><div className="pr-1"><p>{upvote}</p></div><i className="far fa-thumbs-up ml-1"></i></span>
+            <span className="icon is-medium pl-1 pr-1"><i className="far fa-thumbs-up mr-1"></i><div className="mr-1"><p>{upvote > 0 ? upvote : null}</p></div></span>
           </button>
           {/* <button className={`button is-danger  ${active}`} onClick={onDislike}>
             <span className="icon is-small "><div className="pr-1"><p>{upvote}</p></div><i className="far fa-thumbs-down ml-1"></i></span>

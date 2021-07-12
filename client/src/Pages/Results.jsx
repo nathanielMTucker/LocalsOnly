@@ -91,7 +91,8 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
     
         return (
             
-                <div className="columns pt-4" >
+               <div className="section pb-0">
+                    <div className="columns pt-4" >
                     <Results className="is-two-fifths column side result-card" loading={loading}>
                         {items && displayItems()}
                     </Results>
@@ -100,6 +101,7 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
                     </div>
                 </div>
                 
+               </div>
             
         )
     

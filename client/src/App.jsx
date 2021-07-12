@@ -67,7 +67,7 @@ export default compose(withFirebase, withUser)((props)=>{
     if(authUser && userInfo)
       return (
         
-         <div className="section mb-0">
+         
             <Router>
             <Nav setMadeSearch={setMadeSearch}/>
             <Switch>
@@ -81,7 +81,7 @@ export default compose(withFirebase, withUser)((props)=>{
             </Switch>
           </Router>
        
-         </div>
+         
       )
   
     return(
