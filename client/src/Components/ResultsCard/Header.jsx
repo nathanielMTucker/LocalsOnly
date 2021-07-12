@@ -1,16 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router-dom';
+import {StarRating} from '../Results';
+
 const IOM = require('../../img/LocalsOnly.png')
-export default props => {
-    const rating = ()=>{
-        var r = [];
-        for(var i = 0; i < props.rating; i++){
-            r.push(
-                <i key={i} className="fas fa-star"></i>
-            );
-        }
-        return r;
-    }
+const Header = props => {
     // const getImage = ()=>{
     //     if(item.images && item.images.length > 0){
     //         return 
@@ -36,7 +29,7 @@ export default props => {
                 <section className="pl-6 level content">
                     <div className="level-left">
                         <div className="icon has-text-info level-item">
-                            {rating(props.rating)}
+                            <StarRating rating={props.rating}/>
                         </div>
                         <p className="pl-6 level-item">
                             {props.reviewCount} {props.reviewCount === 1 ? "review" : "reviews"}
@@ -49,21 +42,22 @@ export default props => {
             </div>
         </article>
         <Link className="is-hidden-tablet" to={`/local?id=${props.id}`}>
-        <div className="columns is-mobile">
-            <div className="column">
-                <figure className="image is-96x96">
-                    <img src={props.image} alt="LocalsOnly"/>
-                </figure>
+            <div className="columns is-mobile">
+                <div className="column">
+                    <figure className="image is-96x96">
+                        <img src={props.image} alt="LocalsOnly"/>
+                    </figure>
+                </div>
+                
             </div>
-            
-        </div>
-                <p>
-                        <strong>{props.name}</strong>
-                        <br/>
-                        {props.description}
-                    </p>
-                    
+            <p>
+                <strong>{props.name}</strong>
+                <br/>
+                {props.description}
+            </p>
         </Link>
         </>
     )
 }
+
+export default Header;

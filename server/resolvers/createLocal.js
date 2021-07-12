@@ -12,9 +12,9 @@ router.route('/createLocal').post(async (req, res)=>{
                 name : address.name,
                 description : details.description,
                 website : address.web,
-                city : address.city.toLowerCase(),
+                city: address.city.toLowerCase(),
+                state: address.state.toLowerCase(),
                 phoneNumber : address.tel,
-                state : address.state.toLowerCase(),
                 geo : {
                     lat : String(coors.lat),
                     lng : String(coors.lng)
@@ -40,23 +40,14 @@ router.route('/createLocal').post(async (req, res)=>{
                 },
                 owner : id,
                 reviewCount : 1,
-                hashtags : details.tags,
                 images : images
         };
     
         try {        
                 const {createLocal: createdLocal} = await sendQuery(CREATE_LOCAL, variables);
-                // console.log(createdLocal);
                 const {_id} = createdLocal;
-                
-                const {findUserByID} = await sendQuery(GET_USER_OWNS, {id});
-                let {owns} = findUserByID;
-                // console.log(owns);
-                owns = [...owns, _id];
-                // console.log(owns);
-                // const {updateUser : {owns : updatedOwns}} = 
-                await sendQuery(UPDATE_USER_OWNS, {id, data : {owns}})
-                // console.log(updatedOwns);
+                const {updateUser} = await sendQuery(UPDATE_USER_OWNS, {id, data:[_id]}) 
+                console.log(updateUser);
                 res.status(200).json(createdLocal);
                 
         }catch(err){

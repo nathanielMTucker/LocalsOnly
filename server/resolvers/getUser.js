@@ -4,7 +4,6 @@ const response = require('./utils/response');
 const router = require('express').Router();
 
 router.route('/getUser').get(async (req, res)=>{
-    console.log("Authenticating User");
     try {        
         const {auth} = req.query
        

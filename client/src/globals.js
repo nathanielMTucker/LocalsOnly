@@ -33,4 +33,4 @@ const imageURL = image =>{
     return `https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${image}`;
 }
 
-module.exports = {STATES, API_KEY, fromLatLng, fromAddress, getAbbrs};
+module.exports = {STATES, API_KEY, fromLatLng, fromAddress, getAbbrs, ABBRS};

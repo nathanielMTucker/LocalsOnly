@@ -4,8 +4,6 @@ const response = require('./utils/response');
 const router = require('express').Router();
 
 router.route('/createUser').post(async (req, res)=>{
-    console.log(req.body);
-    
     const {authID, email, name, localTo, birthday} = req.body;
     
     const variables = {

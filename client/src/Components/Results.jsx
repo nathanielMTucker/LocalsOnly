@@ -1,6 +1,6 @@
 import React from 'react'
 const IOM = require('../img/LocalsOnly.png')
-export default ({loading, children, className})=> {
+const Results = ({loading, children, className})=> {
     return (
         <div className={className}>
             
@@ -12,3 +12,38 @@ export default ({loading, children, className})=> {
         </div>
     )
 }
+
+const StarRating = ({rating}) => {
+    
+    const tmp = rating - 0.5;
+    let isHalf = false;
+    if(tmp === Math.floor(rating)){
+        isHalf = true;
+    }
+    let unrated;
+    if(isHalf){
+        unrated = 4 - tmp;
+        rating = rating - 1;
+    }else{
+        unrated = 5 - rating;
+    }
+    
+    const ratingElm = [];
+    
+    for(let i = 0; i < rating; i++) ratingElm.push("fas fa-star")
+    
+    if(isHalf){
+        ratingElm.push("fas fa-star-half-alt")
+    }
+    
+    for(let i = 0; i < unrated; i++) ratingElm.push("far fa-star")
+    
+    return (ratingElm.map((star)=>
+        <i className={`${star} has-text-success`}/>
+    ))
+}
+
+export default Results;
+export {
+    StarRating
+};

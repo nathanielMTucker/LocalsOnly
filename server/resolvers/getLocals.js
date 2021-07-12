@@ -27,28 +27,29 @@ const getAbbrs = state=>{
     return state
 }
 router.route('/getLocals').get(async (req, res)=>{
-        // console.log("Entered");
-        let {what, where} = req.query;
+    // console.log("Entered");
+    let {what, where} = req.query;
 
-        what = what.replace(',','')
-        what = what.split(' ')
-        console.log(what);
-        console.log(where);
-        let [city, state] = where.split(' ');
-       
-        state = state.toLowerCase();
-        city = city.toLowerCase();
-        
-        const query = QUICK_LOOK_LOCAL;
-        const variables = {
-            city ,
-            state 
-        }
+    what = what.replace(',','')
+    what = what.split(' ')
+    
+    let [city, state] = where.split(' ');
+    
+    state = getAbbrs(state);
+    console.log(state);
+    city = city.toLowerCase();
+    
+    const query = QUICK_LOOK_LOCAL;
+    const variables = {
+        city ,
+        state 
+    }
+
     try { 
         let {localByLocation : {data}} = await sendQuery(query, variables);
         // console.log(localByLocation);
         if(what[0] === 'all' && what.length === 1){
-            // console.log(data);
+            console.log(data);
             res.status(200).json(data)
         }else{
             const regex = new RegExp(what.join("|"), "i")
@@ -59,8 +60,11 @@ router.route('/getLocals').get(async (req, res)=>{
                     filtered = [...filtered, local];
                 }
             })
-          
             console.log(filtered);
+            filtered.sort((localA, localB)=>(localB.rating - localA.rating))
+            
+            console.log(filtered);
+
             res.status(200).json(filtered)
         }
 

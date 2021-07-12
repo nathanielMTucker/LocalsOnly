@@ -7,6 +7,7 @@ import axios from 'axios';
 import {fromAddress} from '../../globals';
 import {withUser} from '../../User';
 import {compose} from 'recompose';
+import "./NewLocal.scss";
 
 
 const hours = {
@@ -73,13 +74,16 @@ const NewLocal = ({history, USER : {ownerID} }) => {
     ]
     const onSubmit = e=>{
         e.preventDefault();
-        // console.log(ownerID.toString()); 
+        // console.log(address.tel);
+        console.log(ownerID.toString()); 
         for(let i = 0; i < image.length; i++){
             console.log(image[i]);
         }
         axios.get(fromAddress(address))
-             .then(async ({data : {results : [{geometry : { location}}]}})=>{
-                
+             .then(async ({data 
+                : {results : [{geometry : { location}}]}
+            })=>{
+                console.log(location);
                 axios.post(`/api/createLocal`,{
                     
                         owner : ownerID.toString(),
@@ -113,6 +117,9 @@ const NewLocal = ({history, USER : {ownerID} }) => {
                 <h1 className="title has-text-centered">
                     Create New Local
                 </h1>
+                <div className="mb-1">
+                * required
+                </div>
                 <div className="box has-background-primary-light">
                     <form method="POST" encType="multipart/form-data" onSubmit={onSubmit} className="form">
                         {pages[num]}

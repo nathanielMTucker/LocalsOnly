@@ -1,6 +1,6 @@
 import React ,{useEffect, useState} from 'react'
 import Nav from './Components/Search/Nav';
-import Results from './Pages/Results/Results';
+import Results from './Pages/Results';
 import Home from './Pages/Home';
 import Local from './Pages/Local';
 import NewLocal from './Pages/NewLocal/NewLocal';
@@ -66,8 +66,9 @@ export default compose(withFirebase, withUser)((props)=>{
 
     if(authUser && userInfo)
       return (
-        <div className="section pb-0">
-          <Router>
+        
+         <div className="section mb-0">
+            <Router>
             <Nav setMadeSearch={setMadeSearch}/>
             <Switch>
                 <Route exact path={ROUTES.HOME} component={Home}/>
@@ -79,7 +80,8 @@ export default compose(withFirebase, withUser)((props)=>{
                 <Route render={() => <Redirect to={ROUTES.HOME}/>}/>
             </Switch>
           </Router>
-        </div>
+       
+         </div>
       )
   
     return(

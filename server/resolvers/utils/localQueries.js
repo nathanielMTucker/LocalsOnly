@@ -45,14 +45,8 @@ fragment hourRange on Day{
                 _id
             }
             description 
-            reviews{
-                rating
-                review
-            }
-            reviewCount
             rating 
-            hashtags
-            searchTags
+            reviewCount
             address{
                 street
                 apt
@@ -157,7 +151,7 @@ fragment hourRange on Day{
   }
 `
 
-const CREATE_LOCAL = `
+const CREATE_LOCAL =`
     mutation(
         $name: String!, 
         $description: String!,
@@ -168,13 +162,12 @@ const CREATE_LOCAL = `
         $geo:GeoInput,
         $price:Int,
         $hours:HoursInput,
-        $rating:Int,
+        $rating:Float,
         $localsOnly:Boolean,
         $address:AddressInput,
         $quick:QuickInput,
         $owner:ID!,
         $reviewCount:Int,
-        $hashtags: [String!],
         $images : [String!]
     ){
         createLocal(data:{
@@ -193,7 +186,6 @@ const CREATE_LOCAL = `
             quick:$quick,
             owner:{connect:$owner},
             reviewCount:$reviewCount,
-            hashtags:$hashtags
             images:$images
         }){
             _id
@@ -221,11 +213,29 @@ const DELETE_LOCAL = `
     }
 `
 
+const GET_LOCAL_RATING = `
+    query($id:ID!){
+        findLocalByID(id:$id){
+            rating
+            reviewCount
+        }
+    }
+`
+const UPDATE_LOCAL_RATING = `
+    mutation($id:ID!, $rating:Float, $reviewCount:Int){
+        updateLocal(id:$id, data:{rating:$rating, reviewCount:$reviewCount}){
+            rating
+            reviewCount
+        }
+    }
+`
 module.exports = { 
     GET_ALL_LOCALS,
     GET_LOCALS_BY_ID, 
     CREATE_LOCAL, 
     UPDATE_LOCAL,
     DELETE_LOCAL,
-    QUICK_LOOK_LOCAL
+    QUICK_LOOK_LOCAL,
+    GET_LOCAL_RATING,
+    UPDATE_LOCAL_RATING
 }

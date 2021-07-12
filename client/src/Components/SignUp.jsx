@@ -10,7 +10,7 @@ const SignUp = ({setStatus, user, setUser})=> {
     const checkPasswordMatch = ()=>{
       const pass = document.getElementById('password');
       const passMatch = document.getElementById('password_match');
-      const validateString = str => (/[a-z0-9!#$%^&\*]/gi.test(str))
+      const validateString = str => (/^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[!#$%^&+=]).*$/.test(str))
       
         
           if(pass.value === passMatch.value && (pass.value.length > 7 && passMatch.value.length > 7)){
@@ -73,7 +73,7 @@ const SignUp = ({setStatus, user, setUser})=> {
         <label className="label level">
           <span className="level-left">
             <span className="level-item">Password</span> 
-            <small className="help level-item is-info"> must be at least 8 characters and contain a-z, A-Z, 0-9 and !#$%^&*</small>
+            <small className="help level-item is-info"> must be at least 8 characters and contain at least 1 letter, number and special character (!#$%^&+=)</small>
           </span>
         </label>
           <div className="field">

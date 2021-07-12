@@ -40,7 +40,6 @@ const getCondition = url =>{
     const pathname = url.pathname
     const parsed = pathname.split("/")
     const condition = parsed(parsed.length-1);
-    console.log(condition);
     return condition;
 }
 

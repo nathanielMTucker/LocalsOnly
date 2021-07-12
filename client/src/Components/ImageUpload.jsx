@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default ({image, setImage, setLoading}) => {
+const ImageUpload = ({image, setImage, setLoading}) => {
     
     const uploadImage = async e =>{
         const files = e.target.files;
         for(let i = 0; i < files.length; i++){
             const form = new FormData();
-            form.append('file', files[0]);
+            form.append('file', files);
             form.append('upload_preset', 'local_images');
             setLoading(true);
 
@@ -42,3 +42,5 @@ export default ({image, setImage, setLoading}) => {
         </div>
     )
 }
+
+export default ImageUpload;

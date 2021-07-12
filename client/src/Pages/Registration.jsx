@@ -75,7 +75,7 @@ const RegistrationBase = ({firebase, history})=>{
         return function cleanup(){
             abortController.abort();
         }
-    }, [])
+    })
     
     const handleSubmit = e => {
         e.preventDefault();

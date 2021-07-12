@@ -14,9 +14,6 @@ const firebaseConfig = {
   measurementId:process.env.REACT_APP_FIREBASE_MEASUREMENTID,
 }
 
-
-// console.log(firebaseConfig);
-
 export const FirebaseContext = React.createContext(null);
 
 export const withFirebase = Component => props => (

@@ -4,7 +4,8 @@ const getLocals = require('./getLocals');
 const getUser = require('./getUser');
 const createUser = require('./createUser');
 const updateUser = require('./updateUser');
-
+const createReview = require('./createReview');
+const getReviews = require('./getReviews');
 
 module.exports = {
      createLocal,
@@ -12,5 +13,7 @@ module.exports = {
      getLocals,
      getUser,
      createUser ,
-     updateUser
+     updateUser,
+     createReview,
+     getReviews
 }

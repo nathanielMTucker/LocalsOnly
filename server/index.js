@@ -1,17 +1,28 @@
 const express = require('express');
-const app = express();
-const path = require('path')
+const { graphqlHTTP } = require('express-graphql');
+const { buildSchema } = require('graphql');
+const path = require('path');
 const cors = require('cors');
-const {createLocal, createUser, getLocal, getLocals, getUser, updateUser} = require('./resolvers');
+const {
+    createLocal, 
+    createUser, 
+    getLocal, 
+    getLocals, 
+    getUser, 
+    updateUser,
+    getReviews,
+    createReview
+} = require('./resolvers');
 
 
-app.use(express.static("public"))
+
+const app = express();
+
+
+
+app.use(express.static("public"));
 app.use(express.json());
 app.use(cors());
-
-app.get('/api', (req, res)=>{
-    res.send({express:`EXPRESS BACKEND IS RUNNING`});
-});
 
 app.use('/api', 
     createLocal, 
@@ -19,12 +30,14 @@ app.use('/api',
     getLocal, 
     getLocals, 
     getUser, 
-    updateUser
+    updateUser,
+    getReviews,
+    createReview
 );
 
 app.use((req, res)=>{
     res.sendFile(path.join(__dirname+'/public/index.html'))
-})
+});
 
 const port = process.env.PORT || 5001;
 app.listen(port, ()=>console.log(`Listening on port ${port}`));

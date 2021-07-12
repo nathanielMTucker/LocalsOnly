@@ -1,15 +1,22 @@
 
+enum Role {
+    FREE
+    PREM
+    ADMIN
+}
 
-type User @collection(name: "users") @relation {
+type User {
     name : String
     authID : String
     email : String
     localTo : String
     softLocalTo : [String]
-    owns : [Local]
+    owns : [Local!] @relation
     birthday : Birthday
     updateLocalTo : String,
-    dateUpdateLocalTo : Date 
+    dateUpdateLocalTo : Date
+    reviews : [Review!] @relation 
+    role : Role
 }
 
 type Birthday @embedded {
@@ -19,15 +26,13 @@ type Birthday @embedded {
 }
 
 
-type Local @collection(name: "locals") @relation {
-    name : String!
-    owner : User!
-    description : String!
-    reviews : [Reviews!]
+type Local {
+    name : String
+    owner : User
+    description : String
+    reviews : [Review!] @relation
     reviewCount : Int
-    rating : Int
-    hashtags : [String!]
-    searchTags : [String!]
+    rating : Float
     address : Address
     price : Int
     hours : Hours
@@ -36,8 +41,8 @@ type Local @collection(name: "locals") @relation {
     phoneNumber : String
     geo : Geo
     quick : Quick
-    city : String!
-    state : String!
+    city : String
+    state : String
     images : [String!]
 }
 
@@ -73,15 +78,16 @@ type Day @embedded{
     to : String
     closed : Boolean
 }
-type Reviews @relation {
+type Review {
     local : Local!
     reviewer : User!
     review : String
-    rating : Int
+    rating : Float
     upvote : Int
     downvote : Int
     shares : Int
-    actual : Int
+    actual : Float
+    userUpvoted: [User!] @relation
 }
 
 type Geo @embedded{
@@ -97,15 +103,3 @@ type Query {
     userAuth(authID : String!) : User
     localByLocation(city : String!, state : String!) : [Local]
 }
-
-# type Mutation {
-#     addUserOwns(user : ID!, local : ID!) : User
-#     updateUserOwns(user : ID!, local : ID!)
-# }
-
-# type PartialUpdateUserInput {
-#     owns : 
-# }
-
-#local: 283920193849131532
-#user: 284554644917584396

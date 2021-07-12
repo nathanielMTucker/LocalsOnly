@@ -1,4 +1,8 @@
-$main : rgba(255,230,0,1);
+$yellow : rgba(255,230,0,1);
+$green : rgba(0, 209, 178,1);
+$purple : rgba(102, 0, 179,1);
+$light-purple : rgba(145, 0, 255,1);
+$blue : #000036;
 
 *{
     margin: 0;
@@ -39,6 +43,50 @@ amenity-items{
     min-width: 100%;
 }
 
+.homelogo{
+    img{
+        width: 10rem;
+        height: 10rem;
+        border-radius: 1;
+    }
+}
+
+#home{
+    margin-top: 10px;
+    footer{
+        margin:0;
+        padding:0;
+        background-color: $green;
+        width:100%;
+        min-height: 100px;
+        color: black;
+    }
+    // background-color: $blue;
+}
+
+.why{
+    p{
+        padding:1em;
+        color:white;
+    }
+    // height:5em;
+    background-color: $purple;
+    width: 100%;
+    // clip-path: polygon(0% 100%, 100% 100%, 0% 0%);
+    margin : 0 10;
+}
+
+.who{
+    
+    .columns{
+        .column{
+            .card{
+                border-color: $green;
+                border-width: 0.5%;
+            }
+        }
+    }
+}
 .title-container{
     position: relative;
     img{
@@ -62,7 +110,7 @@ amenity-items{
 }
 
 .is-secondary{
-    background-color: #FFE600;
+    background-color: $yellow;
     color: black;
 }
 
@@ -93,7 +141,7 @@ amenity-items{
 }
 
 .is-main{
-    background: $main;
+    background: $yellow;
 }
 
 #results{
@@ -139,4 +187,15 @@ amenity-items{
     border: solid 1px;
     
     box-shadow: 5px black;
+}
+
+textarea::placeholder{
+    color: black;
+    font-size: 1em;
+}
+
+.avatar{
+    img{
+        border-radius: 50%;
+    }   
 }

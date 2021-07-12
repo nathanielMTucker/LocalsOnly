@@ -15,8 +15,9 @@ const GET_USER_FOR_UPDATE = `
   query ($id : ID!){
     findUserByID(id:$id){
       name
-      email
-      localTo
+      description
+      city
+      state
     }
   }
   `
@@ -38,17 +39,23 @@ mutation($name : String!, $email : String!, $localTo : String!, $authID : String
 const GET_USER_OWNS = `
 query($id:ID!){
   findUserByID(id:$id){
-    owns:{
-      _id
+    owns{
+      data{
+        _id
+      }
     }
   }
 }
 `
 
 const UPDATE_USER_OWNS = `
-mutation($id : ID!, $data : UserInput!){
-  updateUser(id : $id, data : $data){
-    owns
+mutation($id : ID!, $data : [ID]){
+  updateUser(id : $id, data : {owns:{connect:$data}}){
+    owns{
+      data{
+        _id
+      }
+    }
   }
 }
 `

@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import queryString from 'query-string';
-
+import {StarRating} from '../Components/Results';
 import MapContainer from '../Components/MapContainer';
-import Desc from '../Components/LocalDescription';
+// import Desc from '../Components/LocalDescription';
 import Reviews from '../Components/Reviews';
 
 const IOM = require('../img/LocalsOnly.png')
@@ -26,11 +26,11 @@ const Local = ({location : {search}}) =>{
         if(!item) getData()
     })
     
-    const getImage = ()=>{
+    const Images = ()=>{
         if(item.images && item.images.length > 0){
-            return `https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${item.images[0]}`
+            return <img src={`https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${item.images[0]}`} alt="localsonly"/>
         }
-        return IOM
+        return null
     }
     const getData = async ()=>{
         
@@ -40,7 +40,6 @@ const Local = ({location : {search}}) =>{
             .then(res=>{
                
                     console.log("Postal courier has delivered your package!");
-                    console.log(res.data);
                     setItem(res.data)
             })
             .catch((err)=>{console.log(`Postal courier has vanished!: ${err}`);});
@@ -66,7 +65,7 @@ const Local = ({location : {search}}) =>{
 
         return (
             <div className="columns">
-                <div className="column">
+                <div className="column is-one-third">
                     {day}
                 </div>
                 <div className="column">
@@ -75,12 +74,78 @@ const Local = ({location : {search}}) =>{
             </div>
         )
     }
-    
-    const DisplayAmenities = () =>{
-        return (
-            <div>
+    const DisplayAmenitiesBusiness = () =>{
+        const amenities = {
+            takeout: {
+                icon:"fas fa-shopping-bag",
+                description:"Takeout"
+            },
+            dineIn: {
+                icon:"fas fa-utensils",
+                description:"Dine-in"
+            },
+            delivery:{
+                icon:"fas fa-truck",
+                description:"Delivery"
+            }
+        }
 
-            </div>
+        return (
+            // <div>
+            //     {
+                    Object.keys(item.quick).map((a)=>
+                    {
+                        const quick = item.quick[a];
+                        return quick && amenities.hasOwnProperty(a) ? 
+                       
+                        <div className="level">
+                        <div className="level-left">
+                                <i className={`${amenities[a].icon} tile level-item`}/>
+                                <span className="level-item">{amenities[a].description}</span>
+                            </div>
+                            </div>
+                       
+                        :null
+                    })
+            //     }
+            // </div>
+        )
+    }
+    const DisplayAmenitiesFamily = () =>{
+        const amenities = {
+            dogFriendly: {
+                icon:"fas fa-paw",
+                description: "Pet Friendly"
+            },
+            familyFriendly:{
+                icon:"fas fa-baby",
+                description:"Family Friendly"
+            },
+            twentyOnePlus: {
+                icon:"fas fa-beer",
+                description:"21+"
+            }
+            
+        }
+        return (
+            // <div>
+            //     {
+                    Object.keys(item.quick).map((a)=>
+                    {
+                        const quick = item.quick[a];
+                        return quick && amenities.hasOwnProperty(a) ? 
+                        
+                            <div className="level">
+                                <div className="level-left">
+                                <i className={`${amenities[a].icon} level-item`}/>
+                                <span className="level-item">{amenities[a].description}</span>
+                                </div>
+                            </div>
+                       
+                        :null
+                    })
+            //     }
+            // </div>
         )
     }
 
@@ -88,32 +153,12 @@ const Local = ({location : {search}}) =>{
         dayOfTheWeek.map(day =><GetHours day={day}/>)
     )
 
-    const Rating = () => {
-        const { rating } = item;
-        const unrated = 5 - rating;
-        
-        const ratingElm = [];
-        
-        for(let i = 0; i < rating; i++) ratingElm.push("fas")
-        
-        
-        for(let i = 0; i < unrated; i++) ratingElm.push("far")
-        
-        return (ratingElm.map((star)=>{
-            console.log(star);
-                let success = ""
-                if(star === "fas"){
-                    success = "has-text-success";
-                }
-                return <i className={`${star} fa-star ${success}`}/>
-        }))
-    }
 
     const Price = () =>{
         const { price } = item;
         
         return ([...Array(price).keys()].map(()=>
-            <i className="fas fa-dollar-sign has-text-success is-size-4"/>
+            <i className="fas fa-dollar-sign has-text-success is-size-5"/>
         ))
     }
 
@@ -131,7 +176,9 @@ const Local = ({location : {search}}) =>{
     const DisplayPriceAndRating = ()=>(
         <>
             <div className="level-item"><p>Rating</p></div>
-            <div className="level-item"><Rating/></div>
+            <div className="level-item"><StarRating rating={item.rating}/></div>
+            <div className="level-item">{`${item.reviewCount} review${item.reviewCount === 1 ? null : 's'}`}</div> 
+            <div className="level-item"></div>
             <div className="level-item"><p>Price</p></div>
             <div className="level-item"><Price/></div>
         </>
@@ -155,29 +202,55 @@ const Local = ({location : {search}}) =>{
                         </div>
                         <div className="level-right">
                             <div className="level is-mobile">
-                                <button disabled className="level-item button">Contact</button>
-                                <button disabled className="level-item button">Share</button>
+                                <button disabled title="Not available" className="level-item button">Contact</button>
+                                <button disabled title="Not available" className="level-item button">Share</button>
                             </div>
                         </div>
                     </header>
+                    <section>
+                        <Images/>
+                    </section>
                     <section className="columns">
                         <section className="column">
                             <map>
                                 <MapContainer zoom={16} markers={[item.geo]} style={mapStyle}/>
                             </map>
-                                <div className="level">
-                                    <div className="container">
-                                        <h3 className="is-size-4">Address</h3>
-                                        <Address/>
-                                    </div>
-                                    <div className="level-right">
-                                        <button className="level-item button">Direction</button>
-                                        <button className="level-item button">Street View</button>
-                                    </div>
+                            <div className="">
+                            <h4 className="is-size-4">Details</h4>
+                            <div>
+                                {item.description}
+                            </div>
+                            </div>
+                            <div className="level">
+                                <div className="">
+                                    <h4 className="is-size-4">Address</h4>
+                                    <Address/>
                                 </div>
+                                <div className="level-right">
+                                    <a href={`https://www.google.com/maps/search/?api=1&query=${item.geo.lat},${item.geo.lng}`} className="level-item button is-outlined is-link">Direction</a>
+                                    <button className="level-item button is-outlined is-primary">Street View</button>
+                                </div>
+                            </div>
                         </section>
-                        <section className="column">Hello</section>
-                        <section className="column">Hello</section>
+                        <section className="column is-one-quarter">
+                        <h4 className="is-size-4">Hours</h4>
+                            <Hours/>
+                            <h4 className="is-size-4">Amenities & Info</h4>
+                            <div className="columns">
+                                
+                                    <div className="column">
+                                    <DisplayAmenitiesFamily/>
+                                    </div>
+                                    <div className="column">
+                                    <DisplayAmenitiesBusiness/>
+                                    </div>
+                            </div>
+                                    
+                        </section>
+                        <section className="column">
+                            <h4 className="is-size-4">Reviews</h4>
+                            <Reviews localID={queryString.parse(search).id}/>
+                        </section>
                     </section>
                 </article>
             }
