@@ -4,6 +4,7 @@ import queryString from 'query-string';
 import {StarRating} from '../Components/Results';
 import MapContainer from '../Components/MapContainer';
 // import Desc from '../Components/LocalDescription';
+import {ImageUploadPopup} from '../Components/ImageUpload';
 import Reviews from '../Components/Reviews';
 
 const IOM = require('../img/LocalsOnly.png')
@@ -187,10 +188,13 @@ const Local = ({location : {search}}) =>{
         </>
     )
 
+    
+
     return (
         <main id="local">
             {item && 
                 <article>
+                    
                     <header id="local-header" className="content level">
                         <Images/>
                         <div className="info">
@@ -206,56 +210,56 @@ const Local = ({location : {search}}) =>{
                                 </div>
                             </div>
                         </div>
-                        <div className=" local-actions level-right">
-                                <div className="level is-mobile">
-                                    {/* <button disabled title="Not available" className="level-item button">Contact</button>
-                                    <button disabled title="Not available" className="level-item button">Share</button> */}
-                                    <button className="button is-inverted">Add photos</button>
-                                </div>
+                        <div className="local-actions level-right">
+                            <div className="level is-mobile">
+                                {/* <button disabled title="Not available" className="level-item button">Contact</button>
+                                <button disabled title="Not available" className="level-item button">Share</button> */}
+                                <ImageUploadPopup/>
+                            </div>
                         </div>
                     </header>
                     
                     <section className="section container">
-                    <section className="columns">
-                        <section className="column">
-                            <map>
-                                <MapContainer zoom={16} markers={[item.geo]} style={mapStyle}/>
-                            </map>
-                            <div className="">
-                            <h4 className="is-size-4">Details</h4>
-                            <div>
-                                {item.description}
-                            </div>
-                            </div>
-                            <div className="level">
+                        <section className="columns">
+                            <section className="column">
+                                <map>
+                                    <MapContainer zoom={16} markers={[item.geo]} style={mapStyle}/>
+                                </map>
                                 <div className="">
-                                    <h4 className="is-size-4">Address</h4>
-                                    <Address/>
+                                <h4 className="is-size-4">Details</h4>
+                                <div>
+                                    {item.description}
                                 </div>
-                                <div className="level-right">
-                                    <a href={`https://www.google.com/maps/search/?api=1&query=${item.geo.lat},${item.geo.lng}`} className="level-item button is-outlined is-link">Direction</a>
-                                    <button className="level-item button is-outlined is-primary">Street View</button>
                                 </div>
-                            </div>
-                            <h4 className="is-size-4">Hours</h4>
-                            <Hours/>
-                            <h4 className="is-size-4">Amenities & Info</h4>
-                            <div className="columns">
-                                
-                                    <div className="column">
-                                    <DisplayAmenitiesFamily/>
+                                <div className="level">
+                                    <div className="">
+                                        <h4 className="is-size-4">Address</h4>
+                                        <Address/>
                                     </div>
-                                    <div className="column">
-                                    <DisplayAmenitiesBusiness/>
+                                    <div className="level-right">
+                                        <a href={`https://www.google.com/maps/search/?api=1&query=${item.geo.lat},${item.geo.lng}`} className="level-item button is-outlined is-link">Direction</a>
+                                        <button className="level-item button is-outlined is-primary">Street View</button>
                                     </div>
-                            </div>
+                                </div>
+                                <h4 className="is-size-4">Hours</h4>
+                                <Hours/>
+                                <h4 className="is-size-4">Amenities & Info</h4>
+                                <div className="columns">
+                                    
+                                        <div className="column">
+                                        <DisplayAmenitiesFamily/>
+                                        </div>
+                                        <div className="column">
+                                        <DisplayAmenitiesBusiness/>
+                                        </div>
+                                </div>
+                            </section>
+                            
+                            <section className="column">
+                                <h4 className="is-size-4">Reviews</h4>
+                                <Reviews localID={queryString.parse(search).id}/>
+                            </section>
                         </section>
-                        
-                        <section className="column">
-                            <h4 className="is-size-4">Reviews</h4>
-                            <Reviews localID={queryString.parse(search).id}/>
-                        </section>
-                    </section>
                     </section>
                 </article>
             }

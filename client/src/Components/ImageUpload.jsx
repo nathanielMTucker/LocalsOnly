@@ -1,4 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react';
+
+// const RemoveImage = ({images, removeImage}) =>
+//     images.map((image, i) =>
+//     <div key={i} className='fadein'>
+//       <div 
+//         onClick={() => removeImage(image.public_id)} 
+//         className='delete'
+//       >
+//         <i className="far fa-times-circle fa-2x"></i>
+//       </div>
+//       <img src={image.secure_url} alt='' />
+//     </div>
+//   )
+
 
 const ImageUpload = ({image, setImage, setLoading}) => {
     
@@ -43,4 +57,63 @@ const ImageUpload = ({image, setImage, setLoading}) => {
     )
 }
 
+const ImageUploadPopup = ({local, user})=>{
+
+    const [uploading, setUploading] = useState(false);
+    const [images, setImages] = useState([]);
+
+    const addPhoto=e=>{
+        e.preventDefault();
+        const form = document.getElementById("image-form")
+        form.style.display = "block"
+        // const dimmer = document.createElement("div");
+        // dimmer.style.width =  window.innerWidth + 'px';
+        // dimmer.style.height = window.innerHeight + 'px';
+        // dimmer.className = 'dimmer';
+        // dimmer.onclick = function(){
+        //     document.body.removeChild(this);   
+        //     form.style.display = "none"
+        // }
+            
+        // document.body.appendChild(dimmer);
+    }
+    const getImagesFromUser = ( e)=>{
+        e.preventDefault();
+        const {target:{files}} = e;
+        setImages([...images, ...files]);
+        // if(images && images.length > 0){
+            
+        //     console.log(images);
+        // }
+    }
+
+    const uploadImages = e =>{
+        e.preventDefault();
+        console.log(images);
+    }
+
+    const closeForm=e=>{
+        e.preventDefault();
+        document.getElementById("image-form").style.display = "none"
+        setImages([]);
+        // document.getElementsByClassName("dimmer").remove();
+    }
+
+    return (
+        <section>
+            <button className="button is-outlined" onClick={addPhoto}>Add photos</button>
+            <div className="form-popup" id="image-form">
+                <form onSubmit={uploadImages} className="form-container">
+                    <input type="file" multiple onChange={getImagesFromUser}/>
+                    <button type="submit" className="button">Upload</button>
+                    <button type="submit" className="button cancel" onClick={closeForm}>Cancel</button>
+                </form>
+            </div>
+        </section>
+    )
+}
+
 export default ImageUpload;
+export {
+    ImageUploadPopup
+}
