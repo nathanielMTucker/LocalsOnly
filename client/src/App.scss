@@ -3,6 +3,7 @@ $green : rgba(0, 209, 178,1);
 $purple : rgba(102, 0, 179,1);
 $light-purple : rgba(145, 0, 255,1);
 $blue : #000036;
+$nav-bar-height: 10vh;
 
 *{
     margin: 0;
@@ -163,9 +164,9 @@ amenity-items{
 
 .side{
     overflow-y: scroll;
-    height: 93vh;
-    padding-left: 0;
-    padding-top: 0;
+    // height: 93vh;
+    margin-left: 8px;
+    // padding-top: 0;z
 }
 
 .result-card{
@@ -200,8 +201,42 @@ textarea::placeholder{
     }   
 }
 
+input, textarea{
+    &:required{
+      &:invalid{
+        border-color: pink;
+        border-width: 2px;
+      }
+  
+      &:valid{
+        border-color:green;
+        border-width: 2px;
+      }
+    }
+  }
+  #desc{
+    height: 5%;
+}
 
-
+.addr{
+    border-radius: 3px;
+}
+.image-row{
+    .image-item{
+    // position: relative;
+    text-align:center;
+    // width:100%;
+    // background-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0));
+    .delete-image{
+        background-color:rgba(0, 0, 0,0.5);
+        // background-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+        position: absolute;
+        // top: 8px;
+        // left: 16vw;
+    
+}
+}
+}
 #local-header{
     position: relative;
     text-align:center;
@@ -211,20 +246,19 @@ textarea::placeholder{
     img{
         z-index: -1;
         width:100%;
-        height: 5%;
         border-radius:0;
     }
        
     .info{
         position: absolute;
         bottom: 8px;
-        left: 16px;
+        left: 16vw;
     }
 
     .local-actions{
         position: absolute;
         bottom: 20px;
-        right:16px;
+        right:16vw;
     }
 }
 
@@ -250,68 +284,62 @@ textarea::placeholder{
     right: 28px;
     width: 280px;
   }
-  .dimmer{
-    background: #000;
-    position: absolute;
-    opacity: .5;
-    top: 0;
-    z-index:9;
-  }
-  /* The popup form - hidden by default */
-  .form-popup {
+  
+
+  #error-popup{
     display: none;
-    position:fixed;
-    top:50%;
-    left:50%;
-    width:400px;  /* adjust as per your needs */
-    height:400px;   /* adjust as per your needs */
-    margin-left:-200px;   /* negative half of width above */
-    margin-top:-200px;   /* negative half of height above */
-    border: 1px solid #000;
-    z-index: 10;
+    position: fixed; 
+    bottom:0%;
+    width:100vw;
+    z-index: 1000;
+
+    &:active{
+        display: none;
+    }
   }
-  
-  /* Add styles to the form container */
-  .form-container {
-    width:400px;  /* adjust as per your needs */
-    height:400px;
-    padding: 10px;
-    background-color: white;
+
+  #local-page{
+      padding-top:calc(#{$nav-bar-height});
   }
-  
-  /* Full-width input fields */
-  .form-container input[type=file]{
-    width: 100%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
-    border: none;
-    background: #f1f1f1;
+
+  #results-page{
+    padding-top:calc(#{$nav-bar-height} + 0.25vh);
   }
-  
-  /* When the inputs get focus, do something */
-  .form-container input[type=file]:focus{
-    background-color: #ddd;
-    outline: none;
+
+  #image-upload-page{
+    padding-top:calc(#{$nav-bar-height} + 1vh);
   }
-  
-  /* Set a style for the submit/login button */
-  .form-container .button {
-    background-color: #04AA6D;
-    color: white;
-    padding: 16px 20px;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    margin-bottom:10px;
-    opacity: 0.8;
-  }
-  
-  /* Add a red background color to the cancel button */
-  .form-container .cancel {
-    background-color: red;
-  }
-  
-  /* Add some hover effects to buttons */
-  .form-container .button:hover, .open-button:hover {
-    opacity: 1;
-  }
+  #main-nav{
+    padding:0 0.75vw;
+    height: $nav-bar-height;
+    border-radius: 0;
+    border-bottom: solid 1px hsl(295, 4%, 74%);
+    img{
+        // height: 40px;
+        width: 60px;
+        border-radius: 15%;
+    }
+
+    .is-full-width{
+        width: 97vw;
+        left:-3.5rem;
+    }
+    
+    .is-one-quarter-width{
+        width:25vw;
+    }
+    
+    .is-three-quarters-width{
+        width:75vw;
+    }
+    
+    .is-tertiary{
+        background-color: #808cff;
+    }
+
+    
+}
+
+.search-bar{
+    border-radius: 100px;
+}

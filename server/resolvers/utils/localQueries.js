@@ -75,7 +75,18 @@ fragment hourRange on Day{
             }
             city 
             state
-            images
+            images{
+                data{
+                    url
+                    description
+                    user{
+                        avatar{
+                            url
+                        }
+                        name
+                    }
+                }
+            }
         }
     }
 `
@@ -145,7 +156,11 @@ fragment hourRange on Day{
           delivery 
           dogFriendly 
         }
-        images
+        images{
+            data{
+                url
+            }
+        }
       }
     }
   }

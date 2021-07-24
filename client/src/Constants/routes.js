@@ -1,6 +1,7 @@
 export const HOME = '/';
 export const SEARCH = '/search';
 export const LOCAL = '/local';
-export const NEWLOCAL = '/createNewLocal';
+export const NEW_LOCAL = '/create-local';
 export const SIGNUP = '/registration';
 export const PROFILE = '/user';
+export const UPLOAD_IMAGE = "/local/upload-image"

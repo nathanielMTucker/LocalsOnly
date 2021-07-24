@@ -83,7 +83,7 @@ const RegistrationBase = ({firebase, history})=>{
         firebase.createUserWithEmailAndPassword(user.email, user.passwordOne, {signal: signal})
         .then( ({user : {uid}}) => {
             
-            axios.post(`/api/createUser`,{
+            axios.post(`/api/v1/users`,{
                 authID: uid,
                 email:user.email,
                 name: user.name,
@@ -101,7 +101,7 @@ const RegistrationBase = ({firebase, history})=>{
                     }
                 );
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
 
         })
         .catch(
@@ -112,7 +112,7 @@ const RegistrationBase = ({firebase, history})=>{
                         alert(err.message)
                         break
                     default:
-                        console.log(err);
+                        console.error(err);
                         break                        
                 }
             }

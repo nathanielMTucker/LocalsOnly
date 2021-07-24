@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom';
 import {StarRating} from '../Results';
 
-const IOM = require('../../img/LocalsOnly.png')
+// const IOM = require('./LocalsOnly.png')
 const Header = props => {
     // const getImage = ()=>{
     //     if(item.images && item.images.length > 0){
@@ -12,12 +12,8 @@ const Header = props => {
     // }
     return (
         <>
-        <article className="media is-hidden-mobile">
-            <div className="media-left ">
-                <figure className="image is-96x96">
-                    <img src={`https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${props.image}` || IOM} alt="LocalsOnly"/>
-                </figure>
-            </div>
+        <article className="is-flex is-hidden-mobile">
+            
             <div className="media-content">
                 <div className="content">
                     <p>
@@ -26,14 +22,13 @@ const Header = props => {
                         {props.description}
                     </p>
                 </div>
-                <section className="pl-6 level content">
+                <section className="level content">
                     <div className="level-left">
-                        <div className="icon has-text-info level-item">
-                            <StarRating rating={props.rating}/>
+                        <div className="icon has-text-info">
+                            <div className=""><StarRating rating={props.rating}/></div>
+                            <div className="">{`${props.reviewCount} review${props.reviewCount === 1 ? '' : 's'}`}</div> 
                         </div>
-                        <p className="pl-6 level-item">
-                            {props.reviewCount} {props.reviewCount === 1 ? "review" : "reviews"}
-                        </p>
+                        
                     </div>
                 </section>
             </div>
@@ -48,7 +43,6 @@ const Header = props => {
                         <img src={props.image} alt="LocalsOnly"/>
                     </figure>
                 </div>
-                
             </div>
             <p>
                 <strong>{props.name}</strong>

@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react'
 import SignIn from './SignIn';
-import './Search/Search.scss';
 import {buttons} from '../Constants/IDs';
 import Search from './Search/Search';
 const {SEARCH, SIGN} = buttons

@@ -5,16 +5,17 @@ import axios from 'axios';
 import {withUser} from '../User';
 import Rating from '@material-ui/lab/Rating'
 import {StarRating} from './Results';
+import {ServerError} from "./Error";
 
 const Review = withUser(({localID, USER : {ownerID : userID}}) => {
     
     const [reviews, setReviews] = useState();
 
     useEffect(() =>{
-        axios.get(`/api/getReviews?id=${localID}&user=${userID}`)
+        axios.get(`/api/v1/reviews?id=${localID}&user=${userID}`)
         .then(res=>{
             console.log(res.data);
-            setReviews(res.data);
+            setReviews(res.data.reviews);
         })
         .catch(err=>{
             console.log(err);
@@ -59,7 +60,7 @@ const Post = ({userID, localID})=>{
         console.log(userID);
         console.log(localID);
         setIsLoading("is-loading")
-        axios.post('/api/createReview',{
+        axios.post('/api/v1/reviews',{
             local:localID,
             reviewer:userID,
             rating: parseFloat(rating),
@@ -97,7 +98,7 @@ const ReviewCard = ({review, user}) =>{
     // console.log(upvoteUsers[0]._id + " === " + user);
     const [upvote, setUpvote] = useState(review.upvote);
     const [active, setActive] = useState("is-light");
-
+    const [error, setError] = useState({});
     useEffect(()=>{
         console.log("upvoteUsers: " + upvoteUsers);
         if(upvoteUsers){
@@ -109,6 +110,12 @@ const ReviewCard = ({review, user}) =>{
     // const onDislike = e =>{
     //     e.preventDefault();
     // }
+
+    const removeError = e =>{
+        e.preventDefault();
+        document.getElementById("error-popup").style.display = "none"
+    }
+
     const onLike = e =>{
         e.preventDefault();
         const like = ()=>{
@@ -123,36 +130,33 @@ const ReviewCard = ({review, user}) =>{
         }
         if(upvoteUsers){
             unlike();
-            axios.post("/api/reviewUnliked",{
-                reviewID:review._id,
-                user,
-                upvote
-            }).then(({data:{upvote:newUpvote, userUpvoted:newUpvoteUsers}})=>{
+            axios.delete(`/api/v1/review/${review._id}/user/${user}/unlike`)
+            .then(({data:{upvote:newUpvote, userUpvoted:newUpvoteUsers}})=>{
                 setUpvote(newUpvote);
                 console.log("Unliked: " + newUpvoteUsers);
                 setUpvoteUsers(newUpvoteUsers);
             }).catch(err=>{
-                console.log(err);
+                console.dir(err);
+                document.getElementById("error-popup").style.display = "block";
+                setError({status:err.response.status,message:err.response.statusText})
                 like();
             })
             return
         }
         if(!upvoteUsers){
             like();
-        axios.post("/api/reviewLiked",{
-            reviewID:review._id,
-            user,
-            upvote
-        }).then(res=>{
-            return res;
-        }).then(({data:{upvote:newUpvote, userUpvoted:newUpvoteUsers}})=>{
-            setUpvote(newUpvote);
-            console.log("Liked: " + newUpvoteUsers);
-            setUpvoteUsers(newUpvoteUsers);
-        }).catch(err=>{
-            console.log(err);
-            unlike();
-        })
+            axios.post(`/api/v1/review/${review._id}/like`,{
+                user
+            }).then(res=>{
+                return res;
+            }).then(({data:{upvote:newUpvote, userUpvoted:newUpvoteUsers}})=>{
+                setUpvote(newUpvote);
+                console.log("Liked: " + newUpvoteUsers);
+                setUpvoteUsers(newUpvoteUsers);
+            }).catch(err=>{
+                console.dir(err);
+                unlike();
+            })
         }
         
     }
@@ -182,6 +186,9 @@ const ReviewCard = ({review, user}) =>{
           </button> */}
         </div>
       </nav>
+    </div>
+    <div id="error-popup" onClick={removeError}>
+        <ServerError status={error && error.status} message={error.message}/>
     </div>
   </article>
 }

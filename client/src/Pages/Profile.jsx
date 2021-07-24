@@ -36,8 +36,7 @@ const Profile = ({USER : user, firebase}) => {
                             </button>
                         <button className="button is-primary" onClick={e=>{
                             e.preventDefault();
-                            axios.put('/api/updateUser',{
-                                id : userInfo.id,
+                            axios.patch(`/api/v1/users/${userInfo.id}`,{
                                 name : userInfo.name,
                                 email : userInfo.email,
                                 localTo : userInfo.localTo

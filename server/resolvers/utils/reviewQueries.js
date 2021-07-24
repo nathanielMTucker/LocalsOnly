@@ -35,7 +35,6 @@ const GET_LOCAL_REVIEWS = `
             data{
               _id
             }
-            
           }
         }
       }
@@ -67,9 +66,23 @@ mutation($user:[ID!],$review:ID!, $upvote:Int!){
   }
 }
 `
+
+const GET_REVIEW_FROM_LOCAL_BY_ID = (request)=>`
+    query($id:ID!){
+      findReviewByID(id:$id){
+        ${
+          (request===null || request===undefined || request==="" || request===" ")?
+          "upvote":
+          request.replace(/,/g,"\n").replace(/{/g, "{\n").replace(/}/g, "\n}").replace("upvote", "")
+        }
+      }
+    }
+  `
+
 module.exports = {
   CREATE_REVIEW,
   GET_LOCAL_REVIEWS,
   UPDATE_UPVOTE_LIKED,
-  UPDATE_UPVOTE_UNLIKED
+  UPDATE_UPVOTE_UNLIKED,
+  GET_REVIEW_FROM_LOCAL_BY_ID
 }

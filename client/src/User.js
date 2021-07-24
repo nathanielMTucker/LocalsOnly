@@ -18,7 +18,7 @@ export default class User{
         this.role = "";
     }
     isSet(){
-      return !this.email === ""
+      return !!this.ownerID;
     }
     set(user){
       this.ownerID = user.ownerID;

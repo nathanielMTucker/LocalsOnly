@@ -9,18 +9,18 @@ const Search = ({loc, handleSubmit, handleInput, className}) => {
 
   return (
     
-    <form className={`field has-addons ${className}`} onSubmit={handleSubmit}>
+    <form className={`field  has-addons ${className}`} onSubmit={handleSubmit}>
     
-    <p className="control">
-      <input type="text" className="input" placeholder="What to do?" name="what" value={loc.search} onChange={handleInput} />
-    </p>
+    <div className="control ">
+      <input type="text" className="input search-bar" placeholder="What to do?" name="what" value={loc.search} onChange={handleInput} />
+    </div>
     <div className="control">
       <input className="input" type="text" name="state" value={loc.state} onChange={handleInput}/>
       
     </div>
     
     <p className="control">
-      <button type="submit" className="button is-primary" onClick={toggle}>
+      <button type="submit" className="button is-primary search-bar" onClick={toggle}>
         <i className="fas fa-search"/>
       </button>
     </p>

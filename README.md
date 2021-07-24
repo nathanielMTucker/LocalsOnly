@@ -35,4 +35,4 @@ Make sure you have node.js and npm installed on your computer. You can check thi
 
 Clone the __Dev__ repo, then run on both client and server separately `npm install`.
 
-After all the dependancies are installed, have two terminals open and more into the server and client directory. In the server terminal run `npm run dev` then go into the client terminal and run `npm start`. Let me know to approve you into the dev team and then I will give the .env files. Pun the server and client .env files in their respective locations. You must then make an account, after which let me know and I will make you into an admin.
+After all the dependencies are installed, have two terminals open and more into the server and client directory. In the server terminal run `npm run dev` then go into the client terminal and run `npm start`. Let me know to approve you into the dev team and then I will give the .env files. Pun the server and client .env files in their respective locations. You must then make an account, after which let me know and I will make you into an admin.

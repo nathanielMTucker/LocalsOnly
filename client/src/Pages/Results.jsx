@@ -9,6 +9,16 @@ import {compose} from 'recompose'
 import {withRouter} from 'react-router'
 import axios from 'axios'
 
+const dayOfWeek = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday"
+]
+
 export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{search}, madeSearch, setMadeSearch})=> {
     
     const [items, setItems] = useState([])
@@ -22,7 +32,7 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
         
         let {what, where} = queryString.parse(search);
         
-        const itemsFromData = await axios.get(`/api/getLocals?what=${what}&where=${where}`)
+        const itemsFromData = await axios.get(`/api/v1/locals?what=${what}&where=${where}`)
         .then(({data})=>data)
         .catch(err=>{
             console.error(err)
@@ -59,26 +69,29 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
                     <p>{items[0].message}</p>
                 </div>
                 )
-        
+        const today = dayOfWeek[new Date().getDay()]
+
         const results = items
             .filter(post=>(
                 !post.localsOnly ||
                 `${post.address.state}:${post.address.city.replace(" ","_")}` === localTo ||
                 role === "admin"))
-            .map((local, index) => 
-
-                <ResultsCard
-                    key={index}
-                    i={index}
-                    id={local._id}
-                    name={local.name}
-                    description={local.description}
-                    rating={local.rating}
-                    reviewCount={local.reviewCount}
-                    hours={local.hours}
-                    address={local.address}
-                    image={local.images[0]}
-                />
+            .map((local, index) => {
+                const hours = local.hours[today];
+                return <ResultsCard
+                        key={index}
+                        i={index}
+                        id={local._id}
+                        name={local.name}
+                        description={local.description}
+                        rating={local.rating}
+                        reviewCount={local.reviewCount}
+                        hours={hours}
+                        address={local.address}
+                        image={local.images.data[0]}
+                        price={local.price}
+                    />
+                }
             )
 
         if(results.length <= 0){
@@ -91,13 +104,13 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
     
         return (
             
-               <div className="section pb-0">
+               <div className="" id="results-page">
                     <div className="columns pt-4" >
-                    <Results className="is-two-fifths column side result-card" loading={loading}>
+                    <Results className=" is-two-fifths column side result-card" loading={loading}>
                         {items && displayItems()}
                     </Results>
-                    <div className="column pt-1 mb-0 pb-0 is-medium is-hidden-mobile">
-                        {items && <MapContainer style={{height:'92vh', width:'58.5vw'}} zoom={16} markers={items.map(item=>item.geo)}/>}
+                    <div className="column is-medium is-hidden-mobile">
+                        {items && <MapContainer style={{height:'89vh', width:'58.5vw'}} zoom={16} markers={items.map(item=>item.geo)}/>}
                     </div>
                 </div>
                 

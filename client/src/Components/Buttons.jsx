@@ -30,14 +30,14 @@ export const LocalizeLinkButton = ()=>{
             document.getElementById('sign').classList.remove('is-active');
     }
     return (
-        <Link title="New Local" className="button has-background-primary-light" to={ROUTES.NEWLOCAL} onClick={toggle}>
+        <Link title="New Local" className="button is-inverted" to={ROUTES.NEW_LOCAL} onClick={toggle}>
             <i className="fas fa-plus-circle"/>
         </Link> 
     )
 }
 
 export const UserProfileButton = ()=>(
-    <Link title="Profile" className="button is-main" to={ROUTES.PROFILE}>
+    <Link title="Profile" className="button is-main is-inverted" to={ROUTES.PROFILE}>
         <i className="fas fa-user-astronaut"/>
     </Link>
 )

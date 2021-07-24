@@ -15,7 +15,7 @@ module.exports = async (query, variables)=>{
         }
     });
     if(errors){
-        console.error(errors);
+        console.dir(errors);
         throw new Error("Something went wrong");
     }
     return data;

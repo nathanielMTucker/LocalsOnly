@@ -13,7 +13,7 @@ const Results = ({loading, children, className})=> {
     )
 }
 
-const StarRating = ({rating}) => {
+const StarRating = ({rating, className}) => {
     
     const tmp = rating - 0.5;
     let isHalf = false;
@@ -38,9 +38,13 @@ const StarRating = ({rating}) => {
     
     for(let i = 0; i < unrated; i++) ratingElm.push("far fa-star")
     
-    return (ratingElm.map((star)=>
-        <i className={`${star} has-text-success`}/>
-    ))
+    return (<div className={className}>
+        {
+            ratingElm.map((star)=>
+            <i className={`${star} has-text-success`}/>
+        )
+        }
+    </div>)
 }
 
 export default Results;

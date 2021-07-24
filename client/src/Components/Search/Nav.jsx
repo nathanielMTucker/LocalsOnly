@@ -1,6 +1,5 @@
 import React , {useState, useEffect} from 'react'
 import { withRouter } from "react-router";
-import './Search.scss';
 import Search from './Search';
 import {LogoLinkButton, LocalizeLinkButton, LogoutButton, UserProfileButton} from '../Buttons';
 import {SearchDropdown} from '../Dropdowns';

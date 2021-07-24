@@ -3,11 +3,9 @@ import axios from 'axios';
 import queryString from 'query-string';
 import {StarRating} from '../Components/Results';
 import MapContainer from '../Components/MapContainer';
-// import Desc from '../Components/LocalDescription';
-import {ImageUploadPopup} from '../Components/ImageUpload';
 import Reviews from '../Components/Reviews';
+import {Link} from 'react-router-dom';
 
-const IOM = require('../img/LocalsOnly.png')
 
 const dayOfTheWeek = [
     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -27,20 +25,15 @@ const Local = ({location : {search}}) =>{
         if(!item) getData()
     })
     
-    const Images = ()=>{
-        if(item.images && item.images.length > 0){
-            return <img src={`https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${item.images[0]}`} alt="localsonly"/>
-        }
-        return <img src="./img/tempelake.jpeg"/>
-        // <div className="local-image-backdrop">
-            
-        {/* </div> */}
-    }
+    const Images = () => (item.images && item.images.length > 0)?
+            <img src={`https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${item.images[0]}`} alt="localsonly"/>:
+            <img src="./img/tempelake.jpeg"/>
+    
     const getData = async ()=>{
         
         let {id} = queryString.parse(search);
        
-        await axios.get(`/api/getLocal?id=${id}`)
+        await axios.get(`/api/v1/local/${id}`)
             .then(res=>{
                
                     console.log("Postal courier has delivered your package!");
@@ -95,8 +88,6 @@ const Local = ({location : {search}}) =>{
         }
 
         return (
-            // <div>
-            //     {
                     Object.keys(item.quick).map((a)=>
                     {
                         const quick = item.quick[a];
@@ -111,8 +102,6 @@ const Local = ({location : {search}}) =>{
                        
                         :null
                     })
-            //     }
-            // </div>
         )
     }
     const DisplayAmenitiesFamily = () =>{
@@ -132,8 +121,6 @@ const Local = ({location : {search}}) =>{
             
         }
         return (
-            // <div>
-            //     {
                     Object.keys(item.quick).map((a)=>
                     {
                         const quick = item.quick[a];
@@ -148,8 +135,6 @@ const Local = ({location : {search}}) =>{
                        
                         :null
                     })
-            //     }
-            // </div>
         )
     }
 
@@ -179,11 +164,8 @@ const Local = ({location : {search}}) =>{
 
     const DisplayPriceAndRating = ()=>(
         <>
-            <div className="level-item"><p>Rating</p></div>
             <div className="level-item"><StarRating rating={item.rating}/></div>
             <div className="level-item">{`${item.reviewCount} review${item.reviewCount === 1 ? '' : 's'}`}</div> 
-            <div className="level-item"></div>
-            <div className="level-item"><p>Price</p></div>
             <div className="level-item"><Price/></div>
         </>
     )
@@ -191,14 +173,14 @@ const Local = ({location : {search}}) =>{
     
 
     return (
-        <main id="local">
+        <main id="local-page">
             {item && 
                 <article>
-                    
                     <header id="local-header" className="content level">
                         <Images/>
-                        <div className="info">
-                            <div className="level-left">
+                        <section className="">
+                        <div className="info ">
+                            <div className="level-left ">
                                 <h1 className="level-item is-size-1-tablet has-text-white">{item.name}</h1>
                                 <div className="level is-hidden-mobile has-text-white">
                                     <DisplayPriceAndRating/>
@@ -214,9 +196,10 @@ const Local = ({location : {search}}) =>{
                             <div className="level is-mobile">
                                 {/* <button disabled title="Not available" className="level-item button">Contact</button>
                                 <button disabled title="Not available" className="level-item button">Share</button> */}
-                                <ImageUploadPopup/>
+                                <Link className="button" to={`/local/upload-image?id=${queryString.parse(search).id}&name=${item.name}`}>Upload images</Link>
                             </div>
                         </div>
+                        </section>
                     </header>
                     
                     <section className="section container">

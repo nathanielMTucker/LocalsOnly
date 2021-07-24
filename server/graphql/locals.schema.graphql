@@ -6,7 +6,9 @@ enum Role {
 }
 
 type User {
+    avatar: Avatar
     name : String
+    handler : String
     authID : String
     email : String
     localTo : String
@@ -17,6 +19,7 @@ type User {
     dateUpdateLocalTo : Date
     reviews : [Review!] @relation 
     role : Role
+    images : [Image] @relation
 }
 
 type Birthday @embedded {
@@ -25,6 +28,18 @@ type Birthday @embedded {
     year : Int
 }
 
+type Image {
+    user : User! @relation
+    local : Local! @relation
+    review: Review @relation
+    url : String!
+    description : String
+}
+
+type Avatar {
+    user: User! @relation
+    url: String!
+}
 
 type Local {
     name : String
@@ -43,7 +58,7 @@ type Local {
     quick : Quick
     city : String
     state : String
-    images : [String!]
+    images : [Image] @relation
 }
 
 
@@ -88,6 +103,7 @@ type Review {
     shares : Int
     actual : Float
     userUpvoted: [User!] @relation
+    images: [Image!] @relation
 }
 
 type Geo @embedded{
