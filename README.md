@@ -31,7 +31,7 @@ support those who want to learn and grow into the world of web development.
 
 ## How to get the site up and running
 
-Make sure you have node.js and npm installed on your computer. You can check this by running `node --version` and `npm --version`. If either give you an error, please install by going [here](nodejs.org)
+Make sure you have node.js and npm installed on your computer. You can check this by running `node --version` and `npm --version`. If either give you an error, please install by going [here](https://nodejs.org/en/)
 
 Clone the __Dev__ repo, then run on both client and server separately `npm install`.
 
