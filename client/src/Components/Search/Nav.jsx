@@ -7,7 +7,8 @@ import {useHistory} from 'react-router';
 import {fromLatLng} from '../../globals';
 import axios from 'axios';
 import { geolocated } from "react-geolocated";
-import {getCities} from 'countrycitystatejson'
+// import {getCities} from 'countrycitystatejson'
+import queryString from 'query-string'
 const parseAddress = require('parse-address-string');
 
 export default withRouter(geolocated({
@@ -15,12 +16,11 @@ export default withRouter(geolocated({
       enableHighAccuracy: false,
   },
   userDecisionTimeout: 5000,
-})(({setMadeSearch})=>{
+})(({setMadeSearch, location:{search:urlQuery}})=>{
     
   const [width, setWidth] = useState(window.innerWidth);
   
-  const [state, setState] = useState('Arizona');
-  const [city, setCity] = useState('Tempe');
+  const [state, setState] = useState(queryString.parse(urlQuery).where || 'Tempe, Arizona');
   
   const updateDimensions = ()=>{setWidth(window.innerWidth)}
   const history = useHistory();
@@ -45,10 +45,7 @@ export default withRouter(geolocated({
         break;
       case "state":
         setState(value)
-        setCity(getCities('US', value)[0])
-        break;
-      case "city":
-        setCity(value);
+        // setCity(getCities('US', value)[0])
         break;
       default:
         break;
@@ -76,7 +73,7 @@ export default withRouter(geolocated({
     
     
     setMadeSearch(true)
-    history.push(`/search?what=${search === '' ? 'all' : search.replace(' ', '+')}&where=${city}+${state}`);
+    history.push(`/search?${search === '' ? '' : `what=${search.replace(' ', '+')}&`}where=${state}`);
   }
 
   const isMobile = () => (width < 769)
@@ -96,8 +93,8 @@ export default withRouter(geolocated({
             <div className="level-item">
             {
               isMobile() ? 
-                <SearchDropdown getCities={getCities} loc={{search, state, city}} handleInput={handleInput} handleSubmit={handleSubmit}/>
-                :<Search className="pl-2" getCities={getCities} loc={{search, state, city}} handleInput={handleInput} handleSubmit={handleSubmit}/>
+                <SearchDropdown loc={{search, state}} handleInput={handleInput} handleSubmit={handleSubmit}/>
+                :<Search className="pl-2" loc={{search, state}} handleInput={handleInput} handleSubmit={handleSubmit}/>
             }
             </div>
           </div>

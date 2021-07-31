@@ -1,4 +1,4 @@
-
+export default `
 enum Role {
     FREE
     PREM
@@ -7,23 +7,19 @@ enum Role {
 
 type User {
     avatar: Avatar
-    handle: String
-    readTermsAndConditions: Boolean
-    name: String
-    authID: String
-    email: String
-    localTo: String
-    softLocalTo: [String]
-    owns: [Local!] @relation
-    birthday: Birthday
-    updateLocalTo: String,
-    dateUpdateLocalTo: Date
-    reviews: [Review!] @relation 
-    role: Role
-    images: [Image] @relation
-    followingUser: [User] @relation
-    followingLocal: [Local] @relation
-    earlyBeta: Boolean
+    name : String
+    handler : String
+    authID : String
+    email : String
+    localTo : String
+    softLocalTo : [String]
+    owns : [Local!] @relation
+    birthday : Birthday
+    updateLocalTo : String,
+    dateUpdateLocalTo : Date
+    reviews : [Review!] @relation 
+    role : Role
+    images : [Image] @relation
 }
 
 type Birthday @embedded {
@@ -47,7 +43,7 @@ type Avatar {
 
 type Local {
     name : String
-    publishedBy : User
+    owner : User
     description : String
     reviews : [Review!] @relation
     reviewCount : Int
@@ -63,16 +59,9 @@ type Local {
     city : String
     state : String
     images : [Image] @relation
-    isClaimed: Claim
-    isSmallBusiness: Boolean
-    isLocal: Boolean
 }
 
-type Claim {
-    isClaimed: Boolean
-    by: User @relation
-    local: Local! @relation
-}
+
 
 type Quick @embedded {
     twentyOnePlus : Boolean
@@ -130,3 +119,4 @@ type Query {
     userAuth(authID : String!) : User
     localByLocation(city : String!, state : String!) : [Local]
 }
+`

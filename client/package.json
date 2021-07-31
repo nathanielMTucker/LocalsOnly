@@ -3,8 +3,8 @@
   "version": "0.5.1-alpha",
   "private": true,
   "engines": {
-    "node": "14.4.0",
-    "npm": "6.14.5"
+    "node": "16.5.0",
+    "npm": "7.20.1"
   },
   "homepage": "https://www.localsonly.xyz/",
   "dependencies": {
@@ -20,8 +20,6 @@
     "firebase": "^8.3.2",
     "google-maps-react": "^2.0.6",
     "node-fetch": "^2.6.1",
-    "node-sass": "^5.0.0",
-    "npm": "^7.20.1",
     "parse-address-string": "0.0.3",
     "query-string": "^7.0.0",
     "react": "^17.0.2",

@@ -1,5 +1,5 @@
 
-const GET_USER = `
+const GET_USER_AUTH = `
 query ($auth : String!) {
     userAuth(authID : $auth){
       name
@@ -8,9 +8,28 @@ query ($auth : String!) {
       softLocalTo
       _id
       authID
+      avatar{
+        url
+      }
     }
   }
 `
+const GET_USER_BY_ID = `
+query ($id : ID!) {
+    findUserByID(id:$id){
+      name
+      email
+      localTo
+      softLocalTo
+      _id
+      authID
+      avatar{
+        url
+      }
+    }
+  }
+`
+
 const GET_USER_FOR_UPDATE = `
   query ($id : ID!){
     findUserByID(id:$id){
@@ -60,7 +79,8 @@ mutation($id : ID!, $data : [ID]){
 }
 `
 module.exports = {
-  GET_USER,
+  GET_USER_BY_ID,
+  GET_USER_AUTH,
   CREATE_USER,
   UPDATE_USER_OWNS,
   GET_USER_OWNS,

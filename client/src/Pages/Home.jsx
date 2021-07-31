@@ -3,7 +3,7 @@ import {withUser} from '../User';
 
 // const gabe = require("./gabe.jpeg")
 
-export default withUser( USER=>{
+export default withUser( user=>{
 
     const creator = (name, image, detail)=>(
         <div className="column is-3">
@@ -39,7 +39,7 @@ export default withUser( USER=>{
     )
 
     return (
-        <div id="home">
+        <main id="home">
             {/* <article  style={{
                 textAlign: "center"
             }}>
@@ -73,7 +73,7 @@ export default withUser( USER=>{
             <footer>
                 This is the footer
             </footer> */}
-        </div>
+        </main>
     )
     
 })

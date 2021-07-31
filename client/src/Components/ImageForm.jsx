@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ImageForm = ({folder, callback}) => {
+const ImageForm = ({folder, multiple, callback}) => {
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState([]);
 
@@ -9,7 +9,11 @@ const ImageForm = ({folder, callback}) => {
     const {
       target: { files },
     } = e;
-    setImages(currentImages=>[...currentImages, ...files]);
+    if(multiple){
+      setImages(currentImages=>[...currentImages, ...files]);
+      return;
+    }
+    setImages([...files]);
   };
 
   const uploadImages = async e => {
@@ -55,14 +59,23 @@ const ImageForm = ({folder, callback}) => {
       const {name} = images[index];
       setImages(images.filter(image=>image.name !== name))
   }
+  // const changeDescription = e =>{
+  //   e.preventDefault();
+  // }
     return <div className="tile is-ancestor">
         <div className="tile is-parent image-row">
             {images && images.map((image, index)=>(
-                <div className="tile is-child image-item" key={index}>
+                <div className="tile is-4 is-child image-item" key={index}>
+                    <div>
                     <span className="is-small button is-inverted is-danger delete-image" title="Remove" id={index} onClick={removeImage}>
                       <i className="far fa-trash-alt"/>
                     </span>
                     <img src={URL.createObjectURL(image)} alt="Could not load"/>
+                    </div>
+                    {/* <div>
+                      <label htmlFor="caption">Caption</label>
+                    <textarea name="caption" onChange={changeDescription}/>
+                    </div> */}
                 </div>
             ))}
         </div>
@@ -73,7 +86,7 @@ const ImageForm = ({folder, callback}) => {
     <form onSubmit={uploadImages} className="form-container">
       <div className="file is-centered is-boxed has-name">
         <label className="file-label">
-          <input className="file-input" multiple type="file" name="images" onChange={getImagesFromUser}/>
+          <input className="file-input" multiple={multiple} type="file" name="images" onChange={getImagesFromUser}/>
           <span className="file-cta">
             <span className="file-icon">
               <i className="fas fa-images"/>

@@ -31,7 +31,7 @@ export const SearchDropdown = ({loc, handleInput, handleSubmit, zip})=>{
             </div>
             <div className="dropdown-menu is-left is-full-width" id="dropdown-menu" role="menu">
                 <div className="dropdown-content">
-                    <div className="dropdown-item">
+                    <div className="dropdown-item mobile-search">
                       <Search loc={loc} handleInput={handleInput} handleSubmit={handleSubmit} zip={zip}/>
                     </div>
                 </div>

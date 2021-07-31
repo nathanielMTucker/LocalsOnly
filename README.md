@@ -1,5 +1,7 @@
 # LocalsOnly
 
+## Description
+
 ## What is LocalsOnly?
 
 A Yelp like website with the focus on locals to add input about businesses and places of interest.
@@ -29,9 +31,9 @@ This website started with myself having no knowledge on the subject. This is als
 others to join and learn about web development. My goal is to guide this site into a company to further
 support those who want to learn and grow into the world of web development.
 
-## How to get the site up and running
+## Installation - How to get the site up and running
 
-Make sure you have node.js and npm installed on your computer. You can check this by running `node --version` and `npm --version`. If either give you an error, please install by going [here](nodejs.org)
+Make sure you have node.js and npm installed on your computer. You can check this by running `node --version` and `npm --version`. If not; please install by going [here](nodejs.org)
 
 Clone the __Dev__ repo, then run on both client and server separately `npm install`.
 

@@ -5,7 +5,8 @@ import {StarRating} from '../Components/Results';
 import MapContainer from '../Components/MapContainer';
 import Reviews from '../Components/Reviews';
 import {Link} from 'react-router-dom';
-
+import { CloudinaryContext} from 'cloudinary-react'
+import Picture from '../Components/Picture';
 
 const dayOfTheWeek = [
     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -25,8 +26,18 @@ const Local = ({location : {search}}) =>{
         if(!item) getData()
     })
     
-    const Images = () => (item.images && item.images.length > 0)?
-            <img src={`https://res.cloudinary.com/dpjlvg7ql/image/upload/v1615148804/locals/${item.images[0]}`} alt="localsonly"/>:
+    const Images = () => (item.images.data && item.images.data.length > 0)?
+            <CloudinaryContext  cloudName={"dpjlvg7ql"} secure={false} upload_preset="local_images">
+                <div className="level">
+                {
+                    item.images.data.splice(0,4).map((image, index)=>(
+                        <figure className="level-item mx-0" key={index}>
+                             <Picture id={image.url} preset="local_images"></Picture>
+                        </figure>
+                    ))
+                }
+                </div>
+            </CloudinaryContext>:
             <img src="./img/tempelake.jpeg"/>
     
     const getData = async ()=>{
@@ -62,11 +73,13 @@ const Local = ({location : {search}}) =>{
 
         return (
             <div className="level">
+                <div className="level-left">
                 <div className="level-item">
                     {day}
                 </div>
                 <div className="level-item">
                     {(closed || to === '') ? 'closed' : `${from} - ${to}`}
+                </div>
                 </div>
             </div>
         )

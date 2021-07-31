@@ -10,7 +10,7 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import "./App.scss";
+import "./App.css";
 import * as ROUTES from "./Constants/routes";
 import { withFirebase } from "./Authentication";
 import Registration from "./Pages/Registration";
@@ -22,6 +22,7 @@ import { withUser } from "./User";
 import Upcoming from "./Pages/Upcoming";
 import ImageUpload from "./Pages/ImageUpload"
 import 'bulma/css/bulma.min.css';
+import EditProfile from "./Pages/EditProfile";
 
 export default compose(
   withFirebase,
@@ -34,13 +35,15 @@ export default compose(
 
   const setUser = (res) => {
     const data = res.data;
-    props.USER.set({
+    console.dir(data);
+    props.user.set({
       ownerID: data._id,
       name: data.name,
       email: data.email,
       localTo: data.localTo,
       role: "admin",
       softLocalTo: data.softLocalTo,
+      avatar: data.avatar.url
     });
     setUserInfo(data);
   };
@@ -49,7 +52,7 @@ export default compose(
     setAuthUser(auth);
     if (auth) {
       axios
-        .get(`/api/v1/users/${auth.uid}`)
+        .get(`/api/v1/users/auth/${auth.uid}`)
         .then(setUser)
         .catch((err) => {
           setUserInfo(null);
@@ -85,7 +88,8 @@ export default compose(
           />
           <Route path={ROUTES.UPLOAD_IMAGE} component={ImageUpload}/>
           <Route path={ROUTES.LOCAL} component={Local} />
-          <Route path={ROUTES.PROFILE} component={Profile} />
+          <Route exact path={ROUTES.PROFILE} component={Profile} />
+          <Route exact path={ROUTES.PROFILE + "/edit"} component={EditProfile}/>
           <Route path={"/upcoming-features"} component={Upcoming} />
           <Route render={() => <Redirect to={ROUTES.HOME} />} />
         </Switch>

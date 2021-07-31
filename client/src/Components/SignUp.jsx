@@ -2,10 +2,10 @@ import React,{useEffect} from 'react';
 import { Link} from 'react-router-dom';
 import * as ROUTES from '../Constants/routes';
 import {buttons} from '../Constants/IDs';
-
+import { withFirebase } from '../Authentication';
 
  
-const SignUp = ({setStatus, user, setUser})=> {
+const SignUp = withFirebase(({setStatus, user, setUser})=> {
   
     const checkPasswordMatch = ()=>{
       const pass = document.getElementById('password');
@@ -111,7 +111,7 @@ const SignUp = ({setStatus, user, setUser})=> {
         {user.error && <p className="help is-danger">{user.error.message}</p>}
       </section>
     );
-  }
+  })
 
  
 export const SignUpLink = () => {

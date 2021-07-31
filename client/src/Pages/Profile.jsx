@@ -1,82 +1,89 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { withUser } from '../User'
 import {withFirebase} from '../Authentication';
 import {compose} from 'recompose';
 import axios from 'axios';
+import useToggle from '../Components/useHooks/useToggle';
+import ImageForm from "../Components/ImageForm";
+import Picture from '../Components/Picture';
+import queryString from 'query-string'
+import FourOFour from './FourOFour';
+import {Link} from 'react-router-dom';
+import { CloudinaryContext} from 'cloudinary-react'
+import {CEOTag, DevTag, PremiumTag, BetaTag} from "../Components/UserTag";
 
-const Profile = ({USER : user, firebase}) => {
+const Profile = ({user , firebase}) => {
     
-    let [state, city] = user.localTo.split(':');
-    const [edit, setEdit] = useState(false);
-    const [userInfo, setUserInfo] = useState({
-        id : user.ownerID,
-        name : user.name,
-        email : user.email,
-        localTo : user.localTo
-    })
+    const [edit, setEdit] = useToggle();
+    const [editAvatar, setEditAvatar] = useToggle();
+    const [userSearch, setUserSearch] = useState();
 
-    const updateUserInto = (e)=>{
-        e.preventDefault();
-        const {target : {name, value}} = e;
-        setUserInfo({...userInfo, [name] : value})
+    const getUser = async ()=>{
+        await axios.get(`/api/v1/users?id=${user.ownerID}`)
+        .then(res=>{
+            console.dir(res.data);
+            setUserSearch(res.data)
+        }).catch(err=>{
+            console.error(500)
+        })
+        // .then(user=>setUserSearch(user))
     }
 
+    useEffect(()=>{
+        getUser();
+    },[])
+
+    const uploadURLs = ()=>{}
+    
+    const formatLocal = ()=>{
+        let [state, city] = user.localTo.split(':');
+        return `${city.charAt(0).toUpperCase() + city.slice(1)}, ${state.toUpperCase()}`
+    }
+    
     return (
-        <div id="profile-page" className="pt-5 pl-0 container">
-            <h1 className="title">
-                    Profile { edit ? 
-                    <div>
-                        <button className="button is-danger" onClick={e=>{
-                                e.preventDefault();
-                                setEdit(false)
-                            }}>
-                                <small className="help">
-                                    cancel
-                                </small>
-                            </button>
-                        <button className="button is-primary" onClick={e=>{
-                            e.preventDefault();
-                            axios.patch(`/api/v1/users/${userInfo.id}`,{
-                                name : userInfo.name,
-                                email : userInfo.email,
-                                localTo : userInfo.localTo
-                            }).then(res=>{
-                                {/* console.log(res); */}
-                                setEdit(false);
-                            }).catch(err=>{
-                                console.log(err);
-                            })
-                            }}
-                        
-                        >
-                            <small className="help">submit</small>
-                        </button>
+        <main id="profile-page" className="section container">
+            
+                <article className="columns">
+                <section id="profile-details" className="column">
+                    <div className="media">
+                        <figure className="media-left">
+                            <p className="image is-128x128">
+                                <Link to={`/dashboard/edit`}>
+                                <div className="profile-avatar">
+                                    {
+                                        user.avatar === null ? <img src="https://bulma.io/images/placeholders/128x128.png"/>:
+                                        <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="avatar_images">
+                                        <Picture id={user.avatar} preset="avatar_images"/>
+                                        </CloudinaryContext>
+                                    }
+                                    <div className="edit-avatar">edit</div>
+                                </div>
+                                </Link>
+                            </p>
+                        </figure>
+                        <div className="media-content">
+                            <h1 className="title">{user.name} <span></span>
+                            <CEOTag/><DevTag/> <PremiumTag/> <BetaTag/>
+                            <br/>
+                            <h2 className="subtitle">@{user.handler}</h2></h1>
+                            
+                            <p>Email: {user.email}</p>
+                            <p>Local: {formatLocal()}</p>
+                        </div>
                     </div>
-                    :
-                        <button onClick={(e)=>{
-                        e.preventDefault();
-                        setEdit(true);
-                        }}><small className="help is-info">edit</small></button>}
-            </h1>
-            <div className="">
-                <p>Name: {
-                    user.name === '' ? <a className="has-text-info" href="#">Add</a> : 
-                    edit ? <input className="input" type="text" value={userInfo.name} onChange={updateUserInto} name="name"/> : 
-                    user.name}</p>
-                <p>Email:  {
-                    user.email === '' ? <a className="has-text-info" href="#">Add</a> : 
-                    edit ? <input className="input" type="text" value={userInfo.email} onChange={updateUserInto} name="email"/> :
-                    user.email}</p>
-                <p>Local:  {
-                    user.localTo === '' ? <a className="has-text-info" href="#">Add</a> :
-                    edit ? <input className="input" type="" value={userInfo.localTo} onChange={updateUserInto} name="localTo"/> :
-                    `${city}, ${state}`}</p>
-                {/* <p>Soft Local: Feature still in development. Learn about upcoming features <a href="/upcoming-features">here.</a></p> */}
-            </div>
-            <footer>
-                <button className="button is-danger is-outlined is-small">Delete Account</button>
-            </footer>
-        </div>
+                    <Link className="button" to={`/dashboard/edit`}>Edit Profile</Link>
+                </section>
+                <section className="column">
+                    <div id="locals-posted">
+                        {
+
+                        }
+                    </div>
+                </section>
+                
+            </article>     
+            
+        </main>
     )
 }
 

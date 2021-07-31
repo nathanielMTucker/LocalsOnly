@@ -8,13 +8,9 @@ import {getAbbrs} from '../globals';
 import { withFirebase } from '../Authentication';
 import axios from 'axios';
 import Alert from '../Components/Alert';
-import '../App.scss';
 import {LogoLinkButton} from '../Components/Buttons';
 
 const getCities = require('countrycitystatejson').getCities
-
-
-
 
 const RegistrationBase = ({firebase, history})=>{
     const isCity = (state, city)=>{
@@ -131,13 +127,13 @@ const RegistrationBase = ({firebase, history})=>{
         return !(verPass && verAddress);
     }
     return (
-    <div className="registration section">
+    <main className="registration section">
         <div className="columns is-centered">
             <div className="is-half  ">
                 <div className="box border-main">
                     <div className="hero fill-hero box is-primary">
-                        <div className="text-center level">
-                            <LogoLinkButton/>
+                        <div className="text-center level homelogo">
+                        <img src="../LocalsOnly.png" alt="localsonly"/>
                             <label className="level-item title">Registration</label>
                         </div>
                         
@@ -146,7 +142,7 @@ const RegistrationBase = ({firebase, history})=>{
                     <section className="column">
                         <form onSubmit={handleSubmit} className="form">
                         <label className="label">
-                            <SignUp firebase={firebase} setUser={setUser} setStatus={setVerPass} user={user}/>
+                            <SignUp setUser={setUser} setStatus={setVerPass} user={user}/>
                         </label>
                         <label className="label">
                             <div className="is-mobile">
@@ -192,7 +188,7 @@ const RegistrationBase = ({firebase, history})=>{
                 </div>
             </div>
         </div>
-    </div>
+    </main>
     )
 }
 const Registration = compose(withRouter, withFirebase)(RegistrationBase);

@@ -7,7 +7,7 @@ import Rating from '@material-ui/lab/Rating'
 import {StarRating} from './Results';
 import {ServerError} from "./Error";
 
-const Review = withUser(({localID, USER : {ownerID : userID}}) => {
+const Review = withUser(({localID, user : {ownerID : userID}}) => {
     
     const [reviews, setReviews] = useState();
 

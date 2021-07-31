@@ -4,7 +4,7 @@ export const UserContext = React.createContext(null);
 
 export const withUser = Component => props => (
     <UserContext.Consumer>
-      {user => <Component {...props} USER={user} />}
+      {user => <Component {...props} user={user} />}
     </UserContext.Consumer>
   );
 
@@ -16,6 +16,7 @@ export default class User{
         this.localTo = "";
         this.softLocalTo = [];
         this.role = "";
+        this.avatar = "";
     }
     isSet(){
       return !!this.ownerID;
@@ -27,5 +28,6 @@ export default class User{
       this.localTo = user.localTo;
       this.softLocalTo = user.softLocalTo;
       this.role = user.role;
+      this.avatar = user.avatar
     }
 }

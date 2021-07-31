@@ -1,6 +1,6 @@
 const sendQuery = require('./utils/sendQueries');
 const express = require('express');
-const { CONNECT_IMAGE_TO_LOCAL_USER, GET_IMAGES_WITH_USER_BY_LOCAL } = require("./utils/imageQueries");
+const { CONNECT_IMAGE_TO_LOCAL_USER, GET_IMAGES_WITH_USER_BY_LOCAL, CONNECT_AVATAR_TO_USER } = require("./utils/imageQueries");
 const router = express.Router();
 
 const uploadImages = async (images, local, user, review, description)=>
@@ -35,6 +35,24 @@ router.post("/images/locals/:localID/users/:userID/reviews/:reviewID",async (req
   const {images, description} = req.body;
 
   const im = uploadImages(images, localID, userID, reviewID, description);
+
+  res.status(200);
+})
+
+router.post("/images/users/:userID", async (req, res)=>{
+  const {userID} = req.params;
+  const {images, description} = req.body;
+  console.log(userID);
+  console.dir(images);
+  
+  try{
+    const im = await sendQuery(CONNECT_AVATAR_TO_USER, {user:userID,url:images[0]});
+  
+    console.dir(im);
+  }catch(err){
+    console.error(err);
+    res.status(500);
+  }
 
   res.status(200);
 })

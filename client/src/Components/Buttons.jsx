@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {useHistory} from 'react-router-dom'
 import * as ROUTES from '../Constants/routes';
 import {withFirebase} from '../Authentication';
-
+import {withUser} from '../User';
 export const LogoutButton = withFirebase(({firebase}) => {
     const history = useHistory();
    return <React.Fragment>
@@ -36,8 +36,8 @@ export const LocalizeLinkButton = ()=>{
     )
 }
 
-export const UserProfileButton = ()=>(
+export const UserProfileButton = withUser(({user:{ownerID:id}})=>(
     <Link title="Profile" className="button is-main is-inverted" to={ROUTES.PROFILE}>
         <i className="fas fa-user-astronaut"/>
     </Link>
-)
+))

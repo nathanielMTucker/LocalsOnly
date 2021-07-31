@@ -33,49 +33,56 @@ const getAbbrs = state=>{
         if(state.toLowerCase() === STATES[i].toLowerCase())
             return ABBRS[i].toLowerCase();
     }
-    return state
+    return state.toLowerCase();
 }
 
 router.route('/locals').get(async (req, res)=>{
     // console.log("Entered");
     let {what, where, fields, offset, limit} = req.query;
 
-    what = what.replace(',','')
-    what = what.split(' ')
     
-    let [city, state] = where.split(' ');
+    
+    let [city, state] = where.split(/[, ]+/);
     
     state = getAbbrs(state);
     console.log(state);
     city = city.toLowerCase();
-    
+    console.log(city);
     const query = QUICK_LOOK_LOCAL;
     const variables = {
         city ,
-        state 
+        state,
+        offset,
+        limit:Number(limit)
     }
 
     try { 
-        let {localByLocation : {data}} = await sendQuery(query, variables);
+        let {localByLocation} = await sendQuery(query, variables);
         // console.log(localByLocation);
-        if(what[0] === 'all' && what.length === 1){
-            console.log(data);
-            res.status(200).json(data)
+        if(what === null || what === undefined || what === ' '){
+            console.dir(localByLocation);
+            res.status(200).json(localByLocation)
         }else{
-            const regex = new RegExp(what.join("|"), "i")
-            const filtered = []
+            what = what.replace(',','')
+            what = what.split(' ')
+            const join = `(${what.join("|")})`;
+            const regex = new RegExp(join, "gi")
+            console.log(regex);
+            let filtered = []
         
-            data.forEach(local=>{
+            localByLocation.data.forEach(local=>{
                 if(regex.test(local.name) || regex.test(local.description)){
+                    
+                    // console.log(nameCount);
                     filtered = [...filtered, local];
                 }
             })
-            console.log(filtered);
-            filtered.sort((localA, localB)=>(localB.rating - localA.rating))
+            // console.log(filtered);
+            filtered.sort((localA, localB)=>((localB.rating * localB.reviewCount) - (localA.rating * localA.reviewCount)))
             
-            console.log(filtered);
+            // console.log(filtered);
 
-            res.status(200).json(filtered)
+            res.status(200).json({data:filtered, before:localByLocation.before, after:localByLocation.after})
         }
 
     }catch(err){
@@ -133,8 +140,7 @@ router.route('/local').post(async (req, res)=>{
                     delivery: details.delivery,
                 },
                 owner : id,
-                reviewCount : 1,
-                images : images
+                reviewCount : 1
         };
     
         try {        

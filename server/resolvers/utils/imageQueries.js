@@ -1,3 +1,4 @@
+
 const CONNECT_IMAGE_TO_LOCAL_USER = `
 mutation($user:ID!, $local:ID!, $url:String!, $description:String){
   createImage(data:{
@@ -5,6 +6,16 @@ mutation($user:ID!, $local:ID!, $url:String!, $description:String){
     local:{connect:$local},
     url:$url,
     description:$description
+  }){
+    _id
+  }
+}
+`
+const CONNECT_AVATAR_TO_USER = `
+mutation($user:ID!, $url:String!){
+  createAvatar(data:{
+    user:{connect:$user},
+    url:$url
   }){
     _id
   }
@@ -41,5 +52,6 @@ query($user:ID!){
 `
 module.exports = {
   CONNECT_IMAGE_TO_LOCAL_USER,
-  GET_IMAGES_WITH_USER_BY_LOCAL
+  GET_IMAGES_WITH_USER_BY_LOCAL,
+  CONNECT_AVATAR_TO_USER
 }

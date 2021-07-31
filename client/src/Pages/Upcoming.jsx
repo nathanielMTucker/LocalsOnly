@@ -2,8 +2,8 @@ import React from 'react'
 
 export default () => {
     return (
-        <div>
+        <main>
             Upcoming Features Page
-        </div>
+        </main>
     )
 }

@@ -119,8 +119,8 @@ fragment hourRange on Day{
           ...hourRange
     }
   }
-  query ($city : String!, $state : String!){
-    localByLocation(city : $city, state : $state){
+  query ($limit:Int!, $offset:String, $city : String!, $state : String!){
+    localByLocation(_size:$limit,_cursor:$offset city : $city, state : $state){
       data{
         _id
         owner{
@@ -156,12 +156,14 @@ fragment hourRange on Day{
           delivery 
           dogFriendly 
         }
-        images{
+        images(_size:1){
             data{
                 url
             }
         }
       }
+      before
+      after
     }
   }
 `
@@ -182,8 +184,7 @@ const CREATE_LOCAL =`
         $address:AddressInput,
         $quick:QuickInput,
         $owner:ID!,
-        $reviewCount:Int,
-        $images : [String!]
+        $reviewCount:Int
     ){
         createLocal(data:{
             name:$name , 
@@ -200,8 +201,7 @@ const CREATE_LOCAL =`
             address:$address,
             quick:$quick,
             owner:{connect:$owner},
-            reviewCount:$reviewCount,
-            images:$images
+            reviewCount:$reviewCount
         }){
             _id
         }

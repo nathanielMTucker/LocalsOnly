@@ -8,6 +8,7 @@ import { withUser } from '../User'
 import {compose} from 'recompose'
 import {withRouter} from 'react-router'
 import axios from 'axios'
+import { CloudinaryContext} from 'cloudinary-react'
 
 const dayOfWeek = [
     "sunday",
@@ -19,10 +20,12 @@ const dayOfWeek = [
     "saturday"
 ]
 
-export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{search}, madeSearch, setMadeSearch})=> {
+export default compose(withUser, withRouter)(({user:{role, localTo}, location:{search}, madeSearch, setMadeSearch})=> {
     
     const [items, setItems] = useState([])
     const [loading, setLoading] = useState(true)
+    const [offset, setOffset] = useState(null);
+    const [limit, setLimit] = useState(10);
 
     useEffect(()=>{  
         getData()
@@ -32,7 +35,7 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
         
         let {what, where} = queryString.parse(search);
         
-        const itemsFromData = await axios.get(`/api/v1/locals?what=${what}&where=${where}`)
+        const itemsFromData = await axios.get(`/api/v1/locals?${what ? `what=${what}` : ''}&where=${where}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
         .then(({data})=>data)
         .catch(err=>{
             console.error(err)
@@ -41,7 +44,8 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
             }])
         })
 
-        setItems(itemsFromData)
+        setItems(itemsFromData.data)
+        setOffset(itemsFromData.after)
         setLoading(false);
         setMadeSearch(false); 
     }
@@ -52,7 +56,7 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
                     <p className="subtitle">
                         We could not find anything!
                     </p>
-                    <p>You can help by adding new places to the database <Link className="is-text is-focused" to='/createNewLocal'>here</Link>.</p>
+                    <p>You can help by adding new places to the database <Link className="is-text is-focused" to='/create-local'>here</Link>.</p>
                     </div>
                 </div>
         )
@@ -103,19 +107,30 @@ export default compose(withUser, withRouter)(({USER:{role, localTo}, location:{s
     }
     
         return (
-            
-               <div className="" id="results-page">
-                    <div className="columns pt-4" >
+            <main className="" id="results-page">
+                <div className="columns pt-4" >
                     <Results className=" is-two-fifths column side result-card" loading={loading}>
-                        {items && displayItems()}
+                        <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="local_images">
+                            {items && displayItems()}
+                            {offset ? <button className="show-more subtitle"><span>Show more</span></button> : 
+                                items ? 
+                                <div className="pt-1 pb-5 container is-centered">
+                                    <div className="notification is-info has-text-centered">
+                                        <p className="subtitle">
+                                            This is all we could find!
+                                        </p>
+                                        <p>You can help by adding new places to the database <Link className="is-text is-focused" to='/create-local'>here</Link>.</p>
+                                    </div>
+                                </div> : null
+                            }
+                        </CloudinaryContext>
                     </Results>
+                    
                     <div className="column is-medium is-hidden-mobile">
                         {items && <MapContainer style={{height:'89vh', width:'58.5vw'}} zoom={16} markers={items.map(item=>item.geo)}/>}
                     </div>
                 </div>
-                
-               </div>
-            
+            </main>
         )
     
 })

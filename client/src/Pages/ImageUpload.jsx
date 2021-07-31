@@ -5,7 +5,7 @@ import axios from "axios";
 import { withUser } from '../User'
 import {compose} from 'recompose';
 
-const ImageUpload = ({USER:user, location : {search}})=>{
+const ImageUpload = ({user, location : {search}})=>{
   const [localID] = useState(queryString.parse(search).id);
   const [name] = useState(queryString.parse(search).name);
   
@@ -20,14 +20,14 @@ const ImageUpload = ({USER:user, location : {search}})=>{
     })
   }
 
-  return <div id="image-upload-page" className="section content">
+  return <main id="image-upload-page" className="section content">
     <section className="box section container">
       <p className="title">
         Upload Images: {name}
       </p>
-      <ImageForm folder={"local"} callback={uploadURLs}/>
+      <ImageForm folder={"local"} multiple={true} callback={uploadURLs}/>
     </section>
-  </div>
+  </main>
 }
 
 export default compose(withUser)(ImageUpload);

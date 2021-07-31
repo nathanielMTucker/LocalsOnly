@@ -1,7 +1,7 @@
 import React  from 'react';
 import {Link} from 'react-router-dom';
 import {StarRating} from '../Results';
-import './ResultsCard.scss';
+
 // import Footer from './Footer';
 import Picture from "../Picture";
 const ResultsCard = props => 
@@ -16,16 +16,12 @@ const ResultsCard = props =>
         ))
     }
     
-    const MainImage = () =>
-        <Picture id={props.image.url} preset="local_images"/>
-    
-
     return (
         <Link id={props.id} className="box" to={`/local?id=${props.id}`}>
             <section className="columns">
             <span className="column is-4">
                 <figure className="image">
-                    {props.image === undefined ? <img src="./LocalsOnly.png"/> : <MainImage/>}
+                    {props.image === undefined ? <img src="./LocalsOnly.png"/> : <Picture id={props.image.url} preset="local_images"/>}
                 </figure>
             </span>
             <article className="column">

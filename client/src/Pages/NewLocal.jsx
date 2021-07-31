@@ -15,7 +15,7 @@ const hours = {
         to: '',
         closed: false
     }
-const NewLocal = ({history, USER : {ownerID} }) => {
+const NewLocal = ({history, user : {ownerID} }) => {
 
     const [days, setDays] = useState({
         monday:hours,
@@ -135,7 +135,7 @@ const NewLocal = ({history, USER : {ownerID} }) => {
     }
 
     return (
-        <div className="section columns is-centered" style={{marginBottom:"-2.75rem"}}>
+        <main className="section columns is-centered" style={{marginBottom:"-2.75rem"}}>
             <div className="column is-half">
                 <h1 className="title has-text-centered">
                     Create New Local
@@ -143,7 +143,7 @@ const NewLocal = ({history, USER : {ownerID} }) => {
                 <div className="mb-1">
                 * required
                 </div>
-                <div className="has-background-primary-light">
+                <div className="">
                     <form method="POST" encType="multipart/form-data" onSubmit={onSubmit} className="form">
                     
                     <label htmlFor="businessName" className="label has-text-grey">
@@ -279,7 +279,7 @@ const NewLocal = ({history, USER : {ownerID} }) => {
                     </form>
                 </div>
             </div>
-        </div>
+        </main>
     )
 }
 

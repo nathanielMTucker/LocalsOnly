@@ -19,21 +19,18 @@
   "homepage": "https://github.com/nathanielMTucker/LocalsOnly#readme",
   "dependencies": {
     "@types/express": "^4.17.13",
-    "apollo-server-express": "^1.4.0",
     "axios": "^0.21.1",
-    "body-parser": "^1.19.0",
     "concurrently": "^5.3.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "countrycitystatejson": "^20.8.9-a",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-graphql": "^0.12.0",
-    "graphql": "^15.5.0",
-    "graphql-import": "^1.0.2",
-    "graphql-tools": "^7.0.5",
-    "jsonwebtoken": "^8.5.1",
-    "nodemon": "^2.0.6",
-    "ws": "^7.4.2"
+    "express-ws": "^5.0.2",
+    "graphql-tag": "^2.12.5",
+    "nodemon": "^2.0.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.8"
   }
 }

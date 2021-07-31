@@ -1,4 +1,4 @@
-const {CREATE_USER,UPDATE_USER, GET_USER_FOR_UPDATE,GET_USER} = require('./utils/userQueries');
+const {CREATE_USER,UPDATE_USER, GET_USER_FOR_UPDATE,GET_USER_BY_ID,GET_USER_AUTH} = require('./utils/userQueries');
 const sendQuery = require('./utils/sendQueries');
 const response = require('./utils/response');
 const router = require('express').Router();
@@ -6,26 +6,17 @@ const router = require('express').Router();
 const names = ["name", "email", "localTo"];
 
 router.route('/users').get(async (req, res)=>{
-    try{
-        if(req.params || req.body){
-            console.error("Cannot take in params or body");
-            return;
-        }
-        const {fields} = req.query;
-        
-    }catch(err){
+    
+})
 
-    }
-});
-
-router.route('/users/:userID').get(async (req, res)=>{
+router.route('/users/auth/:userID').get(async (req, res)=>{
     try {
         
         const {fields} = req.query
         const {userID:id} = req.params
-        console.log(id);
-        const {userAuth} = await sendQuery(GET_USER, {auth:id})
-       
+        // console.log(id);
+        const {userAuth} = await sendQuery(GET_USER_AUTH, {auth:id})
+        console.dir(userAuth)
         res.status(200).json(userAuth)
         
     }catch(err){
