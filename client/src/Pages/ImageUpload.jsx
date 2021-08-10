@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import queryString from 'query-string';
 import ImageForm from "../Components/ImageForm";
 import axios from "axios";

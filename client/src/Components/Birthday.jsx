@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default props =>{
+const Birthday = props =>{
     const verifyAge = event=>{
         // const bd = new Date(event.target.value);
         
@@ -23,3 +23,6 @@ export default props =>{
         </div>  
     )
 }
+
+
+export default Birthday;

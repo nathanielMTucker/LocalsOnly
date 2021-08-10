@@ -41,7 +41,7 @@ fragment hourRange on Day{
     query($id:ID!){
         findLocalByID(id:$id){
             name
-            owner{
+            publishedBy{
                 _id
             }
             description 
@@ -123,9 +123,6 @@ fragment hourRange on Day{
     localByLocation(_size:$limit,_cursor:$offset city : $city, state : $state){
       data{
         _id
-        owner{
-            _id
-        }
         description
         name
         address{
@@ -200,7 +197,7 @@ const CREATE_LOCAL =`
             localsOnly:$localsOnly,
             address:$address,
             quick:$quick,
-            owner:{connect:$owner},
+            publishedBy:{connect:$owner},
             reviewCount:$reviewCount
         }){
             _id

@@ -1,9 +1,9 @@
 :root{
     --yellow : rgba(255,230,0,1);
     --green : rgba(0, 209, 178,1);
-    --purple : rgba(102, 0, 179,1);
+    --purple : rgba(103,0,254, 1);
     --light-purple : rgba(145, 0, 255,1);
-    --blue : #000036;
+    --blue : #1778f2;
     --nav-bar-height: 10vh;
 }
 
@@ -22,6 +22,12 @@
     border-width: 1em;
     border-color: black
 }
+.animate-tag p{
+    display:none;
+}
+.animate-tag  p:hover{
+    display: block;
+}
 
 .avatar img{
     border-radius: 50%;
@@ -38,6 +44,20 @@
     padding : 1em;
     border: solid 1px;
     box-shadow: 5px black;
+}
+
+.password-visible-icon,
+.current-location-button{
+    cursor: pointer;
+}
+
+.control.has-icons-left .icon.password-visible-icon,
+.control.has-icons-left .icon.current-location-button{
+    pointer-events: all;
+}
+
+.control.has-icons-left .icon.current-location-button:hover{
+    color: blue;
 }
 
 #error-popup{
@@ -74,20 +94,35 @@
 .mobile-search{
     width:100vw;
 }
-
-.show-more{
+.has-text-fb{
+    color: var(--blue) !important
+}
+.has-text-dsc{
+    color: #7289DA !important
+}
+.text-has-line{
     width: 100%; 
-    text-align: center; 
-    border-bottom: 1px solid #000; 
-    line-height: 0.1em;
-    margin: 10px 0 20px; 
-    border: none;
-    outline: none;
+   text-align: center; 
+   border-bottom: 1px solid #000; 
+   line-height: 0.1em;
+   margin: 10px 0 20px; 
 }
 
-.show-more span{
+.button.is-google{
+    background-color: #4285F4;
+    background: linear-gradient(90deg, #4285F4 94%, #DB4437 94% 96%, #F4B400 96% 98%, #0F9D58 98%);
+    /* linear-gradient(90deg, #DB4437 75%, #F4B400 75%), 
+    linear-gradient(90deg, #F4B400  80%, #0F9D58 90%); */
+    color:white;
+}
+
+/* .button.is-google:hover{
+    border-color: 
+} */
+
+.text-has-line span{
     background:#fff; 
-    padding:0 10px; 
+    padding:0 10px;
 }
 
 .hours.columns.column{
@@ -102,7 +137,6 @@
 .logo{
     height: 50%;
     width: 50%;
-    border-radius: 15%;
 }
 
 .loading{
@@ -110,25 +144,40 @@
     min-width: 100%;
 }
 
-.homelogo img{
+.home-logo img{
     width: 10rem;
     height: 10rem;
     border-radius: 1;
 }
 
 #home{
+    min-height:100vh;
+    padding-top:calc(var(--nav-bar-height) + 1vh);
     margin-top: 10px;
 }
-
-#home footer{
+.home-section{
+    min-height:100vh;
+}
+footer.footer{
+    border-radius:0;
     margin:0;
     padding:0;
-    background-color: var(--green);
+    background-color: var(--purple);
+    /* height: 45vh; */
     width:100%;
-    min-height: 100px;
-    color: black;
+    color: white;
 }
 
+footer.footer a{
+    color:white;
+}
+footer.footer li{
+    list-style: none;
+}
+.get-involved{
+    color:white;
+    
+}
 .is-secondary{
     background-color: var(--yellow);
     color: black;
@@ -144,7 +193,7 @@ textarea:required:invalid{
     border-width: 2px;
 }
     
-input:required:valid, 
+input:required:valid:focus, 
 textarea:required:valid{
     border-color:green;
     border-width: 2px;
@@ -154,19 +203,19 @@ textarea:required:valid{
     height: 5%;
 }
 
-.image-row.image-item{
+.image-item{
     text-align:center;
+    width:25%;
 }
 
-.image-row.image-item img{
-    width:5%;
+.image-item:nth-child(4n):after{
+    content: "\00000a";
+    white-space: pre;  
+    flex-wrap: wrap;
+
 }
 
-.image-row.image-item.contain > div{
-    float: left;
-}
-
-.image-row.image-item.delete-image{
+.image-item > .delete-image{
     background-color:rgba(0, 0, 0,0.5);
     position: absolute;   
 }
@@ -174,9 +223,11 @@ textarea:required:valid{
 #image-upload-page{
     padding-top:calc(var(--nav-bar-height) + 1vh);
 }
+
 #avatar-upload-page{
     padding-top:calc(var(--nav-bar-height) + 1vh);
 }
+
 .loading{
     padding: 16% 44%;
 }
@@ -249,6 +300,10 @@ textarea:required:valid{
     width: 1em;
 }
 
+#new-local-page{
+    margin-top:calc(var(--nav-bar-height) + 1vh);
+}
+
 .open-button {
     background-color: #555;
     color: white;
@@ -269,6 +324,16 @@ textarea:required:valid{
 
 #profile-page{
     padding-top:calc(var(--nav-bar-height) + 1.5vh);
+}
+
+.profile-local-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.profile-local-item{
+    position: relative;
 }
 
 .access{
@@ -326,7 +391,11 @@ button:focus {
     width:100%;
     border-radius: 15%;
 }
-
+.profile-local-section{
+    /* border:1px solid var(--green); */
+    width:100%;
+    padding:1em;
+}
 .result-card:first-child{
     padding-top: 1.25rem;
 }

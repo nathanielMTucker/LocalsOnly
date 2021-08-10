@@ -17,6 +17,7 @@ export default class User{
         this.softLocalTo = [];
         this.role = "";
         this.avatar = "";
+        this.handler = "";
     }
     isSet(){
       return !!this.ownerID;
@@ -28,6 +29,7 @@ export default class User{
       this.localTo = user.localTo;
       this.softLocalTo = user.softLocalTo;
       this.role = user.role;
-      this.avatar = user.avatar
+      this.avatar = user.avatar;
+      this.handler = user.handler;
     }
 }

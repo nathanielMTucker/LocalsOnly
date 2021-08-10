@@ -3,27 +3,28 @@ enum Role {
     FREE
     PREM
     ADMIN
+    CEO
+    EBETA
 }
 
 type User {
     avatar: Avatar
-    handle: String
+    handle: String @unique
     readTermsAndConditions: Boolean
     name: String
     authID: String
-    email: String
+    email: String @unique
     localTo: String
     softLocalTo: [String]
-    owns: [Local!] @relation
+    published: [Local!] @relation(name:"local_publisher")
     birthday: Birthday
     updateLocalTo: String,
     dateUpdateLocalTo: Date
     reviews: [Review!] @relation 
     role: Role
     images: [Image] @relation
-    followingUser: [User] @relation
-    followingLocal: [Local] @relation
-    earlyBeta: Boolean
+    followingUser: [User]
+    followingLocal: [Local] @relation(name:"local_user_following")
 }
 
 type Birthday @embedded {
@@ -47,7 +48,7 @@ type Avatar {
 
 type Local {
     name : String
-    publishedBy : User
+    publishedBy : User! @relation(name:"local_publisher")
     description : String
     reviews : [Review!] @relation
     reviewCount : Int
@@ -58,7 +59,7 @@ type Local {
     localsOnly : Boolean
     website : String
     phoneNumber : String
-    geo : Geo
+    geo : Geo @unique
     quick : Quick
     city : String
     state : String
@@ -66,6 +67,7 @@ type Local {
     isClaimed: Claim
     isSmallBusiness: Boolean
     isLocal: Boolean
+    followedBy: [User] @relation(name:"local_user_following")
 }
 
 type Claim {
@@ -128,5 +130,6 @@ type Query {
     allLocals : [Local]
     allUsers : [User]
     userAuth(authID : String!) : User
+    findUserByHandle(handle: String!) : User
     localByLocation(city : String!, state : String!) : [Local]
 }

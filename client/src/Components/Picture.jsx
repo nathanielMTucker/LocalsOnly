@@ -1,13 +1,10 @@
 import React from 'react'
 import {Image} from 'cloudinary-react';
 
-const Picture = ({id, preset}) => {
+const Picture = ({id}) => {
     
     return (
-        <Image publicId={id}>
-
-        </Image>
-        // <p>Hello</p>
+        <Image publicId={id}></Image>
     )
 }
 

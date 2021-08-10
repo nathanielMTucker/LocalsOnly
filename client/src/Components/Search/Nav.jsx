@@ -4,19 +4,9 @@ import Search from './Search';
 import {LogoLinkButton, LocalizeLinkButton, LogoutButton, UserProfileButton} from '../Buttons';
 import {SearchDropdown} from '../Dropdowns';
 import {useHistory} from 'react-router';
-import {fromLatLng} from '../../globals';
-import axios from 'axios';
-import { geolocated } from "react-geolocated";
-// import {getCities} from 'countrycitystatejson'
 import queryString from 'query-string'
-const parseAddress = require('parse-address-string');
 
-export default withRouter(geolocated({
-  positionOptions: {
-      enableHighAccuracy: false,
-  },
-  userDecisionTimeout: 5000,
-})(({setMadeSearch, location:{search:urlQuery}})=>{
+export default withRouter(({setMadeSearch, location:{search:urlQuery}})=>{
     
   const [width, setWidth] = useState(window.innerWidth);
   
@@ -25,7 +15,6 @@ export default withRouter(geolocated({
   const updateDimensions = ()=>{setWidth(window.innerWidth)}
   const history = useHistory();
   const [search, setSearch] = useState('');
-  const [userLocation, setUserLocation] = useState(null);
     
   useEffect(()=>{
    
@@ -51,41 +40,20 @@ export default withRouter(geolocated({
         break;
     }
   }
-  
-  const getLocation = async loc =>{
-    axios.get(fromLatLng(`${loc.coords.latitude},${loc.coords.longitude}`))
-         .then(
-           res=>{
-             parseAddress(res.data.results[0].formatted_address,
-              (err, add)=>{
-                console.log(add.city);
-                setUserLocation(`${add.city}, ${add.state}`)
-              })
-            }
-          )
-         .catch(error=>console.log(error))
-  }
+ 
   const handleSubmit = event=>{
     event.preventDefault();
-    navigator.geolocation.getCurrentPosition(pos => {
-      getLocation(pos);
-    })
-    
-    
     setMadeSearch(true)
     history.push(`/search?${search === '' ? '' : `what=${search.replace(' ', '+')}&`}where=${state}`);
   }
 
   const isMobile = () => (width < 769)
 
-    
-      
   return (
       <nav 
         id="main-nav"
         className={`navbar level ${isMobile() ? 'is-mobile' : '' } pr-2 pl-2 pt-0 is-fixed-top ivory`} 
-        role="navigation"
-      >
+        role="navigation">
           <div className="level-left">
             <div className="level-item">
               <LogoLinkButton/>
@@ -94,7 +62,7 @@ export default withRouter(geolocated({
             {
               isMobile() ? 
                 <SearchDropdown loc={{search, state}} handleInput={handleInput} handleSubmit={handleSubmit}/>
-                :<Search className="pl-2" loc={{search, state}} handleInput={handleInput} handleSubmit={handleSubmit}/>
+                :<Search className="pl-2" loc={{search, state}} setLocation={setState} handleInput={handleInput} handleSubmit={handleSubmit}/>
             }
             </div>
           </div>
@@ -109,10 +77,9 @@ export default withRouter(geolocated({
               <div className="level-item">
                 <LogoutButton/>
               </div>
-              
           </div>
       </nav>
   )
     
-}))
+})
 

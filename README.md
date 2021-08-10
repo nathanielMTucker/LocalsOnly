@@ -33,8 +33,57 @@ support those who want to learn and grow into the world of web development.
 
 ## Installation - How to get the site up and running
 
-Make sure you have node.js and npm installed on your computer. You can check this by running `node --version` and `npm --version`. If not; please install by going [here](nodejs.org)
+### Before making any changes
 
-Clone the __Dev__ repo, then run on both client and server separately `npm install`.
+- __Never__ commit anything directly into `master`. Make sure you branch from `Dev` and name the branch appropriately. When you push back into Github, push your branch and make a __pull request__ into `Dev`.
 
-After all the dependencies are installed, have two terminals open and more into the server and client directory. In the server terminal run `npm run dev` then go into the client terminal and run `npm start`. Let me know to approve you into the dev team and then I will give the .env files. Pun the server and client .env files in their respective locations. You must then make an account, after which let me know and I will make you into an admin.
+- To make a new branch first `git checkout Dev` then `git checkout -b <new_branch>`.
+
+- When you are done making changed; first \
+  -- `git add .` or `git add <file_name>` \
+  -- then `git commit -m "detailed message of what was done here..."` \
+  -- then, push your new branch by `git push origin <new_branch>`. \
+
+### Clone LocalsOnly repo
+
+- Open a Terminal window
+-- Clone the LocalsOnly repo: `git clone https://github.com/nathanielMTucker/LocalsOnly <DIRECTORY>`
+--- Change `<DIRECTORY>` to preferred location, i.e.: "/home/$USER/projects/LocalsOnly"
+-- Using `git clone` in Ubuntu will ask for username & password in Terminal (enter credentials)
+
+### Install nodejs & npm
+
+- [Nodejs installer](https://nodejs.org/en/download/) (Latest LTS Version: 14.17.4 (includes npm 6.14.14))
+-- Install help from [docs.npmjs.com](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/)
+-- Verify with `npm --version` and `nodejs --version`
+
+### Install dependencies
+
+**You may need superuser privileges to run `npm`.**
+
+- Open Terminal and go to directory of LocalsOnly repo was downloaded
+-- Run `npm install` in both _/server_ & _/client_ directories, separately
+-- Note: If you have any install errors, ensure $USER "owns" LocalsOnly and its sub-directories, for example in Ubuntu: `sudo chown $USER:$USER -R ~/LocalsOnly/`
+--- Then, run `npm clean-install` in both _/server_ & _/client_ directories to refresh the files
+
+### Run LocalsOnly server
+
+- Open a Terminal
+-- Change directory to _/server_, run: `npm run dev`
+Note: You may run only one server instance at a time. If `npm run dev` prompts a startup error, the program may be running in the background. Please find the instance and kill it.
+For example in Ubuntu:
+- Run `sudo lsof -t -i:5001` to get PID (i.e.: 7199)
+- Kill PID `sudo kill -9 7199`
+- Now go back to `~/LocalsOnly/server/` and run `npm run dev`; the program should now start
+
+### Open the LocalsOnly webapp
+
+- Open **another** Terminal
+-- Change directory to _/client_, run: `npm start`
+
+### Configuring LocalsOnly
+
+- Notify @Nathaniel... of `npm start` success to approve you into the dev team and then he will give the .env files.
+-- Put the _/server_ and _/client_ `.env` files in their respective locations.
+-- You must then make an account, after which let @Nathan... know and he will make you an admin.
+

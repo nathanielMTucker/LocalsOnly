@@ -5,6 +5,8 @@ import { withFirebase } from '../Authentication';
 import { SignUpLink } from './SignUp';
 import { Checkbox } from '@material-ui/core';
 import { withUser } from '../User';
+import { GoogleSignIn } from './Buttons';
+import useToggle from '../Components/useHooks/useToggle';
 
 const SignInPage = () => (<SignInForm />);
 
@@ -19,6 +21,7 @@ const INITIAL_STATE = {
 
 const SignInFormBase = props=>{
   
+    const [toggleError, setToggleError] = useToggle();
     let [state, setState] = React.useState(INITIAL_STATE);
 
     React.useEffect(()=>{
@@ -41,6 +44,9 @@ const SignInFormBase = props=>{
           })
           .catch(error => {
             setState({ ...state, error:error });
+            if(!toggleError)
+              setToggleError();
+            
           });
 
       })
@@ -71,16 +77,21 @@ const SignInFormBase = props=>{
     };
 
     const onRememberMe = ( {target : checked}) => {
-     setState({...state, rememberMe : checked}) 
+     setState({...state, rememberMe : !checked}) 
     }
 
-    const { email, password, error } = state;
-
+    const { email, password } = state;
+    let {error} = state;
     const isInvalid = password === '' && email === '';
 
-    return (
+    return (<div>
+      
       <form onSubmit={onSubmit} className="container">
-        <div className="field">
+       {/* <div className="section px-0 pt-6 pb-5">
+        <GoogleSignIn setUser={props.setUser}/>
+       </div> */}
+       {/* <div className="text-has-line"><span>or</span></div> */}
+        <div className="field pt-6">
           <div className="control">
             <label htmlFor="email" className="label">
               Email
@@ -115,14 +126,20 @@ const SignInFormBase = props=>{
         />Remember My Email
         <div className="field">
           <div className="control">
-            <button className={`button  is-outlined ${isInvalid ? 'is-danger' : 'is-primary'}`} disabled={isInvalid} type="submit">
+            <button className={`button is-outlined ${isInvalid ? 'is-danger' : 'is-primary'}`} disabled={isInvalid} type="submit">
             Sign In
             </button>
           </div>
-          <SignUpLink />
+          <div className="section">
+          <SignUpLink/>
+          </div>
         </div>
-        {error && <p>{error.message}</p>}
       </form>
+        {error && <div className={`box is-danger is-outlined ${toggleError && "is-hidden"}`} onClick={e=>{
+          e.preventDefault();
+          setToggleError();
+        }}>{error.message}</div>}
+    </div>
     );
  }
 

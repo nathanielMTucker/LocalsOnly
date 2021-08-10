@@ -21,9 +21,18 @@ const GET_LOCAL_REVIEWS = `
       reviews{
         data{
           _id
+          local{
+            city
+            state
+          }
           reviewer{
             _id
             name
+            avatar{
+              url
+            }
+            handle
+            role
           }
           review
           rating

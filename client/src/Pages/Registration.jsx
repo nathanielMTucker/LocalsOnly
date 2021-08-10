@@ -8,7 +8,6 @@ import {getAbbrs} from '../globals';
 import { withFirebase } from '../Authentication';
 import axios from 'axios';
 import Alert from '../Components/Alert';
-import {LogoLinkButton} from '../Components/Buttons';
 
 const getCities = require('countrycitystatejson').getCities
 
@@ -132,7 +131,7 @@ const RegistrationBase = ({firebase, history})=>{
             <div className="is-half  ">
                 <div className="box border-main">
                     <div className="hero fill-hero box is-primary">
-                        <div className="text-center level homelogo">
+                        <div className="text-center level home-logo">
                         <img src="../LocalsOnly.png" alt="localsonly"/>
                             <label className="level-item title">Registration</label>
                         </div>

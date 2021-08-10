@@ -1,8 +1,9 @@
 import React from 'react';
+import {withUser} from '../User';
 
 const DevTag = () => 
 <span className="ml-1 tag is-info is-light">
-      <i className="fas fa-tools pr-1 mr-1 my-0"/> Dev
+      <i className="fas fa-tools pr-1 mr-1 my-0"/> <p>Dev</p>
   </span>
 
 
@@ -20,15 +21,39 @@ const PremiumTag = () =>
 
 
 const CEOTag = () =>
-<span className="tag is-danger is-light">
-<i className="fas fa-crown pr-1 mr-1 my-0"/> CEO
+<span className="tag is-danger is-light ">
+<i className="fas fa-crown pr-1 mr-1 my-0"/> <p className="content">Founder</p>
 </span>
 
+const UserTag = withUser(({user, role})=>{
+  const r = role || user.role;
+  console.log(r);
+  if(r === "CEO"){
+    return <CEOTag/>
+  }
+  if(r === "admin"){
+    return <DevTag/>
+  }
+  if(r === "ebet"){
+    return <BetaTag/>
+  }
+  if(r === "prem"){
+    return <PremiumTag/>
+  }
+  return null;
+})
 
+const UserTagAnimate = ()=>
+<span className="animate-tag">
+  <UserTag/>
+</span>
+
+export default UserTag
 
 export {
   DevTag,
   BetaTag,
   PremiumTag,
-  CEOTag
+  CEOTag,
+  UserTagAnimate
 }

@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import Picture from '../Components/Picture';
+import { CloudinaryContext} from 'cloudinary-react'
+import {withUser} from "../User";
 
 const ImageForm = ({folder, multiple, callback}) => {
   const [uploading, setUploading] = useState(false);
@@ -59,23 +62,15 @@ const ImageForm = ({folder, multiple, callback}) => {
       const {name} = images[index];
       setImages(images.filter(image=>image.name !== name))
   }
-  // const changeDescription = e =>{
-  //   e.preventDefault();
-  // }
+  
     return <div className="tile is-ancestor">
         <div className="tile is-parent image-row">
             {images && images.map((image, index)=>(
-                <div className="tile is-4 is-child image-item" key={index}>
-                    <div>
-                    <span className="is-small button is-inverted is-danger delete-image" title="Remove" id={index} onClick={removeImage}>
-                      <i className="far fa-trash-alt"/>
-                    </span>
-                    <img src={URL.createObjectURL(image)} alt="Could not load"/>
-                    </div>
-                    {/* <div>
-                      <label htmlFor="caption">Caption</label>
-                    <textarea name="caption" onChange={changeDescription}/>
-                    </div> */}
+                <div className="tile is-child image-item" key={index}>
+                  <span className="is-small button is-inverted is-danger delete-image" title="Remove" id={index} onClick={removeImage}>
+                    <i className="far fa-trash-alt"/>
+                  </span>
+                  <img src={URL.createObjectURL(image)} alt="Could not load"/>
                 </div>
             ))}
         </div>
@@ -110,5 +105,71 @@ const ImageForm = ({folder, multiple, callback}) => {
   );
 };
 
+const ImageProfileForm = withUser(({user, setImage})=>{
+  // const [uploading, setUploading] = useState(false);
+  // const [images, setImages] = useState([]);
+
+  const getImagesFromUser = e => {
+    e.preventDefault();
+    const {
+      target: { files },
+    } = e;
+    setImage([...files]);
+  };
+
+  
+
+  const DisplaySelectedImages = ({images, setImages}) =>{
+    const removeImage = e =>{
+      e.persist();
+      const index = Number(e.target.id);
+      console.log("Image name: " + index);
+      const {name} = images[index];
+      setImages(images.filter(image=>image.name !== name))
+  }
+  
+    return <div className="tile is-ancestor">
+        <div className="tile is-parent image-row">
+            {images && images.map((image, index)=>(
+                <div className="tile is-child image-item" key={index}>
+                  <span className="is-small button is-inverted is-danger delete-image" title="Remove" id={index} onClick={removeImage}>
+                    <i className="far fa-trash-alt"/>
+                  </span>
+                  <img src={URL.createObjectURL(image)} alt="Could not load"/>
+                </div>
+            ))}
+        </div>
+    </div>
+}
+
+  return (
+    
+      <div className="file is-centered is-boxed has-name">
+        <label className="file-label">
+          <input className="file-input" src={"./LocalsOnly.png"} type="file" name="images" onChange={getImagesFromUser}/>
+          <span className="image is-128x128">
+            
+           { 
+           user.avatar === null ? <img src="https://bulma.io/images/placeholders/128x128.png" alt="User"/>:
+              <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="avatar_images">
+                  <Picture id={user.avatar} preset="avatar_images"/>
+              </CloudinaryContext>
+              }
+           
+            <span className="file-label">
+              Get images
+            </span>
+          </span>
+        </label>
+      </div>
+      
+      
+   
+  );
+})
 
 export default ImageForm;
+
+export {
+  ImageProfileForm
+}

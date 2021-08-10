@@ -1,9 +1,11 @@
 import React from 'react'
 
-export default () => {
+const Upcoming = () => {
     return (
         <main>
             Upcoming Features Page
         </main>
     )
 }
+
+export default Upcoming;

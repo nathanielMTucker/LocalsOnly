@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    borderRadius: '50px'
   },
   avatar: {
     margin: theme.spacing(1),
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default ()=>{
+const Opening = ({setUser})=>{
   const classes = useStyles();
 
   return (
@@ -59,13 +60,15 @@ export default ()=>{
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
+        <div className={`${classes.paper} home-logo`}>
           <img src="LocalsOnly.png" className="is-hidden-mobile" style={{height:'25vh',width: '13vw'}} alt=""/>
           <img src="LocalsOnly.png" className="is-hidden-tablet mb-1" style={{height:'25vh',width: '45vw'}} alt=""/>
-          <SignIn/>
+          <SignIn setUser={setUser}/>
         </div>
         <Copyright/>
       </Grid>
     </Grid>
   );
 }
+
+export default Opening;

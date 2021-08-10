@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ResultsCard from '../Components/ResultsCard/ResultsCard'
+import ResultsCard from '../Components/ResultsCard'
 import queryString from 'query-string'
 import MapContainer from '../Components/MapContainer'
 import Results from '../Components/Results'
@@ -25,7 +25,7 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
     const [items, setItems] = useState([])
     const [loading, setLoading] = useState(true)
     const [offset, setOffset] = useState(null);
-    const [limit, setLimit] = useState(10);
+    const [limit] = useState(10);
 
     useEffect(()=>{  
         getData()
@@ -35,8 +35,11 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
         
         let {what, where} = queryString.parse(search);
         
-        const itemsFromData = await axios.get(`/api/v1/locals?${what ? `what=${what}` : ''}&where=${where}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
-        .then(({data})=>data)
+        await axios.get(`/api/v1/locals?${what ? `what=${what}` : ''}&where=${where}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
+        .then(({data:{data, after}})=>{
+            setItems(data)
+            setOffset(after)
+        })
         .catch(err=>{
             console.error(err)
             setItems([{
@@ -44,8 +47,6 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
             }])
         })
 
-        setItems(itemsFromData.data)
-        setOffset(itemsFromData.after)
         setLoading(false);
         setMadeSearch(false); 
     }

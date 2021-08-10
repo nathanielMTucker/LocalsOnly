@@ -46,7 +46,9 @@ export default class Firebase {
     passwordReset = email => this.auth.sendPasswordResetEmail(email);
 
     updatePassword = password => this.auth.currentUser.updatePassword(password);
-
-    
+    updateEmail = email => this.auth.currentUser.updateEmail(email);
+    signInWithGooglePopup = () => this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    emailCredentials = (email, pass)=>firebase.auth.EmailAuthProvider.credential(email,pass)
+    reauth = (credentials)=>this.auth.currentUser.reauthenticateWithCredential(credentials)
 }
 

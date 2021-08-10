@@ -1,12 +1,10 @@
 import React  from 'react';
 import {Link} from 'react-router-dom';
-import {StarRating} from '../Results';
+import {StarRating} from './Results';
 
-// import Footer from './Footer';
-import Picture from "../Picture";
+import Picture from "./Picture";
 const ResultsCard = props => 
 {
-    const isNull = el => el ? el : "null" 
         
     const Price = () =>{
         const { price } = props;
@@ -21,7 +19,7 @@ const ResultsCard = props =>
             <section className="columns">
             <span className="column is-4">
                 <figure className="image">
-                    {props.image === undefined ? <img src="./LocalsOnly.png"/> : <Picture id={props.image.url} preset="local_images"/>}
+                    {props.image === undefined ? <img src="./LocalsOnly.png" alt="LocalsOnly Logo"/> : <Picture id={props.image.url} preset="local_images"/>}
                 </figure>
             </span>
             <article className="column">
@@ -41,9 +39,6 @@ const ResultsCard = props =>
                 </div>
                 <span className="block">
                     {props.description}
-                    <div className="content">
-                        hello
-                    </div>
                 </span>
             </article>
             </section>

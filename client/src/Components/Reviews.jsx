@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
-// import queryString from 'query-string';
-// import {compose} from 'recompose';
+import Picture from '../Components/Picture';
+import { CloudinaryContext} from 'cloudinary-react'
 import {withUser} from '../User';
 import Rating from '@material-ui/lab/Rating'
 import {StarRating} from './Results';
 import {ServerError} from "./Error";
+import UserTag from "./UserTag";
 
-const Review = withUser(({localID, user : {ownerID : userID}}) => {
+const Review = withUser(({localID, user : {ownerID : userID}, userIsLocal}) => {
     
     const [reviews, setReviews] = useState();
 
@@ -31,7 +32,7 @@ const Review = withUser(({localID, user : {ownerID : userID}}) => {
 
     return (
         <section>
-            <Post localID={localID} userID={userID}/>
+            {userIsLocal && <Post localID={localID} userID={userID}/>}
             <div className="reviews">{reviews ? displayReviews():"is Loading"}</div>
         </section>
     )
@@ -39,7 +40,7 @@ const Review = withUser(({localID, user : {ownerID : userID}}) => {
 
 const Post = ({userID, localID})=>{ 
     const [isLoading, setIsLoading] = useState("");
-    const [isLocal, setIsLocal] = useState(true);
+    // const [isLocal, setIsLocal] = useState(true);
     const [rating, setRating] = useState(1);
     const [comment, setComment] = useState("");
 
@@ -77,7 +78,7 @@ const Post = ({userID, localID})=>{
 
     return  ( 
         
-            isLocal && 
+            // isLocal && 
             <form className="field comment-post" onSubmit={onSubmit}>
                     <Rating name="rating" value={rating} onChange={onRating}/>
                 <div className={`control ${isLoading}`}>
@@ -163,14 +164,21 @@ const ReviewCard = ({review, user}) =>{
 
     return <article className="media" key={review._id}>
     <figure className="media-left">
-      <p className="image is-64x64">
-        <img className="avatar" alt="user" src="https://bulma.io/images/placeholders/128x128.png"/>
-      </p>
+      {/* <Link className="image is-64x64" to={`/user?id=${review.reviewer._id}`}> */}
+       <p className="image is-64x64">
+            {
+                review.reviewer.avatar === null ? <img src="https://bulma.io/images/placeholders/128x128.png" alt="User"/>:
+                <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="avatar_images">
+                    <Picture id={review.reviewer.avatar.url} preset="avatar_images"/>
+                </CloudinaryContext>
+            }
+       </p>
+      {/* </Link> */}
     </figure>
     <div className="media-content">
       <div className="content">
         <p>
-          <strong>{review.reviewer.name}</strong> <small><StarRating rating={review.rating}/></small>
+          <strong>{review.reviewer.name} </strong>@{review.reviewer.handle}<br/><UserTag tag={review.reviewer.role}/><small><StarRating rating={review.rating}/></small>
           
           <br/>
           {review.review}
