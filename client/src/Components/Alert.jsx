@@ -26,11 +26,11 @@ const Alert = ({text, severity})=>{
   const id = open ? 'transitions-popper' : undefined;
 
   return (
-    <div>
-      <button aria-describedby={id} type="button" onClick={handleClick}>
+    <div className="pl-1">
+      <button aria-describedby={id} type="button" className={`button icon is-rounded px-0 is-inverted is-${severity}`} onClick={handleClick}>
       {open ? 
-          <i className="far fa-times-circle"></i>:
-          <i className="far fa-question-circle"></i>
+          <i className="far fa-times-circle py-0 px-0"></i>:
+          <i className="far fa-question-circle py-0 px-0 my-0 mx-0"></i>
         }
       </button>
       <Popper id={id} open={open} anchorEl={anchorEl} placement={'right'} transition>

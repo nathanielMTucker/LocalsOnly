@@ -42,8 +42,21 @@ const StateInitialInput = ({onChange, value, placeholder, className, id}) => {
     </Input>
 }
 
+const SatisfactionScale = ({onClick})=>{
+  return <div className="level button is-static is-rounded has-background-white satisfaction-scale">
+    <span className="level-item icon is-small">
+      <i className="far fa-angry has-text-danger fa-2x is-clickable" id={0} onClick={onClick}/>
+      <i className="far fa-frown has-text-warning fa-2x is-clickable" id={1} onClick={onClick}/>
+      <i className="far fa-meh has-text-grey fa-2x is-clickable" id={2} onClick={onClick}/>
+      <i className="far fa-smile-beam has-text-primary fa-2x is-clickable" id={3} onClick={onClick}/>
+      <i className="far fa-grin-stars has-text-success fa-2x is-clickable" id={4} onClick={onClick}/>
+    </span>
+  </div>
+}
+
 export default Input;
 export {
   SelectInput,
-  StateInitialInput
+  StateInitialInput,
+  SatisfactionScale
 }

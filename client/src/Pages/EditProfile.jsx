@@ -5,6 +5,7 @@ import { withUser } from '../User'
 import { withFirebase } from '../Authentication';
 import {Link} from 'react-router-dom';
 import useToggle from "../Components/useHooks/useToggle"
+import { getCookie, setCookie } from '../globals';
 
 const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
   let [state, city] = user.localTo.split(':');
@@ -13,8 +14,8 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
   const [handleIsAvailable, setHandleIsAvailable] = useState(true);
 
   const [passwordVisible, togglePasswordVisible] = useToggle(false);
-  
-  const [image, setImage] = useState({});
+  const [updatingLocal, setUpdatingLocal] = useState(getCookie("local-update") !== undefined)
+  const [image, setImage] = useState(null);
 
   const [profile, setProfile] = useState({
     name: user.name || "",
@@ -22,7 +23,6 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
     handler: user.handler || "",
     city: city.charAt(0).toUpperCase() + city.slice(1) || "",
     state: state.toUpperCase() || "",
-    avatar: user.avatar || "",
     oldPassword: "",
     newPassword: "",
   })
@@ -51,7 +51,7 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
     }
   ,[profile.handler, user.handler])
 
-
+    
   useEffect(()=>{
     
     if(profile.handler !== user.handler){ 
@@ -87,32 +87,32 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
   const updateProfile = async (e) =>{
     e.preventDefault();
 
-    // if(user.email !== profile.email){
-    //   await firebase.updateEmail(profile.email)
-    //   .then(async _ =>{
-    //     console.log("Email updated");
-    //     await axios.patch(`/api/v1/users/${user.ownerID}/email`,{
-    //       email:profile.email
-    //     })
-    //   })
-    //   .catch(err=>{
-    //     console.log("Error updating email from edit user page");
-    //     console.dir(err)
-    //   })
+    if(user.email !== profile.email){
+      await firebase.updateEmail(profile.email)
+      .then(async _ =>{
+        console.log("Email updated");
+        await axios.patch(`/api/v1/users/${user.ownerID}/email`,{
+          email:profile.email
+        })
+      })
+      .catch(err=>{
+        console.log("Error updating email from edit user page");
+        console.dir(err)
+      })
       
-    // }
+    }
 
-    // if(user.name !== profile.name){
-    //   await axios.patch(`/api/v1/users/${user.ownerID}/name`,{
-    //     name:profile.name
-    //   })
-    // }
+    if(user.name !== profile.name){
+      await axios.patch(`/api/v1/users/${user.ownerID}/name`,{
+        name:profile.name
+      })
+    }
 
-    // if(user.handler !== profile.handler){
-    //   await axios.patch(`/api/v1/users/${user.ownerID}/handle`,{
-    //     handle:profile.handler
-    //   })
-    // }
+    if(user.handler !== profile.handler){
+      await axios.patch(`/api/v1/users/${user.ownerID}/handle`,{
+        handle:profile.handler
+      })
+    }
 
     if(profile.newPassword.length >= 6 && profile.newPassword !== profile.oldPassword ){
       console.log("Changing password");
@@ -133,24 +133,44 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
       
     }
 
-    // if(user.avatar !== profile.avatar){
-    //   uploadImages().then(async avatar=>{
-    //     await axios.patch(`/api/v1/users/${user.ownerID}/avatar`,{
-    //       avatar
-    //     })
-    //   })
-      
-    // }
+    if(image){
+      const form = new FormData();
     
-    // if(profile.state.toLowerCase() !== state.toLowerCase() || profile.city.toLowerCase() !== city.toLowerCase()){
-    //   await axios.patch(`/api/v1/users/${user.ownerID}/local-to`,{
-    //     city:profile.city.toLowerCase(),
-    //     state:profile.state.toLowerCase()
-    //   })
-    // }
+      form.append('file', image);
+      form.append('upload_preset', `avatar_images`);
+      
+      return await fetch(`https://api.cloudinary.com/v1_1/dpjlvg7ql/image/upload`, {
+        method:"POST",
+        body:form
+      }).then(res=>res.json())
+      .then(file=>{
+        const id = file.public_id
+        console.log(id);
+        return id;
+      })
+      .then(async avatar=>{
+        await axios.patch(`/api/v1/users/${user.ownerID}/avatar`,{
+          avatar
+        }).then(res=>{
+          console.dir("Updated Avatar: " + res);
+        })
+      })
 
-    // alert("Your profile has been updated!")
-    // history.push("/dashboard")
+      
+    }
+    
+    if(profile.state.toLowerCase() !== state.toLowerCase() || profile.city.toLowerCase() !== city.toLowerCase()){
+      const localTo = profile.state.toLowerCase() + ":" + profile.city.toLowerCase().replace(" ", "-")
+      setCookie("local-update", localTo, 1000);
+      const d = new Date();
+      d.setTime(d.getTime() + (30*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      setCookie("local-update-on", expires, 30)
+      
+    }
+
+    alert("Your profile has been updated!")
+    history.push("/dashboard")
 
   }
   const HandleCheckIcon = ()=>{
@@ -177,11 +197,18 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
     // console.log(`onChange ${name}: ${value}`)
   }
 
+  const deleteAccount = e =>{
+    e.preventDefault();
+  }
+
   return <main id="avatar-upload-page" className="section mt-4 container">
+    <div className="columns is-centered">
+    <h1 className="title column has-text-centered my-3">Edit Profile</h1>
+    </div>
         <form onSubmit={updateProfile} className="">
     <section className="section container box columns">
     <div className="column">
-        <ImageProfileForm setImage={setImage}/>
+        <ImageProfileForm setImage={setImage} image={image}/>
       </div>
       <div className="column">
 
@@ -247,18 +274,21 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
             </div>
           </div>
 
-            <label htmlFor="local">Local</label>
           <div className="field">
+            <label htmlFor="local">City/Town</label>
+            {updatingLocal && <span className="pl-2 has-text-danger">Your local will update in 30 days.</span>}
             <div name="local" className="control">
-              <input type="text" name="city" value={profile.city} className="input" onChange={onChange} required/>
+              <input type="text" name="city" value={profile.city} className="input" onChange={onChange} required disabled={updatingLocal}/>
             </div>
+            <label htmlFor="local">State</label>
               <div className="control">
-              <input type="text" name="state" value={profile.state} className="input" onChange={onChange} required minLength={2} maxLength={2}/>
+              <input type="text" name="state" value={profile.state} className="input" onChange={onChange} required minLength={2} maxLength={2} disabled={updatingLocal}/>
               </div>
           </div>
-          <div className="buttons">
-            <button className="button is-success" disabled={!handleIsAvailable}>Submit</button>
-            <Link className="button is-danger" to="/dashboard">Cancel</Link>
+          <div className="level">
+            <div className="level-left buttons "><button className="button is-success" disabled={!handleIsAvailable}>Submit</button>
+            <Link className="button is-danger" to="/dashboard">Cancel</Link></div>
+          {/* <div className="level-right"><button className="button is-danger is-inverted" onClick={deleteAccount}>Delete Account</button></div> */}
           </div>
       </div>
     </section>

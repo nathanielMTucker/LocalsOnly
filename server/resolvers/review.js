@@ -21,26 +21,25 @@ const {
 
 router.route('/reviews').get(async (req, res)=>{
   
-  const {id:localID, user, fields, offset, limit} = req.query;
+  const {id, user, fields, offset, limit} = req.query;
 
   const {
-      findLocalByID:{
-        reviews:{
-          data:reviews
-        }
-      }
+      findLocalByID
+      
   } = await sendQuery(
     GET_LOCAL_REVIEWS,
     {
-      localID
+      id,
+      offset, 
+      limit:Number(limit)
     }
   );
 
-  userLiked(reviews, user);
+  userLiked(findLocalByID.reviews.data, user);
 
   const reviewData = {
-    reviews,
-    total:reviews.length
+    findLocalByID,
+    total:findLocalByID.reviews.data.length
   }
   res.status(200).json(reviewData)
 })

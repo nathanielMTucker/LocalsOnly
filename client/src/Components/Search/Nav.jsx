@@ -60,9 +60,8 @@ export default withRouter(({setMadeSearch, location:{search:urlQuery}})=>{
             </div>
             <div className="level-item">
             {
-              isMobile() ? 
-                <SearchDropdown loc={{search, state}} handleInput={handleInput} handleSubmit={handleSubmit}/>
-                :<Search className="pl-2" loc={{search, state}} setLocation={setState} handleInput={handleInput} handleSubmit={handleSubmit}/>
+              !isMobile() &&
+                <Search className="pl-2" loc={{search, state}} setLocation={setState} handleInput={handleInput} handleSubmit={handleSubmit}/>
             }
             </div>
           </div>

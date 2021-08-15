@@ -1,84 +1,68 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withFirebase } from '../Authentication';
 import { SignUpLink } from './SignUp';
-import { Checkbox } from '@material-ui/core';
 import { withUser } from '../User';
 import { GoogleSignIn } from './Buttons';
 import useToggle from '../Components/useHooks/useToggle';
+import RememberMe from './RememberMe';
+import {getCookie, setCookie} from "../globals";
 
 const SignInPage = () => (<SignInForm />);
 
 const INITIAL_STATE = {
   email: '',
   password: '',
-  error: '',
-  rememberMe: false
+  error: ''
 };
 
 
 
-const SignInFormBase = props=>{
+const SignInFormBase = ({firebase})=>{
   
     const [toggleError, setToggleError] = useToggle();
-    let [state, setState] = React.useState(INITIAL_STATE);
+    let [state, setState] = useState(INITIAL_STATE);
+    const [rememberMe, setRememberMe] = useToggle(Boolean(getCookie("remember-me")) || false);
 
-    React.useEffect(()=>{
-      
-    },[])
+    const setPersistentStorage = (persistence, callback)=>{
+      firebase.setPersistenceStorage(persistence)
+        .then(()=>{
+          callback();
+        })
+        .catch(err=>{
+          console.dir("Error in userCheckedRememberMe: " + err);
+        })
+    }
 
     const onSubmit = event => {
       event.preventDefault();
-      
+      // console.log(rememberMe);
       const { email, password } = state;
-      
-      if(state.rememberMe){
-       props.firebase.auth.setPersistence(props.firebase.Auth.Persistence.LOCAL)
-      .then(() => {
-        props.firebase
-          .signInWithEmailAndPassword(email, password)
-          .then((u) => {
-  
-            setState({INITIAL_STATE });
-          })
-          .catch(error => {
-            setState({ ...state, error:error });
-            if(!toggleError)
-              setToggleError();
-            
-          });
+      const signInWithEmail = firebase
+        .signInWithEmailAndPassword(email, password)
+        .then((u) => {
 
-      })
-      .catch((error) => {
+          setState({INITIAL_STATE });
+        })
+        .catch(error => {
+          setState({ ...state, error:error });
+        })
       
-      }); 
+      if(rememberMe){
+        console.log("Remember Me");
+        setCookie("remember-me", true, 30);
+        setPersistentStorage(firebase.persistenceLocal, signInWithEmail);
+        return;
       }
-      else{
-      if(Storage){
-        localStorage.clear();
-      }
-       props.firebase.auth.setPersistence(props.firebase.Auth.Persistence.SESSION)
-        .then(() => (
-          props.firebase
-            .signInWithEmailAndPassword(email, password)
-            .then((u) => {
-    
-              setState({INITIAL_STATE });
-            })
-            .catch(error => {
-              setState({ ...state, error:error });
-            })
-      ))
-    }}
+      console.log("Dont Remember Me");
+      setCookie("remember-me", "", -1);
+      setPersistentStorage(firebase.persistenceNone, signInWithEmail);
+    }
 
     const onChange = ({target: {name, value}}) => {
       setState({...state, [name]: value });
     };
-
-    const onRememberMe = ( {target : checked}) => {
-     setState({...state, rememberMe : !checked}) 
-    }
 
     const { email, password } = state;
     let {error} = state;
@@ -89,8 +73,8 @@ const SignInFormBase = props=>{
       <form onSubmit={onSubmit} className="container">
        {/* <div className="section px-0 pt-6 pb-5">
         <GoogleSignIn setUser={props.setUser}/>
-       </div> */}
-       {/* <div className="text-has-line"><span>or</span></div> */}
+       </div>
+       <div className="text-has-line"><span>or</span></div> */}
         <div className="field pt-6">
           <div className="control">
             <label htmlFor="email" className="label">
@@ -119,14 +103,10 @@ const SignInFormBase = props=>{
             />
           </div>
         </div>
-        <Checkbox
-          name="rememberMe"
-          checked={state.rememberMe}
-          onChange={onRememberMe}
-        />Remember My Email
+        <RememberMe rememberMe={rememberMe} setRememberMe={setRememberMe}/>
         <div className="field">
-          <div className="control">
-            <button className={`button is-outlined ${isInvalid ? 'is-danger' : 'is-primary'}`} disabled={isInvalid} type="submit">
+          <div className="columns is-centered section mt-1">
+            <button className={`column pt-2  button ${isInvalid ? 'is-danger' : 'is-primary'}`} disabled={isInvalid} type="submit">
             Sign In
             </button>
           </div>

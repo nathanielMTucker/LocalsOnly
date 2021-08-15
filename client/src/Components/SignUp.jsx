@@ -108,6 +108,7 @@ const SignUp = withFirebase(({setStatus, user, setUser})=> {
           </div>
         </div>
         </label>
+        
         {user.error && <p className="help is-danger">{user.error.message}</p>}
       </section>
     );

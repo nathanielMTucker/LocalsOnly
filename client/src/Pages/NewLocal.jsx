@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import {withFirebase} from '../Authentication';
 import axios from 'axios';
 import {fromAddress} from '../globals';
@@ -49,6 +49,29 @@ const NewLocal = ({history, user : {ownerID, localTo : userLocalTo} }) => {
         dog:false,
         localsOnly:false
     })
+
+    const checkGeo = useCallback(async ()=>{
+        await axios.get(fromAddress(address))
+        .then(async ({data: {results : [{geometry : { location}}]}
+            })=>{
+                console.log(location);
+                axios.get(`/api/v1/local`,{
+                    address:address,
+                    coors:location
+                })
+                .then(res=>{
+                
+                })
+                .catch(err=>console.error(`From Server: ${err}`))
+            })
+    },[address])
+    useEffect(()=>{
+        const {street, city, state, zip} = address;
+        if(street && city && state && zip){
+            checkGeo()
+        }
+    },[address, checkGeo])
+
     const onChangeAddress = e =>{
         e.preventDefault();
         const name = e.target.name;

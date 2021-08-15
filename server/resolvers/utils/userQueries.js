@@ -1,4 +1,29 @@
-
+const USERS_LOCALS = `
+query($id:ID!, $limit:Int!, $offset:String){
+  findUserByID(id:$id){
+    published(_size:$limit, _cursor:$offset){
+      after
+      data{
+        _id
+        name
+        description
+        address{
+          street
+          apt
+          city
+          state
+        }
+        reviewCount
+        images(_size:1){
+          data{
+            url
+          }
+        }
+      }
+    }
+  }
+}
+`
 const GET_USER_AUTH = `
 query ($auth : String!) {
     userAuth(authID : $auth){
@@ -111,5 +136,6 @@ module.exports = {
   UPDATE_USER_OWNS,
   GET_USER_OWNS,
   GET_USER_FOR_UPDATE, 
-  GET_USER_BY_HANDLE
+  GET_USER_BY_HANDLE,
+  USERS_LOCALS
 }

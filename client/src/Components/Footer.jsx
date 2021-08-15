@@ -1,14 +1,51 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import useToggle from "./useHooks/useToggle";
 import {Link} from 'react-router-dom';
+import { SatisfactionScale } from "./Input";
+
 const Footer = ()=>{
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState({
+    message:"",
+    rating:-1
+  });
+  const [sent, setSent] = useState(false);
+  const [isLoading, toggleIsLoading] = useToggle();
   const onChangeFeedback = e =>{
           e.preventDefault();
-          setFeedback(e.target.value);
+          setFeedback({...feedback, message: e.target.value});
   }
-  const sendFeedback = e=>{
+  const sendFeedback = async e=>{
           e.preventDefault();
-          console.log(feedback);
+          const {message, rating} = feedback;         
+          if(message.length > 0 || rating !== -1){
+            await import('axios').then(axios=>{
+              axios.post("/api/v1/feedback",{
+                message,
+                rating
+              }).then(res=>{
+                setSent(true);
+                
+              }).then(()=>{
+                setTimeout(function(){setSent(false);}, 3000)
+                clearTimeout();
+              })
+            })
+          }
+  }
+
+  const satisfyScale = e=>{
+    e.preventDefault();
+    // console.log(e.target);
+    const {parentElement} = e.target;
+    // console.log(parentElement);
+    parentElement.childNodes.forEach(child=>{
+      // console.log(child.classList);
+      if(child.classList.contains("fas")){
+        child.classList.replace("fas", "far")
+      }
+    })
+    e.target.classList.replace("far", "fas")
+    setFeedback({...feedback, rating: e.target.id});
   }
   return (
     <footer className="footer columns">
@@ -26,7 +63,7 @@ const Footer = ()=>{
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.facebook.com" className="content icon-text">
+                  <a href="https://www.facebook.com/LocalsOnlyxyz-109680918086095" className="content icon-text">
                     <span className="icon has-text-white">
                       <i className="fab fa-large fa-facebook-square"/>
                     </span>
@@ -42,7 +79,7 @@ const Footer = ()=>{
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.twitter.com" className="content icon-text">
+                  <a href="https://twitter.com/localsonlyxyz" className="content icon-text">
                     <span className="icon has-text-white">
                       <i className="fab fa-large fa-twitter"/>
                     </span>
@@ -78,19 +115,22 @@ const Footer = ()=>{
             </li>
           </ul>
           </article>
-          
+          {/* <span className="my-3 has-text-centered box is-link">Made with <i className="fas fa-heart has-text-danger"/> in Tempe</span> */}
         </section>
         <section className="column is-3">
-                <h1 className="title has-text-white">Feedback</h1>
+                <h1 className="title has-text-white mb-1">Feedback</h1>
                 <form className="form" onSubmit={sendFeedback}>
                         
                         <div className="field">
                                 <div className="control">
-                                <textarea className="textarea" type="text" name="feedback" value={feedback} onChange={onChangeFeedback}/>
+                                <textarea className="textarea" type="text" name="feedback" value={feedback.message} onChange={onChangeFeedback}/>
                                 </div>
                         </div>
-                        <div className="control">
-                        <button className="button is-outlined is-white" type="submit">Submit</button>
+                        <div className="control level">
+                        <SatisfactionScale onClick={satisfyScale}/>
+                        <button className={`button is-outlined is-white ${isLoading && "is-loading"}`} type="submit">{sent ? 
+                          <div className="icon is-large px-6"><i className="fas fa-check has-text-success pr-1"/> Thank you</div>
+                        :"Submit"}</button>
                         </div>
                 </form>
         </section>

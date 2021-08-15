@@ -29,10 +29,10 @@ export const SearchDropdown = ({loc, handleInput, handleSubmit, zip})=>{
                     <i className="fas fa-search-location"></i>
                 </button>
             </div>
-            <div className="dropdown-menu is-left is-full-width" id="dropdown-menu" role="menu">
-                <div className="dropdown-content">
-                    <div className="dropdown-item mobile-search">
-                      <Search loc={loc} handleInput={handleInput} handleSubmit={handleSubmit} zip={zip}/>
+            <div className="dropdown-menu mobile-search"  role="menu">
+                <div className="dropdown-content ">
+                    <div className="dropdown-item ">
+                      <Search loc={loc} handleInput={handleInput} handleSubmit={handleSubmit} zip={zip} isMobile={true}/>
                     </div>
                 </div>
             </div>

@@ -30,25 +30,33 @@ export default class Firebase {
     }
     this.Auth = firebase.auth.Auth;
     this.auth = firebase.auth();
-    }
+    this.provider = ""
+  }
 
-    createUserWithEmailAndPassword = (email, password) =>
-      this.auth.createUserWithEmailAndPassword(email, password);
+  setProvider = provider =>{
+    this.provider = provider
+  }
+  setPersistenceStorage = persistence => this.auth.setPersistence(persistence);
+  persistenceLocal = ()=> firebase.auth().Auth.Persistence.LOCAL
+  persistenceNone = ()=> firebase.auth().Auth.Persistence.NONE
+
+  createUserWithEmailAndPassword = (email, password) =>
+    this.auth.createUserWithEmailAndPassword(email, password);
+  
+  emailIsAvailable = email => this.auth.fetchSignInMethodsForEmail(email);
+
+  signInWithEmailAndPassword = (email, password) =>
+    this.auth.signInWithEmailAndPassword(email, password);
+  
+  signOut = () => this.auth.signOut();
     
-    emailIsAvailable = email => this.auth.fetchSignInMethodsForEmail(email);
 
-    signInWithEmailAndPassword = (email, password) =>
-      this.auth.signInWithEmailAndPassword(email, password);
-    
-    signOut = () => this.auth.signOut();
-     
+  passwordReset = email => this.auth.sendPasswordResetEmail(email);
 
-    passwordReset = email => this.auth.sendPasswordResetEmail(email);
-
-    updatePassword = password => this.auth.currentUser.updatePassword(password);
-    updateEmail = email => this.auth.currentUser.updateEmail(email);
-    signInWithGooglePopup = () => this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-    emailCredentials = (email, pass)=>firebase.auth.EmailAuthProvider.credential(email,pass)
-    reauth = (credentials)=>this.auth.currentUser.reauthenticateWithCredential(credentials)
+  updatePassword = password => this.auth.currentUser.updatePassword(password);
+  updateEmail = email => this.auth.currentUser.updateEmail(email);
+  signInWithGooglePopup = () => this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+  emailCredentials = (email, pass)=>firebase.auth.EmailAuthProvider.credential(email,pass)
+  reauth = (credentials)=>this.auth.currentUser.reauthenticateWithCredential(credentials)
 }
 

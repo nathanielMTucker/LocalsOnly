@@ -10,17 +10,22 @@ import UserTag from "./UserTag";
 
 const Review = withUser(({localID, user : {ownerID : userID}, userIsLocal}) => {
     
-    const [reviews, setReviews] = useState();
+    const [reviews, setReviews] = useState([]);
+    const [offset, setOffset] = useState(null);
+    const [limit] = useState(5);
 
-    useEffect(() =>{
-        axios.get(`/api/v1/reviews?id=${localID}&user=${userID}`)
-        .then(res=>{
-            console.log(res.data);
-            setReviews(res.data.reviews);
+    const getReviews = ()=>{
+        axios.get(`/api/v1/reviews?id=${localID}&user=${userID}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
+        .then(({data:{total, findLocalByID:{reviews:{after, data}}}})=>{
+            setReviews(rev=>[...rev, ...data]);
+            setOffset(after)
         })
         .catch(err=>{
             console.log(err);
         })
+    }
+    useEffect(() =>{
+        getReviews();
     },[setReviews, localID, userID])
 
     const displayReviews = ()=>{
@@ -29,18 +34,21 @@ const Review = withUser(({localID, user : {ownerID : userID}, userIsLocal}) => {
             return <ReviewCard review={review} user={userID}/>
         })
     }
-
+    const onClickShowMore = e =>{
+        e.preventDefault();
+        getReviews();
+    }
     return (
         <section>
             {userIsLocal && <Post localID={localID} userID={userID}/>}
             <div className="reviews">{reviews ? displayReviews():"is Loading"}</div>
+            {offset && <div className="text-has-line my-5 is-clickable" onClick={onClickShowMore}><span>show more</span></div>}
         </section>
     )
 })
 
 const Post = ({userID, localID})=>{ 
     const [isLoading, setIsLoading] = useState("");
-    // const [isLocal, setIsLocal] = useState(true);
     const [rating, setRating] = useState(1);
     const [comment, setComment] = useState("");
 
@@ -73,22 +81,15 @@ const Post = ({userID, localID})=>{
         }).catch(err=>{
             console.log(err);
         })
-        // setIsLoading("");
     }
 
     return  ( 
-        
-            // isLocal && 
             <form className="field comment-post" onSubmit={onSubmit}>
-                    <Rating name="rating" value={rating} onChange={onRating}/>
+                <Rating name="rating" value={rating} onChange={onRating}/>
                 <div className={`control ${isLoading}`}>
                     <textarea placeholder="What are your thoughts?" className="textarea" name="comment" id="comment" cols="10" rows="5" onChange={onComment}/>
                 </div>
-                
-                    <button className="button is-success is-pulled-right mt-1" type="submit">Submit</button>
-                    
-                    
-                
+                <button className="button is-success is-pulled-right mt-1" type="submit">Submit</button>
             </form>
         
     )
@@ -96,21 +97,16 @@ const Post = ({userID, localID})=>{
 
 const ReviewCard = ({review, user}) =>{
     const [upvoteUsers, setUpvoteUsers] = useState(review.userUpvoted)
-    // console.log(upvoteUsers[0]._id + " === " + user);
     const [upvote, setUpvote] = useState(review.upvote);
     const [active, setActive] = useState("is-light");
     const [error, setError] = useState({});
     useEffect(()=>{
-        console.log("upvoteUsers: " + upvoteUsers);
-        if(upvoteUsers){
+        console.dir(upvoteUsers);
+        if(review && upvoteUsers === true){
             setActive("")
         }
 
     },[setActive, upvoteUsers, user, setUpvote])
-
-    // const onDislike = e =>{
-    //     e.preventDefault();
-    // }
 
     const removeError = e =>{
         e.preventDefault();
@@ -162,9 +158,8 @@ const ReviewCard = ({review, user}) =>{
         
     }
 
-    return <article className="media" key={review._id}>
+    return <article className="media is-clipped" key={review._id}>
     <figure className="media-left">
-      {/* <Link className="image is-64x64" to={`/user?id=${review.reviewer._id}`}> */}
        <p className="image is-64x64">
             {
                 review.reviewer.avatar === null ? <img src="https://bulma.io/images/placeholders/128x128.png" alt="User"/>:
@@ -173,25 +168,22 @@ const ReviewCard = ({review, user}) =>{
                 </CloudinaryContext>
             }
        </p>
-      {/* </Link> */}
     </figure>
     <div className="media-content">
       <div className="content">
         <p>
-          <strong>{review.reviewer.name} </strong>@{review.reviewer.handle}<br/><UserTag tag={review.reviewer.role}/><small><StarRating rating={review.rating}/></small>
+          <strong>{review.reviewer.name} </strong><UserTag tag={review.reviewer.role}/><br/>@{review.reviewer.handle}
           
           <br/>
-          {review.review}
+          <div className="container pt-2"><small><StarRating rating={review.rating}/></small>
+          {review.review}</div>
          </p>
       </div>
       <nav className="is-mobile">
         <div className="buttons are-small ">
           <button className={`button is-success  ${active}`} onClick={onLike}>
-            <span className="icon is-medium pl-1 pr-1"><i className="far fa-thumbs-up mr-1"></i><div className="mr-1"><p>{upvote > 0 ? upvote : null}</p></div></span>
+            <span className="icon is-medium pl-1"><i className={`far fa-thumbs-up ${upvote > 0 && "mr-1"}`}></i><div className="mr-1"><p>{upvote > 0 ? upvote : null}</p></div></span>
           </button>
-          {/* <button className={`button is-danger  ${active}`} onClick={onDislike}>
-            <span className="icon is-small "><div className="pr-1"><p>{upvote}</p></div><i className="far fa-thumbs-down ml-1"></i></span>
-          </button> */}
         </div>
       </nav>
     </div>

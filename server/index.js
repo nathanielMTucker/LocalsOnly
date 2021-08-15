@@ -7,7 +7,8 @@ const {
     local,
     user,
     review,
-    image
+    image,
+    feedback
 } = require('./resolvers');
 
 const app = express();
@@ -28,7 +29,8 @@ app.use('/api/v1',
     local,
     user,
     review,
-    image
+    image,
+    feedback
 );
 
 app.use((req, res)=>{

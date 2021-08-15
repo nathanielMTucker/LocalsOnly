@@ -40,8 +40,8 @@ const StarRating = ({rating, className}) => {
     
     return (<div className={className}>
         {
-            ratingElm.map((star)=>
-            <i className={`${star} has-text-success`}/>
+            ratingElm.map((star, index)=>
+            <i key={index} className={`${star} has-text-success`}/>
         )
         }
     </div>)

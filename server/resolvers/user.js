@@ -1,4 +1,4 @@
-const {CREATE_USER,UPDATE_USER, GET_USER_FOR_UPDATE,GET_USER_BY_ID,GET_USER_AUTH,GET_USER_BY_HANDLE} = require('./utils/userQueries');
+const {CREATE_USER,UPDATE_USER, GET_USER_FOR_UPDATE,GET_USER_BY_ID,GET_USER_AUTH,GET_USER_BY_HANDLE,USERS_LOCALS} = require('./utils/userQueries');
 const sendQuery = require('./utils/sendQueries');
 const response = require('./utils/response');
 const router = require('express').Router();
@@ -46,10 +46,6 @@ router.route('/users').post(async (req, res)=>{
     }
     try {        
         const {createUser: createdUser} = await sendQuery(CREATE_USER, variables);
-        // console.log(createdUser);
-        // if(avatar && createdUser){
-        //     const {createAvatar} = await sendQuery(CONNECT_AVATAR_TO_USER, {user:createdUser.userID,url:avatar})
-        // }
         res.status(200).json(createdUser);
     }catch(err){
         console.error(err);
@@ -134,14 +130,14 @@ router.route('/users/:user/avatar').patch(async (req,res)=>{
         const {user:id} = req.params
         const {avatar} = req.body;
         const {updateUser} = await sendQuery(`
-        mutation($id:ID!, $avatar:String){
+        mutation($id:ID!, $avatar:String!){
             updateUser(id:$id, data:{
                 avatar:{
                     create:{
                         user:{
-                            connect:$user
+                            connect:$id
                         },
-                        url:$name
+                        url:$avatar
                     }
                 }    
             }){
@@ -151,16 +147,19 @@ router.route('/users/:user/avatar').patch(async (req,res)=>{
           }
         }
         `, {id,avatar})
+        res.status(200).json(updateUser)
     }catch(err){
-        
+        console.dir("In User Patch Avatar: " + err)
     }
 })
 
 router.route('/users/:user/local-to').patch(async (req,res)=>{
+    console.log("Hello");
     try{
         const {user:id} = req.params
-        let {city,state} = req.body;
-        const localTo = state.toLowerCase() + ":" + city.toLowerCase()
+        let {city,state, localTo} = req.body;
+        const lt = (state || city ? (state + ":" + city) : localTo).toLowerCase();
+        console.log(lt);
         const {updateUser} = await sendQuery(`
         mutation($id:ID!, $localTo:String){
             updateUser(id:$id, data:{
@@ -169,9 +168,31 @@ router.route('/users/:user/local-to').patch(async (req,res)=>{
             localTo
           }
         }
-        `, {id,localTo})
+        `, {id,localTo:lt})
+        console.log(updateUser);
+        res.status(200).json(updateUser)
     }catch(err){
-        
+        console.log(err);
     }
 })
+
+
+router.route('/users/locals').get(async (req, res)=>{
+    let {id, fields, offset, limit} = req.query;
+
+    try { 
+        let {findUserByID} = await sendQuery(USERS_LOCALS, {
+            id:id,
+            limit:Number(limit),
+            offset
+        });
+        const {published} = findUserByID
+            res.status(200).json(published)
+        
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({err : 'Something went wrong'})
+    }
+});
 module.exports = router;

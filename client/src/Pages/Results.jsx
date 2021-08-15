@@ -27,6 +27,8 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
     const [offset, setOffset] = useState(null);
     const [limit] = useState(10);
 
+    
+
     useEffect(()=>{  
         getData()
     },[madeSearch])
@@ -37,7 +39,7 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
         
         await axios.get(`/api/v1/locals?${what ? `what=${what}` : ''}&where=${where}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
         .then(({data:{data, after}})=>{
-            setItems(data)
+            setItems(currentItems=>[...currentItems, ...data])
             setOffset(after)
         })
         .catch(err=>{
@@ -52,7 +54,7 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
     }
 
     const NoItemsToDisplay = () =>(
-        <div className="pt-1 container is-centered">
+        <div className="mx-6 container is-centered">
                     <div className="notification is-info has-text-centered">
                     <p className="subtitle">
                         We could not find anything!
@@ -62,7 +64,7 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
                 </div>
         )
 
-    const displayItems = ()=>{
+    const DisplayItems = ()=>{
         if (!items)
             return (
                 <NoItemsToDisplay/>
@@ -107,15 +109,21 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
         return results;
     }
     
+    const onClickShowMore = e =>{
+        e.preventDefault();
+        console.log(e);
+        getData();
+    }
         return (
             <main className="" id="results-page">
                 <div className="columns pt-4" >
                     <Results className=" is-two-fifths column side result-card" loading={loading}>
                         <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="local_images">
-                            {items && displayItems()}
-                            {offset ? <button className="show-more subtitle"><span>Show more</span></button> : 
+                            {items && <DisplayItems/>}
+                        </CloudinaryContext>
+                            {offset ? <div className="text-has-line my-5 is-clickable" onClick={onClickShowMore}><span>show more</span></div> : 
                                 items ? 
-                                <div className="pt-1 pb-5 container is-centered">
+                                <div className="my-5 container is-centered">
                                     <div className="notification is-info has-text-centered">
                                         <p className="subtitle">
                                             This is all we could find!
@@ -124,7 +132,6 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
                                     </div>
                                 </div> : null
                             }
-                        </CloudinaryContext>
                     </Results>
                     
                     <div className="column is-medium is-hidden-mobile">

@@ -20,6 +20,8 @@ import { withUser } from "./User";
 import 'bulma/css/bulma.min.css';
 
 
+
+
 // Pages
 const Results = lazy(()=>import("./Pages/Results"));
 const Home = lazy(()=>import("./Pages/Home"));
@@ -35,16 +37,14 @@ const EditProfile = lazy(()=>import("./Pages/EditProfile"));
 export default compose(
   withFirebase,
   withUser
-)((props) => {
+)(({firebase, user}) => {
   const [madeSearch, setMadeSearch] = useState(true);
   const [authUser, setAuthUser] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const abortController = new AbortController();
 
   const setUser = ({data}) => {
-    // const data = res.data;
-    console.dir(data);
-    props.user.set({
+    user.set({
       ownerID: data._id,
       name: data.name,
       email: data.email,
@@ -68,18 +68,20 @@ export default compose(
         });
     }
   };
-useEffect(()=>{
-  console.log("Checking if User and auth exist: \nuser: " + userInfo + "\nauth: " + authUser);
-},[authUser, userInfo, setUser])
+
+  
+
   useEffect(() => {
     const loc = window.location.href + "";
     
     if (!loc.includes("localhost") && loc.includes("http://"))
       window.location.href = loc.replace("http://", "https://");
 
-    const listener = props.firebase.auth.onAuthStateChanged(setAuth);
+    const listener = firebase.auth.onAuthStateChanged(setAuth);
+   
     return async function cleanup() {
       await listener();
+      
       abortController.abort();
     };
   },[]);
@@ -88,7 +90,7 @@ useEffect(()=>{
     return (
       <Router>
           <Nav setMadeSearch={setMadeSearch} />
-        <Suspense fallback={<div className="section content columns box">Loading...</div>}>
+        <Suspense fallback={<div className="section content columns box" style={{minHeight:"100vh"}}>Loading...</div>}>
           <Switch>
             <Route exact path={ROUTES.HOME} component={Home} />
             <Route path={ROUTES.NEW_LOCAL} component={NewLocal} />
@@ -112,7 +114,9 @@ useEffect(()=>{
 
   return (
     <Router>
-      <Suspense  fallback={<div className="section content columns box">Loading...</div>}>
+      <Suspense  fallback={<div className="columns is-centered">
+        <div className="column">Loading...</div>
+        </div>}>
         <Switch>
           <Route exact path={ROUTES.HOME} component={()=><Opening setUser={setUser}/>} />
           <Route path={ROUTES.SIGNUP} component={Registration} />

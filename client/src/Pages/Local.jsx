@@ -67,27 +67,26 @@ const Local = withUser(({user, location : {search}}) =>{
             hour -= 12;
             am = "p.m."
         }
-
+        if(hour === 0){
+            hour = 12
+        }
         time = parseInt(hour) + ":" + minute + " " + am;
         return time;
     }
 
-    const GetHours = ({day}) => {
+    const GetHours = ({day}) =>{
         let {closed, to, from} = item.hours[day.toLowerCase()];
 
         from = getAnteMeridiem(from);
         to = getAnteMeridiem(to);
 
         return (
-            <div className="level">
-                <div className="level-left">
-                    <div className="level-item">
-                        {day}
-                    </div>
-                    <div className="level-item">
-                        {(closed || to === '') ? 'closed' : `${from} - ${to}`}
-                    </div>
-                </div>
+            <div className="">
+                
+                        <span className="pr-2">{day}</span>
+                   
+                        <span>{(closed || to === '') ? 'closed' : `${from} - ${to}`}</span>
+                    
             </div>
         )
     }
@@ -113,12 +112,10 @@ const Local = withUser(({user, location : {search}}) =>{
                         const quick = item.quick[a];
                         return quick && amenities.hasOwnProperty(a) &&
                        
-                        <div className="level">
-                            <div className="level-left">
-                                <i className={`${amenities[a].icon} tile level-item`}/>
-                                <span className="level-item">{amenities[a].description}</span>
-                            </div>
-                        </div>
+                        <div className="icon-text pt-1">
+                    <span className="icon"><i className={`${amenities[a].icon} `}/></span>
+                    <span>{amenities[a].description}</span>
+                </div>
                     })
         )
     }
@@ -143,12 +140,11 @@ const Local = withUser(({user, location : {search}}) =>{
             {
                 const quick = item.quick[a];
                 return quick && amenities.hasOwnProperty(a) && 
-                    <div className="level">
-                        <div className="level-left">
-                            <i className={`${amenities[a].icon} level-item`}/>
-                            <span className="level-item">{amenities[a].description}</span>
-                        </div>
-                    </div>
+                <div className="icon-text pt-1">
+                    <span className="icon"><i className={`${amenities[a].icon} `}/></span>
+                    <span>{amenities[a].description}</span>
+                </div>
+                        
             })
         )
     }
@@ -238,17 +234,17 @@ const Local = withUser(({user, location : {search}}) =>{
                                 </div>
                                 <div className="level-right">
                                     <a href={`https://www.google.com/maps/search/?api=1&query=${item.geo.lat},${item.geo.lng}`} className="level-item button is-outlined is-link">Direction</a>
-                                    <button className="level-item button is-outlined is-primary">Street View</button>
+                                    {/* <button className="level-item button is-outlined is-primary">Street View</button> */}
                                 </div>
                             </div>
-                            <h4 className="is-size-4">Hours</h4>
-                            <Hours/>
-                            <h4 className="is-size-4">Amenities & Info</h4>
                             <div className="columns">
                                 <div className="column">
-                                    <DisplayAmenitiesFamily/>
+                                    <h4 className="is-size-4">Hours</h4>
+                                    <Hours/>
                                 </div>
                                 <div className="column">
+                                    <h4 className="is-size-4">Amenities & Info</h4>
+                                    <DisplayAmenitiesFamily/>
                                     <DisplayAmenitiesBusiness/>
                                 </div>
                             </div>

@@ -16,9 +16,10 @@ const CREATE_REVIEW = `
 `
 
 const GET_LOCAL_REVIEWS = `
-  query($localID:ID!){
-    findLocalByID(id:$localID){
-      reviews{
+  query($id:ID!, $offset:String, $limit:Int!){
+    findLocalByID(id:$id){
+      reviews(_size:$limit, _cursor:$offset){
+        after
         data{
           _id
           local{

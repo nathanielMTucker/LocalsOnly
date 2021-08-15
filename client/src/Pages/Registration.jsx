@@ -128,16 +128,14 @@ const RegistrationBase = ({firebase, history})=>{
     return (
     <main className="registration section">
         <div className="columns is-centered">
-            <div className="is-half  ">
+            <div className="is-half">
                 <div className="box border-main">
-                    <div className="hero fill-hero box is-primary">
+                    <div className="hero py-6 my-0 px-5 mx-0 is-primary">
                         <div className="text-center level home-logo">
                         <img src="../LocalsOnly.png" alt="localsonly"/>
                             <label className="level-item title">Registration</label>
                         </div>
-                        
                     </div>
-                   
                     <section className="column">
                         <form onSubmit={handleSubmit} className="form">
                         <label className="label">
@@ -165,26 +163,17 @@ const RegistrationBase = ({firebase, history})=>{
                                 </div>
                             </div>
                         </label>
-                        <label className="label">
-                            <div className="level-left">
-                                <div className="level-item">
-                                    Birthday
-                                    <Alert text="Must be 13 years of age or older" severity="info"/>
-                                </div>
-                            </div>
-                            <Birthday setBirthday={setBirthday}/>
-                            
-                        </label>
                         <div className="level">
                             <div className="level-left">
                             <button id="sign-up-button" className="level-item button is-primary" disabled={isDisabled()} type="submit">Sign Up</button>
                             </div>
-                        <small className="help is-info">*All fields are required</small>
+                        <small className="help is-info">* All fields are required</small>
                         </div>
                         </form>
-                    <small>Already have an account? <Link className="has-text-primary" to="/">Login!</Link></small>
                     </section>
+                    <small className="content has-text-centered section">Already have an account? <Link className="has-text-primary" to="/">Login!</Link></small>
                 </div>
+                <div className="my-0 py-0 section content has-text-centered">By signing up you accept all cookies, <Link>terms of services</Link> and <Link>privacy policy</Link></div>
             </div>
         </div>
     </main>

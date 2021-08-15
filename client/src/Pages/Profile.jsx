@@ -1,34 +1,67 @@
 import React, {useState, useEffect} from 'react'
 import { withUser } from '../User'
-import {compose} from 'recompose';
 import axios from 'axios';
 import Picture from '../Components/Picture';
 import {Link} from 'react-router-dom';
 import { CloudinaryContext} from 'cloudinary-react'
 import UserTag from "../Components/UserTag";
 
-const Profile = ({user}) => {
+const Profile = withUser(({user}) => {
     
    
-    const [userSearch, setUserSearch] = useState();
+    const [locals, setLocals] = useState([]);
+    // const [loading, setLoading] = useState(true)
+    const [offset, setOffset] = useState(null);
+    const [limit] = useState(10);
 
+    const getLocals = async ()=>{
+        await axios.get(`/api/v1/users/locals?id=${user.ownerID}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
+        .then(({data:{data, after}})=>{
+            console.log(after);
+            setLocals(currentItems=>[...currentItems, ...data] || null)
+            setOffset(after)
+        })
+        .catch(err=>{
+            console.error(err)
+            setLocals([{
+                message : "Unable to connect"
+            }])
+        })
+
+        // setLoading(false);
+    }
     useEffect(()=>{
-        const getUser = async ()=>{
-            await axios.get(`/api/v1/users?id=${user.ownerID}`)
-            .then(res=>{
-                console.dir(res.data);
-                setUserSearch(res.data)
-            }).catch(err=>{
-                console.error(500)
-            })
-        }
-        getUser();
+        console.log("In user profile: ");
+        console.dir( user)
+        getLocals();
     },[user.ownerID])
 
     
+    const DisplayLocals = () =>{
+        return locals ? locals.map(pub=>
+
+            <li className="box">
+                <h1 className="title">{pub.name}</h1>
+                { 
+                    pub.images && pub.images.data[0]?
+                    <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="local_images">
+                        <Picture id={pub.images.data[0].url} preset="local_images"/>
+                    </CloudinaryContext> :
+                    null
+                }
+                <article className="content">{pub.description}</article>
+                <Link to={`local?id=${pub._id}`}>Go to Local</Link>
+            </li>
+            
+            ) : <h1>Loading...</h1>
+    }
+    const onClickShowMore = e =>{
+        e.preventDefault();
+        getLocals();
+    }
     const formatLocal = ()=>{
         let [state, city] = user.localTo.split(':');
-        return `${city.charAt(0).toUpperCase() + city.slice(1)}, ${state.toUpperCase()}`
+        return city && state ? `${city.charAt(0).toUpperCase() + city.slice(1)}, ${state.toUpperCase()}` : "unavailable"
     }
     
     return (
@@ -76,28 +109,12 @@ const Profile = ({user}) => {
             <section className="my-4 profile-local-section">
                 <h1 className="title">Locals</h1>
                 <ul className="is-flex is-flex-direction-column is-flex-shrink-4">
-                    {
-                        userSearch ? userSearch.published.data.map(pub=>
-
-                        <li className="box">
-                            <h1 className="title">{pub.name}</h1>
-                            { 
-                                pub.images.data && pub.images.data[0]?
-                                <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="local_images">
-                                    <Picture id={pub.images.data[0].url} preset="local_images"/>
-                                </CloudinaryContext> :
-                                null
-                            }
-                            <article className="content">{pub.description}</article>
-                            <Link to={`local?id=${pub._id}`}>Go to Local</Link>
-                        </li>
-                        
-                        ) : <h1>Loading...</h1>
-                    }
+                    <DisplayLocals/> 
+                    {offset && <div className="text-has-line my-5 is-clickable" onClick={onClickShowMore}><span>show more</span></div>}
                 </ul>
             </section>
         </main>
     )
-}
+})
 
-export default compose(withUser)(Profile);
+export default Profile;

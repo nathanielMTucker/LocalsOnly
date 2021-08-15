@@ -9,8 +9,8 @@ const ResultsCard = props =>
     const Price = () =>{
         const { price } = props;
         
-        return ([...Array(price).keys()].map(()=>
-            <i className="fas fa-dollar-sign has-text-success is-size-5"/>
+        return ([...Array(price).keys()].map((_,index)=>
+            <i key={index} className="fas fa-dollar-sign has-text-success is-size-5"/>
         ))
     }
     
