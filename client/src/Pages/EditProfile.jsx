@@ -164,9 +164,13 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
       setCookie("local-update", localTo, 1000);
       const d = new Date();
       d.setTime(d.getTime() + (30*24*60*60*1000));
-      let expires = "expires="+ d.toUTCString();
-      setCookie("local-update-on", expires, 30)
+      let expires = d.toUTCString();
       
+      setCookie("local-update-on", expires, 30)
+      const exp = getCookie("local-update-on");
+      // console.log(exp);
+      const a = new Date(exp);
+      console.log(a.getDate());
     }
 
     alert("Your profile has been updated!")
@@ -195,6 +199,19 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
     if(name === "password") setProfile({...profile, [name]:value.replace(" ", "")})
     else setProfile({...profile, [name]:value})
     // console.log(`onChange ${name}: ${value}`)
+  }
+
+  const LocalUpdateOn = ()=>{
+    const update = new Date(getCookie("local-update-on"))
+    const today = new Date()
+    const difT = Math.abs(update - today);
+    let difD = Math.ceil(difT / (1000*60*60*24));
+    if(difD <= 1){
+      difD = "today"
+    }else{
+      difD = "in "+difD + " days"
+    }
+    return <span>{difD}</span>
   }
 
   const deleteAccount = e =>{
@@ -276,7 +293,7 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
 
           <div className="field">
             <label htmlFor="local">City/Town</label>
-            {updatingLocal && <span className="pl-2 has-text-danger">Your local will update in 30 days.</span>}
+            {updatingLocal && <span className="pl-2 has-text-danger">Your local will update <LocalUpdateOn/></span>}
             <div name="local" className="control">
               <input type="text" name="city" value={profile.city} className="input" onChange={onChange} required disabled={updatingLocal}/>
             </div>

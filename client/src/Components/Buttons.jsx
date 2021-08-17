@@ -3,22 +3,20 @@ import {Link} from 'react-router-dom';
 import {useHistory} from 'react-router-dom'
 import * as ROUTES from '../Constants/routes';
 import {withFirebase} from '../Authentication';
-import {withUser} from '../User';
 import axios from 'axios';
 import { fromLatLng } from '../globals';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 
 export const LogoutButton = withFirebase(({firebase}) => {
     const history = useHistory();
-   return <React.Fragment>
-        <button title="Logout" className="button is-primary" 
+   return <button title="Logout" className="button is-primary is-outlined" 
             onClick={()=>{
                 firebase.signOut(); history.push(ROUTES.HOME);
         }}> 
+            <span className="icon">
             <i className="fas fa-door-open"/>
+            </span>
         </button>
-    </React.Fragment>
 })
 
 export const LogoLinkButton = ()=>(
@@ -35,17 +33,21 @@ export const LocalizeLinkButton = ()=>{
             document.getElementById('sign').classList.remove('is-active');
     }
     return (
-        <Link title="New Local" className="button is-inverted" to={ROUTES.NEW_LOCAL} onClick={toggle}>
+        <Link title="New Local" className="button" to={ROUTES.NEW_LOCAL} onClick={toggle}>
+            <span className="icon">
             <i className="fas fa-plus-circle"/>
+            </span>
         </Link> 
     )
 }
 
-export const UserProfileButton = withUser(({user:{ownerID:id}})=>(
-    <Link title="Profile" className="button is-main is-inverted" to={ROUTES.PROFILE}>
+export const UserProfileButton = ()=>(
+    <Link title="Profile" className="button is-main" to={ROUTES.PROFILE}>
+        <span className="icon">
         <i className="fas fa-user-astronaut"/>
+        </span>
     </Link>
-))
+)
 
 
 
@@ -165,3 +167,13 @@ export const GoogleSignIn = withFirebase(({firebase, setUser})=>{
                 </span>
             </div>
 })
+
+export const DropdownTrigger = ({active, toggleActive})=>{
+    return <div className="dropdown-trigger">
+    <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={()=>{toggleActive()}}>
+      <span className="icon is-small">
+        {active ? <i className="fas fa-times" aria-hidden="false"/> : <i className="fas fa-bars" aria-hidden="true"/>}
+      </span>
+    </button>
+  </div>
+}

@@ -1,18 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
+import useDeviceDetect from "../Components/useHooks/useDeviceDetect";
 
 const Home = ()=>{
-  const [width, setWidth] = useState(window.innerWidth);
-  const updateDimensions = ()=>{setWidth(window.innerWidth)}
-  useEffect(()=>{
-   
-    window.addEventListener('resize', updateDimensions)
-   
-    return function cleanup(){
-      window.removeEventListener('resize', updateDimensions)
-    };
-  },[]);
-  const isMobile = () => (width < 769)
-  return <main id="home"  className={`content is-medium my-6 ${isMobile() && "mx-0"}`}>
+  
+  
+  const { isMobile } = useDeviceDetect();
+  return <main id="home"  className={`content is-medium my-6 ${isMobile && "mx-0"}`}>
     
     <section className="columns is-centered">
       <div className="column">
@@ -20,7 +13,7 @@ const Home = ()=>{
           <h1 className="title   has-text-centered" >
             Hey! Welcome to
           </h1>
-          <div className={`home-page-image has-text-centered ${isMobile() && "full-width"}`}>
+          <div className={`home-page-image has-text-centered ${isMobile && "full-width"}`}>
             <img src="./LocalsOnly.png" alt="LocalsOnly"/>
           </div>
           <h2 className="subtitle has-text-centered">
@@ -49,22 +42,62 @@ const Home = ()=>{
           
         </section>
 
-        {/* <section id="who" className="column  section "> */}
-          
-          <h1 className="title has-text-info has-text-centered">Get back to community.</h1>
-          {/* <div className="container">
+        <section id="who" className="section">
+          <h1 className="title is-large has-text-info has-text-centered"  style={{fontFamily:"Satisfy"}}>What's next?</h1>
+          <div className="">
+            <h2 className="subtitle is-3">Getting around the site</h2>
           <p>
-          
-          </p>
-          </div> */}
+          I am sure you have noticed already, the site is still new and not too much to do yet. But that will soon change!
+          There are 4 main buttons that you will see up top in the navigation bar.</p>
+          <div className="mx-0 px-0">
+            <ul>
+              <li className="no-dot mx-0 ">
+                <span className={`${!isMobile && "icon-text"}`}>
+                  <span className="icon">
+                    <i className="fas fa-search mx-0 "/>
+                  </span>
+                  <span>Use this to search through the various places that have been posted by other locals</span>
+                </span>
+              </li>
+              <li className="no-dot">
+                <span className={`${!isMobile && "icon-text"}`}>
+                  <span className="icon">
+                    <i className="fas fa-plus-circle"/>
+                  </span>
+                  <span>Go here to add a new place for others to see</span>
+                </span>
+              </li>
+              <li className="no-dot">
+                <span className={`${!isMobile && "icon-text"}`}>
+                  <span className="icon">
+                  <i className="fas fa-user-astronaut"/>
+                  </span>
+                  <span>Check out your account details and update your info</span>
+                </span>
+              </li>
+              <li className="no-dot">
+                <span className={`${!isMobile && "icon-text"}`}>
+                  <span className="icon">
+                  <i className="fas fa-door-open"/>
+                  </span>
+                  <span>Done with looking around the site? Make sure you sign-out</span>
+                </span>
+              </li>
+            </ul>
+            <p>Go ahead and make a search or add a few of your favorite spots! If you have any issues or would
+              like to add any kind of comment, there is always a feedback form at the bottom of each page
+            </p>
+          </div>
+          </div>
          
-        {/* </section> */}
+        </section>
 
       </div>
     </section>
         <section id="call-to-action" className="section">
           
           
+        <h1 className="title has-text-info has-text-centered">Get back to community.</h1>
           <div className="container notification is-warning">
           <h1 className="title is-2 has-text-centered">
             We Need Feedback!

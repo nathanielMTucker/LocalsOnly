@@ -192,6 +192,8 @@ footer.footer{
 footer.footer a{
     color:white;
 }
+
+.no-dot,
 footer.footer li{
     list-style: none;
 }
@@ -291,8 +293,9 @@ textarea:required:valid{
 }
 
 #main-nav{
+    position: fixed;
     padding:0 0.75vw;
-    /* height: var(--nav-bar-height); */
+    height: var(--nav-bar-height);
     border-radius: 0;
     border-bottom: solid 1px hsl(295, 4%, 74%);
 }
@@ -526,12 +529,13 @@ textarea::placeholder{
 
 
 .satisfaction-scale i{
-    opacity: 0.75;
     padding:0;
     margin-left:0.2em;
     margin-right:0.2em
 }
-
+.dropdown-content{
+    width:100vw
+}
 .satisfaction-scale i:hover{
-    opacity: 1;
+    font-weight: 900;
 }

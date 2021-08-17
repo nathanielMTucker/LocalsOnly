@@ -9,6 +9,7 @@ export const withUser = Component => props => (
       {user => <Component {...props} user={user} />}
     </UserContext.Consumer>
   );
+
 const updateLocal = async (_id)=>{
     if(getCookie("local-update-on") === undefined && getCookie("local-update") !== undefined){
       console.log(getCookie("local-update"));
@@ -18,6 +19,7 @@ const updateLocal = async (_id)=>{
         setCookie("local-update", "", -1);
       })
     }}
+
 export default class User{
     constructor(){
         this.ownerID = "";
@@ -29,9 +31,19 @@ export default class User{
         this.avatar = "";
         this.handler = "";
     }
+    
     isSet(){
       return !!this.ownerID;
     }
+    
+    isLocalTo(local){
+      return !local.localsOnly || `${local.address.state}:${local.address.city.replace(" ","_")}` === this.localTo || this.isUnrestricted()
+    }
+
+    isUnrestricted(){
+      return this.role !== "user"
+    }
+    
     set(user){
       this.ownerID = user.ownerID;
       this.email = user.email;

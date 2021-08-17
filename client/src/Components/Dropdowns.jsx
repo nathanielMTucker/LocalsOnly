@@ -2,6 +2,9 @@ import React, {useEffect, useRef} from 'react'
 import SignIn from './SignIn';
 import {buttons} from '../Constants/IDs';
 import Search from './Search/Search';
+import {DropdownTrigger} from "./Buttons";
+import useToggle from './useHooks/useToggle';
+
 const {SEARCH, SIGN} = buttons
 
 export const SearchDropdown = ({loc, handleInput, handleSubmit, zip})=>{
@@ -32,7 +35,7 @@ export const SearchDropdown = ({loc, handleInput, handleSubmit, zip})=>{
             <div className="dropdown-menu mobile-search"  role="menu">
                 <div className="dropdown-content ">
                     <div className="dropdown-item ">
-                      <Search loc={loc} handleInput={handleInput} handleSubmit={handleSubmit} zip={zip} isMobile={true}/>
+                      <Search loc={loc} handleInput={handleInput} handleSubmit={handleSubmit} zip={zip}/>
                     </div>
                 </div>
             </div>
@@ -85,4 +88,24 @@ export const SignInDrowdown = props=>{
             </div>
         </div>
     )
+}
+
+export const MenuDropdown = ({children, align}) =>{
+
+    const [active, toggleActive] = useToggle();
+
+    return <div className={`dropdown mr-1 ${align === "right" && "is-right"} ${active && "is-active"}`}>
+        <DropdownTrigger active={active} toggleActive={toggleActive}/>
+        <div className="dropdown-menu " id="dropdown-menu" role="menu">
+            <div className="dropdown-content">
+                {children}
+            </div>
+        </div>
+    </div>
+}
+
+export const DropdownItem = ({children})=>{
+    return <div className="dropdown-item">
+        {children}
+    </div>
 }

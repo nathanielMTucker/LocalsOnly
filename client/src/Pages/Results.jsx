@@ -20,7 +20,7 @@ const dayOfWeek = [
     "saturday"
 ]
 
-export default compose(withUser, withRouter)(({user:{role, localTo}, location:{search}, madeSearch, setMadeSearch})=> {
+export default compose(withUser, withRouter)(({user, location:{search}, madeSearch, setMadeSearch})=> {
     
     const [items, setItems] = useState([])
     const [loading, setLoading] = useState(true)
@@ -79,10 +79,7 @@ export default compose(withUser, withRouter)(({user:{role, localTo}, location:{s
         const today = dayOfWeek[new Date().getDay()]
 
         const results = items
-            .filter(post=>(
-                !post.localsOnly ||
-                `${post.address.state}:${post.address.city.replace(" ","_")}` === localTo ||
-                role === "admin"))
+            .filter(post=>(user.isLocalTo(post)))
             .map((local, index) => {
                 const hours = local.hours[today];
                 return <ResultsCard
