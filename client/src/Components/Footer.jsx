@@ -48,9 +48,10 @@ const Footer = ()=>{
     setFeedback({...feedback, rating: e.target.id});
   }
   return (
-    <footer className="footer columns">
-      <section className="column"></section>
-        <section className="column is-2">
+    <footer className="footer">
+      {/* <section className="column"></section> */}
+        <div className="columns is-centered mb-0 mt-1">
+        <section className="column is-2-desktop">
           <h1 className="title has-text-white">Get Involved</h1>
             <article className="content is-medium">
               <ul className="">
@@ -88,13 +89,8 @@ const Footer = ()=>{
                 </li>
             </ul>
           </article>
-          <div className="">
-            <a href="https://bulma.io">
-              <img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="150" height="48"/>
-            </a>
-          </div>
         </section>
-        <section className="column is-2">
+        <section className="column is-2-desktop">
         <h1 className="title has-text-white">Links</h1>
           <article className="">
           <ul>
@@ -115,9 +111,15 @@ const Footer = ()=>{
             </li>
           </ul>
           </article>
-          {/* <span className="my-3 has-text-centered box is-link">Made with <i className="fas fa-heart has-text-danger"/> in Tempe</span> */}
+          {/* <div className="is-hidden-mobile section pb-0 pt-0 has-text-centered">
+
+          <a href="https://bulma.io">
+              <img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="150" height="48"/>
+            </a>
+          <span className="icon-text ">Made with<span className="icon"><i className="fas fa-heart has-text-danger"/></span> in Tempe, AZ</span>
+          </div> */}
         </section>
-        <section className="column is-3">
+        <section className="column is-3-desktop">
                 <h1 className="title has-text-white mb-1">Feedback</h1>
                 <form className="form" onSubmit={sendFeedback}>
                         
@@ -134,7 +136,16 @@ const Footer = ()=>{
                         </div>
                 </form>
         </section>
-        <section className="column"></section>
+        </div>
+        {/* <section className="column"></section> */}
+        <div className="level is-mobile is-hidden-desktop section pt-0 pb-3 container">
+            <div className="level-item">
+            <a href="https://bulma.io">
+              <img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="150" height="48"/>
+            </a>
+          <span className="icon-text pl-2">Made with<span className="icon"><i className="fas fa-heart has-text-danger"/></span> in Tempe, AZ</span>
+            </div>
+          </div>
     </footer>
   )
 }

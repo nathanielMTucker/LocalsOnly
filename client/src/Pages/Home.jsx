@@ -97,7 +97,7 @@ const Home = ()=>{
         <section id="call-to-action" className="section">
           
           
-        <h1 className="title has-text-info has-text-centered">Get back to community.</h1>
+        <h1 className="title has-text-info has-text-centered">Bring back community.</h1>
           <div className="container notification is-warning">
           <h1 className="title is-2 has-text-centered">
             We Need Feedback!

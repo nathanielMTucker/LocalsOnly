@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import SignUp from '../Components/SignUp';
 import {withRouter, Link} from 'react-router-dom';
 import {compose} from 'recompose';
-import Birthday from '../Components/Birthday';
 import {STATES} from '../globals';
 import {getAbbrs} from '../globals';
 import { withFirebase } from '../Authentication';

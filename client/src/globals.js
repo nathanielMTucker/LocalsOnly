@@ -61,4 +61,4 @@ const setCookie = (cname, cvalue, exdays)=>{
     let expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
-module.exports = {STATES, API_KEY, fromLatLng, fromAddress, getAbbrs, ABBRS, parsePath, imageURL, getCookie, setCookie};
+export {STATES, API_KEY, fromLatLng, fromAddress, getAbbrs, ABBRS, parsePath, imageURL, getCookie, setCookie};

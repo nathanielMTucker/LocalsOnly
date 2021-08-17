@@ -206,7 +206,8 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
     const today = new Date()
     const difT = Math.abs(update - today);
     let difD = Math.ceil(difT / (1000*60*60*24));
-    if(difD <= 1){
+    // if(difD === NaN)
+    if(difD <= 1 || isNaN(difD)){
       difD = "today"
     }else{
       difD = "in "+difD + " days"

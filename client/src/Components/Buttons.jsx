@@ -69,13 +69,24 @@ export const CurrentLocation = ({setLocation, name})=>{
                     let city = "";
                     let state = "";
                     if(results[1]){
-                        for(let i = 0; i < results[0].address_components.length; i++){
-                            for(let b = 0; b < results[0].address_components[i].types.length; b++){
-                                if(results[0].address_components[i].types[b] === "administrative_area_level_1"){
-                                    state = results[0].address_components[i].short_name;
-                                }
-                                if(results[0].address_components[i].types[b] === "locality"){
-                                    city = results[0].address_components[i].short_name;
+                        //Grab city and state from "locality"
+                        for(let i = 0; i < results.length; i++){
+                            if(results[i].types.includes("locality")){
+                                const location = results[i].formatted_address.split(',')
+                                city = location[0];
+                                state = location[1];
+                            }
+                        }
+                        //If could not get from "locality", grab within address_components
+                        if(city === "" || state === ""){
+                            for(let i = 0; i < results[0].address_components.length; i++){
+                                for(let b = 0; b < results[0].address_components[i].types.length; b++){
+                                    if(results[0].address_components[i].types[b] === "administrative_area_level_1"){
+                                        state = results[0].address_components[i].short_name;
+                                    }
+                                    if(results[0].address_components[i].types[b] === "locality"){
+                                        city = results[0].address_components[i].short_name;
+                                    }
                                 }
                             }
                         }

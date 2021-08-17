@@ -8,6 +8,7 @@ import {Link} from 'react-router-dom';
 import { CloudinaryContext} from 'cloudinary-react'
 import Picture from '../Components/Picture';
 import { withUser } from '../User';
+import useDeviceDetect from '../Components/useHooks/useDeviceDetect';
 
 const dayOfTheWeek = [
     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -21,6 +22,8 @@ const mapStyle = {
 
 const Local = withUser(({user, location : {search}}) =>{
    
+    const { isMobile } = useDeviceDetect();
+
     const [item, setItem] = useState(null);
     const [userIsLocal, setUserIsLocal] = useState(false);
     
@@ -200,10 +203,10 @@ const Local = withUser(({user, location : {search}}) =>{
                             </div>
                         </div>
                     </div>
-                    <div className="local-actions level-right">
-                        <div className="level is-mobile">
+                    <div className="local-actions is-hidden-mobile level-right">
+                        <div className="level">
                             {
-                                userIsLocal && (
+                               userIsLocal && (
                                 <div className="buttons">
                                     <Link className="button" to={`/local/upload-image?id=${queryString.parse(search).id}&name=${item.name}`}>Upload images</Link>
                                     {/* <Link className="button" to={`/local/edit?id=${queryString.parse(search).id}`}>Edit</Link> */}
@@ -215,6 +218,18 @@ const Local = withUser(({user, location : {search}}) =>{
                     </section>
                 </header>
                 
+                    
+                        <div className="level is-hidden-tablet">
+                            {
+                               userIsLocal && (
+                                <div className="buttons level-item">
+                                    <Link className="button" to={`/local/upload-image?id=${queryString.parse(search).id}&name=${item.name}`}>Upload images</Link>
+                                    {/* <Link className="button" to={`/local/edit?id=${queryString.parse(search).id}`}>Edit</Link> */}
+                                </div>
+                                )
+                            }
+                        </div>
+                    
                 <section className="section container">
                     <section className="columns">
                         <section className="column">
