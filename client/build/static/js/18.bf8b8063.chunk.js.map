@@ -1,0 +1,1 @@
+{"version":3,"sources":["Pages/Upcoming.jsx"],"names":["Upcoming"],"mappings":"2GAAA,uBAUeA,UARE,WACb,OACI","file":"static/js/18.bf8b8063.chunk.js","sourcesContent":["import React from 'react'\n\nconst Upcoming = () => {\n    return (\n        <main>\n            Upcoming Features Page\n        </main>\n    )\n}\n\nexport default Upcoming;\n"],"sourceRoot":""}

@@ -16,7 +16,6 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "acorn": "^8.1.0",
     "axios": "^0.21.1",
-    "bulma": "^0.9.3",
     "cloudinary-react": "^1.7.0",
     "countrycitystatejson": "^20.8.9-a",
     "dotenv": "^8.2.0",

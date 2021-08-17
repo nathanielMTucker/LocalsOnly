@@ -17,8 +17,6 @@ import { compose } from "recompose";
 
 import { withUser } from "./User";
 
-import 'bulma/css/bulma.min.css';
-
 
 
 
@@ -33,6 +31,7 @@ const Profile = lazy(()=>import("./Pages/Profile"));
 const Upcoming = lazy(()=>import("./Pages/Upcoming"));
 const ImageUpload = lazy(()=>import("./Pages/ImageUpload"));
 const EditProfile = lazy(()=>import("./Pages/EditProfile"));
+const LocalImages = lazy(()=>import("./Pages/LocalImages"));
 
 export default compose(
   withFirebase,
@@ -101,6 +100,7 @@ export default compose(
               )}
             />
             <Route path={ROUTES.UPLOAD_IMAGE} component={ImageUpload}/>
+            <Route path={ROUTES.LOCAL + "/images"} component={LocalImages}/>
             <Route path={ROUTES.LOCAL} component={Local} />
             <Route exact path={ROUTES.PROFILE} component={Profile} />
             <Route path={ROUTES.PROFILE + "/edit"} component={EditProfile}/>

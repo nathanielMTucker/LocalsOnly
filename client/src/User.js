@@ -37,7 +37,7 @@ export default class User{
     }
     
     isLocalTo(local){
-      return !local.localsOnly || `${local.address.state}:${local.address.city.replace(" ","_")}` === this.localTo || this.isUnrestricted()
+      return local && (!local.localsOnly || `${local.address.state}:${local.address.city.replace(" ","_")}` === this.localTo || this.isUnrestricted())
     }
 
     isUnrestricted(){

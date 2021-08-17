@@ -3,15 +3,25 @@
     "description": "Don't just be a tourist, be a local! Discover what locals do, where locals go and what locals are up to. Learn what the locals think of a resturant, business or popular destination.",
     "version": "0.5.0",
     "manifest_version": 1,
-    "icons": {
-      "128": ["LocalsOnly.png"]
-    },
+    "icons": [
+      {
+        "src": "favicon.ico",
+        "sizes": "64x64 32x32 24x24 16x16",
+        "type": "image/x-icon"
+      },
+      {
+        "src" : "./img/LocalsOnly.png",
+        "type" : "image/png",
+        "sizes" : "192x192"
+      }
+    ],
     "app": {
       "urls": [
-        "http://www.localsonly.xyz"
+        "https://www.localsonly.xyz"
       ],
       "launch": {
-        "web_url": "http://www.localsonly.xyz"
+        "web_url": "https://www.localsonly.xyz"
       }
-    }
+    },
+    "background_color" : "#FFFFFF"
   }

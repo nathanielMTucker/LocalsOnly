@@ -39,7 +39,7 @@ const Local = withUser(({user, location : {search}}) =>{
                 const local = `${state}:${city}`
                 console.log(local);
                 console.log(user.localTo)
-                setUserIsLocal(local === user.localTo);
+                setUserIsLocal(user.isLocalTo(local));
             })
             .catch((err)=>{console.log(`Postal courier has vanished!: ${err}`);});
     },[search, user.localTo])
@@ -54,9 +54,9 @@ const Local = withUser(({user, location : {search}}) =>{
             <div className="level">
             {
                 item.images.data.slice(0,4).map((image, index)=>(
-                    <figure className="level-item mx-0" key={index}>
+                    <Link className="level-item mx-0 is-clickable" key={index} to={`/local/images?id=${queryString.parse(search).id}&focus=${index}`}>
                             <Picture id={image.url}></Picture>
-                    </figure>
+                    </Link>
                 ))
             }
             </div>
