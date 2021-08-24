@@ -30,7 +30,9 @@ const GET_LOCAL_REVIEWS = `
             _id
             name
             avatar{
-              url
+              data{
+                url
+              }
             }
             handle
             role

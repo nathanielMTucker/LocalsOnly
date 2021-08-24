@@ -8,7 +8,6 @@ import {Link} from 'react-router-dom';
 import { CloudinaryContext} from 'cloudinary-react'
 import Picture from '../Components/Picture';
 import { withUser } from '../User';
-import useDeviceDetect from '../Components/useHooks/useDeviceDetect';
 
 const dayOfTheWeek = [
     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
@@ -21,8 +20,6 @@ const mapStyle = {
 }
 
 const Local = withUser(({user, location : {search}}) =>{
-   
-    const { isMobile } = useDeviceDetect();
 
     const [item, setItem] = useState(null);
     const [userIsLocal, setUserIsLocal] = useState(false);
@@ -38,11 +35,11 @@ const Local = withUser(({user, location : {search}}) =>{
                 const {city, state} = res.data;
                 const local = `${state}:${city}`
                 console.log(local);
-                console.log(user.localTo)
+                console.log(user.getLocalTo())
                 setUserIsLocal(user.isLocalTo(local));
             })
             .catch((err)=>{console.log(`Postal courier has vanished!: ${err}`);});
-    },[search, user.localTo])
+    },[search, user])
 
     useEffect(()=>{
         getData()

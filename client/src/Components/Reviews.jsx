@@ -1,21 +1,19 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
-import Picture from '../Components/Picture';
-import { CloudinaryContext} from 'cloudinary-react'
 import {withUser} from '../User';
 import Rating from '@material-ui/lab/Rating'
 import {StarRating} from './Results';
 import {ServerError} from "./Error";
-import UserTag from "./UserTag";
+import UserCard from './UserCard';
 
-const Review = withUser(({localID, user : {ownerID : userID}, userIsLocal}) => {
+const Review = withUser(({localID, user, userIsLocal}) => {
     
     const [reviews, setReviews] = useState([]);
     const [offset, setOffset] = useState(null);
     const [limit] = useState(5);
 
     const getReviews = ()=>{
-        axios.get(`/api/v1/reviews?id=${localID}&user=${userID}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
+        axios.get(`/api/v1/reviews?id=${localID}&user=${user.getID()}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
         .then(({data:{total, findLocalByID:{reviews:{after, data}}}})=>{
             setReviews(rev=>[...rev, ...data]);
             setOffset(after)
@@ -26,12 +24,12 @@ const Review = withUser(({localID, user : {ownerID : userID}, userIsLocal}) => {
     }
     useEffect(() =>{
         getReviews();
-    },[setReviews, localID, userID])
+    },[setReviews, localID, user])
 
     const displayReviews = ()=>{
         console.log(reviews);
-        return reviews && reviews.map((review)=>{
-            return <ReviewCard review={review} user={userID}/>
+        return reviews && reviews.map((review, i)=>{
+            return <ReviewCard key={i} review={review} user={user.getID()}/>
         })
     }
     const onClickShowMore = e =>{
@@ -40,7 +38,7 @@ const Review = withUser(({localID, user : {ownerID : userID}, userIsLocal}) => {
     }
     return (
         <section>
-            {userIsLocal && <Post localID={localID} userID={userID}/>}
+            {userIsLocal && <Post localID={localID} userID={user.getID()}/>}
             <div className="reviews">{reviews ? displayReviews():"is Loading"}</div>
             {offset && <div className="text-has-line my-5 is-clickable" onClick={onClickShowMore}><span>show more</span></div>}
         </section>
@@ -106,7 +104,7 @@ const ReviewCard = ({review, user}) =>{
             setActive("")
         }
 
-    },[setActive, upvoteUsers, user, setUpvote])
+    },[setActive, upvoteUsers, user, setUpvote, review])
 
     const removeError = e =>{
         e.preventDefault();
@@ -158,39 +156,21 @@ const ReviewCard = ({review, user}) =>{
         
     }
 
-    return <article className="media is-clipped" key={review._id}>
-    <figure className="media-left">
-       <p className="image is-64x64">
-            {
-                review.reviewer.avatar === null ? <img src="https://bulma.io/images/placeholders/128x128.png" alt="User"/>:
-                <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="avatar_images">
-                    <Picture id={review.reviewer.avatar.url} preset="avatar_images"/>
-                </CloudinaryContext>
-            }
-       </p>
-    </figure>
-    <div className="media-content">
-      <div className="content">
-        <p>
-          <strong>{review.reviewer.name} </strong><UserTag tag={review.reviewer.role}/><br/>@{review.reviewer.handle}
-          
-          <br/>
-          <div className="container pt-2"><small><StarRating rating={review.rating}/></small>
-          {review.review}</div>
-         </p>
-      </div>
-      <nav className="is-mobile">
-        <div className="buttons are-small ">
-          <button className={`button is-success  ${active}`} onClick={onLike}>
-            <span className="icon is-medium pl-1"><i className={`far fa-thumbs-up ${upvote > 0 && "mr-1"}`}></i><div className="mr-1"><p>{upvote > 0 ? upvote : null}</p></div></span>
-          </button>
+    return <UserCard sm avatar={review.reviewer.avatar.data[0].url} name={review.reviewer.name} role={review.reviewer.role} handle={review.reviewer.handle}>
+        <div className="container content pt-2">
+            <StarRating rating={review.rating}/>
+            <p>
+            {review.review}
+            </p>
         </div>
-      </nav>
-    </div>
-    <div id="error-popup" onClick={removeError}>
-        <ServerError status={error && error.status} message={error.message}/>
-    </div>
-  </article>
+        <nav className="is-mobile">
+            <div className="buttons are-small ">
+                <button className={`button is-success  ${active}`} onClick={onLike}>
+                    <span className="icon is-medium pl-1"><i className={`far fa-thumbs-up ${upvote > 0 && "mr-1"}`}></i><div className="mr-1"><p>{upvote > 0 ? upvote : null}</p></div></span>
+                </button>
+            </div>
+       </nav>
+    </UserCard>
 }
 
 export default Review;

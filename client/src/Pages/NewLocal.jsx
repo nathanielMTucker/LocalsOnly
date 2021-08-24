@@ -15,7 +15,7 @@ const hours = {
         to: '',
         closed: false
     }
-const NewLocal = ({history, user : {ownerID, localTo : userLocalTo} }) => {
+const NewLocal = ({history, user }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [days, setDays] = useState({
         monday:hours,
@@ -125,10 +125,11 @@ const NewLocal = ({history, user : {ownerID, localTo : userLocalTo} }) => {
     const onSubmit = async e =>{
         e.preventDefault();
        setIsLoading(true);
-        const localTo = address.state.toLowerCase() + ":" + address.city.toLowerCase();
         
-        if(localTo !== userLocalTo){
+        
+        if(!user.isLocalToCity(address.state.toLowerCase(), address.city.toLowerCase())){
             alert("You can only post if you are local to the area.");
+            setIsLoading(false)
             return;
         }
         
@@ -137,7 +138,7 @@ const NewLocal = ({history, user : {ownerID, localTo : userLocalTo} }) => {
             })=>{
                 console.log(location);
                 axios.post(`/api/v1/local`,{
-                    owner : ownerID.toString(),
+                    owner : user.getID().toString(),
                     address:address,
                     details:details,
                     hours:days,

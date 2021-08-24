@@ -13,7 +13,7 @@ type Feedback{
 }
 
 type User {
-    avatar: Avatar
+    avatar: [Avatar] @relation(name:"user_avatar")
     handle: String @unique
     readTermsAndConditions: Boolean
     name: String
@@ -47,7 +47,7 @@ type Image {
 }
 
 type Avatar {
-    user: User! @relation
+    user: User! @relation(name:"user_avatar")
     url: String!
 }
 

@@ -1,4 +1,5 @@
 require('dotenv').config();
+const {environment} = require("./config");
 const port = process.env.PORT || 5001;
 const express = require('express');
 const path = require('path');
@@ -13,17 +14,14 @@ const {
 
 const app = express();
 require('express-ws')(app);
+console.log(process.env.NODE_ENV);
 
-app.use(express.static("public"));
 app.use(express.json());
 app.use(cors());
 
-// app.use( (req,res, next)=>{
-//     if(!req.headers.authorization){
-//         return res.status(403).json({error: 'No credentials sent!'});
-//     }
-//     next();
-// })
+if(environment().static){
+    app.use(express.static(path.join(__dirname, 'build')))
+}
 
 app.use('/api/v1',
     local,
@@ -33,9 +31,7 @@ app.use('/api/v1',
     feedback
 );
 
-app.use((req, res)=>{
-    res.sendFile(path.join(__dirname+'/public/index.html'))
-});
+
 
 app.ws('/echo', (ws, req)=>{
     ws.on('message', (msg)=>{

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Picture from '../Components/Picture';
-import { CloudinaryContext} from 'cloudinary-react'
 import {withUser} from "../User";
+import Avatar from '../Components/Avatar';
 
 const ImageForm = ({folder, multiple, callback}) => {
   const [uploading, setUploading] = useState(false);
@@ -138,14 +137,11 @@ const ImageProfileForm = withUser(({user, setImage, image})=>{
           <div className="file is-centered is-boxed has-name">
             <label className="file-label">
               <input className="file-input" src={"./LocalsOnly.png"} type="file" name="images" onChange={getImagesFromUser}/>
-              <span className="image is-128x128">
-              { 
-                user.avatar === null ? <img src="https://bulma.io/images/placeholders/128x128.png" alt="User"/>:
-                    <CloudinaryContext cloudName={"dpjlvg7ql"} secure={false} upload_preset="avatar_images">
-                        <Picture id={user.avatar} preset="avatar_images"/>
-                    </CloudinaryContext>
-              }
-              </span>
+              {/* <span className="image is-128x128"> */}
+              
+                <Avatar avatar={user.getAvatar()}/>
+              
+              {/* </span> */}
             </label>
           </div>
           {image && <DisplaySelectedImages/>}

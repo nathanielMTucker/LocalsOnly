@@ -156,7 +156,7 @@ export const GoogleSignIn = withFirebase(({firebase, setUser})=>{
             localTo: data.localTo,
             role: data.role,
             softLocalTo: data.softLocalTo,
-            avatar: (data.avatar && data.avatar.url) || "",
+            avatar: (data.avatar && data.avatar.data) || "",
             handler: data.handle
         }))
         .then(()=>window.location.reload())
@@ -170,12 +170,12 @@ export const GoogleSignIn = withFirebase(({firebase, setUser})=>{
         })
     }
     return <div className="button content is-fullwidth is-google" onClick={signInWithGoogle}>
-                <span className="">
+               
                     <span className="icon">
                         <i className="fab fa-google"/>
                     </span>
                     <span>Google</span>
-                </span>
+                
             </div>
 })
 

@@ -17,12 +17,13 @@ router.route('/users').get(async (req, res)=>{
 })
 
 router.route('/users/auth/:userID').get(async (req, res)=>{
+    console.log("hello");
     try {
         
         const {fields} = req.query
-        const {userID:id} = req.params
-        // console.log(id);
-        const {userAuth} = await sendQuery(GET_USER_AUTH, {auth:id})
+        const {userID:auth} = req.params
+        // console.log(auth);
+        const {userAuth} = await sendQuery(GET_USER_AUTH, {auth})
         // console.dir(userAuth)
         res.status(200).json(userAuth)
         
@@ -142,7 +143,9 @@ router.route('/users/:user/avatar').patch(async (req,res)=>{
                 }    
             }){
                 avatar{
-                    url
+                    data{
+                        url
+                      }
                 }
           }
         }
@@ -179,7 +182,7 @@ router.route('/users/:user/local-to').patch(async (req,res)=>{
 
 router.route('/users/locals').get(async (req, res)=>{
     let {id, fields, offset, limit} = req.query;
-
+    console.log(id);
     try { 
         let {findUserByID} = await sendQuery(USERS_LOCALS, {
             id:id,

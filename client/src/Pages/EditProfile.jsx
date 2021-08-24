@@ -7,20 +7,21 @@ import {Link} from 'react-router-dom';
 import useToggle from "../Components/useHooks/useToggle"
 import { getCookie, setCookie } from '../globals';
 
+
 const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
-  let [state, city] = user.localTo.split(':');
+  let [state, city] = user.getLocalTo().split(':');
 
   const [handleBeingChecked, setHandleBeingChecked] = useState(false);
   const [handleIsAvailable, setHandleIsAvailable] = useState(true);
 
   const [passwordVisible, togglePasswordVisible] = useToggle(false);
-  const [updatingLocal, setUpdatingLocal] = useState(getCookie("local-update") !== undefined)
+  const updatingLocal = getCookie("local-update") !== undefined
   const [image, setImage] = useState(null);
 
   const [profile, setProfile] = useState({
-    name: user.name || "",
-    email: user.email || "",
-    handler: user.handler || "",
+    name: user.getName() || "",
+    email: user.getEmail() || "",
+    handler: user.getHandler() || "",
     city: city.charAt(0).toUpperCase() + city.slice(1) || "",
     state: state.toUpperCase() || "",
     oldPassword: "",
@@ -34,7 +35,7 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
       if(profile.handler.includes(" ")|| profile.handler === "" || profile.handler.length < 4){
         return setHandleIsAvailable(false);
       }
-      if(profile.handler === user.handler){
+      if(profile.handler === user.getHandler()){
         return setHandleIsAvailable(true);
       }
       // console.log(profile.handler);
@@ -49,49 +50,27 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
       })
       
     }
-  ,[profile.handler, user.handler])
+  ,[profile.handler, user])
 
     
   useEffect(()=>{
     
-    if(profile.handler !== user.handler){ 
+    if(profile.handler !== user.getHandler()){ 
        checkHandler().then(()=>setHandleBeingChecked(false))
     }
     
-  }, [checkHandler, profile.handler, user.handler])
+  }, [checkHandler, profile.handler, user])
 
-  const uploadImages = async () => {
-    // e.preventDefault();
-    console.log(image);
-    
-    const form = new FormData();
-
-    const imageURLs = async () =>{
-      form.append('file', image);
-      form.append('upload_preset', `avatar_images`);
-      
-      return await fetch(`https://api.cloudinary.com/v1_1/dpjlvg7ql/image/upload`, {
-        method:"POST",
-        body:form
-      }).then(res=>res.json())
-      .then(file=>{
-        const id = file.public_id
-        console.log(id);
-        return id;
-      })
-    }
-    return await Promise.all(imageURLs)
-  };
   
 
   const updateProfile = async (e) =>{
     e.preventDefault();
 
-    if(user.email !== profile.email){
+    if(user.getEmail() !== profile.email){
       await firebase.updateEmail(profile.email)
       .then(async _ =>{
         console.log("Email updated");
-        await axios.patch(`/api/v1/users/${user.ownerID}/email`,{
+        await axios.patch(`/api/v1/users/${user.getID()}/email`,{
           email:profile.email
         })
       })
@@ -102,14 +81,14 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
       
     }
 
-    if(user.name !== profile.name){
-      await axios.patch(`/api/v1/users/${user.ownerID}/name`,{
+    if(user.getName() !== profile.name){
+      await axios.patch(`/api/v1/users/${user.getID()}/name`,{
         name:profile.name
       })
     }
 
-    if(user.handler !== profile.handler){
-      await axios.patch(`/api/v1/users/${user.ownerID}/handle`,{
+    if(user.getHandler() !== profile.handler){
+      await axios.patch(`/api/v1/users/${user.getID()}/handle`,{
         handle:profile.handler
       })
     }
@@ -139,7 +118,7 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
       form.append('file', image);
       form.append('upload_preset', `avatar_images`);
       
-      return await fetch(`https://api.cloudinary.com/v1_1/dpjlvg7ql/image/upload`, {
+      await fetch(`https://api.cloudinary.com/v1_1/dpjlvg7ql/image/upload`, {
         method:"POST",
         body:form
       }).then(res=>res.json())
@@ -149,7 +128,7 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
         return id;
       })
       .then(async avatar=>{
-        await axios.patch(`/api/v1/users/${user.ownerID}/avatar`,{
+        await axios.patch(`/api/v1/users/${user.getID()}/avatar`,{
           avatar
         }).then(res=>{
           console.dir("Updated Avatar: " + res);
@@ -215,9 +194,7 @@ const EditProfile = withFirebase(withUser(({history, firebase, user})=>{
     return <span>{difD}</span>
   }
 
-  const deleteAccount = e =>{
-    e.preventDefault();
-  }
+  
 
   return <main id="avatar-upload-page" className="section mt-4 container">
     <div className="columns is-centered">

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import useToggle from "./useHooks/useToggle";
 import {Link} from 'react-router-dom';
 import { SatisfactionScale } from "./Input";
@@ -15,6 +15,7 @@ const Footer = ()=>{
           setFeedback({...feedback, message: e.target.value});
   }
   const sendFeedback = async e=>{
+    toggleIsLoading()
           e.preventDefault();
           const {message, rating} = feedback;         
           if(message.length > 0 || rating !== -1){
@@ -23,14 +24,20 @@ const Footer = ()=>{
                 message,
                 rating
               }).then(res=>{
+                setFeedback({
+                  message:"",
+                  rating:-1
+                })
                 setSent(true);
                 
               }).then(()=>{
+
                 setTimeout(function(){setSent(false);}, 3000)
                 clearTimeout();
               })
             })
           }
+          toggleIsLoading();
   }
 
   const satisfyScale = e=>{
@@ -49,7 +56,6 @@ const Footer = ()=>{
   }
   return (
     <footer className="footer">
-      {/* <section className="column"></section> */}
         <div className="columns is-centered mb-0 mt-1">
         <section className="column is-2-desktop">
           <h1 className="title has-text-white">Get Involved</h1>
@@ -137,7 +143,6 @@ const Footer = ()=>{
                 </form>
         </section>
         </div>
-        {/* <section className="column"></section> */}
         <div className="level is-mobile is-hidden-desktop section pt-0 pb-3 container">
             <div className="level-item">
             <a href="https://bulma.io">

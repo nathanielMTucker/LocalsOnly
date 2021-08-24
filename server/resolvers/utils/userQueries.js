@@ -35,7 +35,9 @@ query ($auth : String!) {
       authID
       role
       avatar{
-        url
+        data{
+          url
+        }
       }
       handle
     }
@@ -52,7 +54,9 @@ query ($id : ID!) {
     authID
     role
     avatar{
-      url
+      data{
+        url
+      }
     }
   published{
     data{

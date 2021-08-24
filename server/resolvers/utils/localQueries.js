@@ -81,7 +81,9 @@ fragment hourRange on Day{
                     description
                     user{
                         avatar{
-                            url
+                            data{
+                                url
+                              }
                         }
                         name
                     }

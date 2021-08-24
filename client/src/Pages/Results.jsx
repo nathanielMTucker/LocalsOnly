@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect ,useCallback} from 'react'
 import ResultsCard from '../Components/ResultsCard'
 import queryString from 'query-string'
 import MapContainer from '../Components/MapContainer'
@@ -29,17 +29,16 @@ export default compose(withUser, withRouter)(({user, location:{search}, madeSear
 
     
 
-    useEffect(()=>{  
-        getData()
-    },[madeSearch])
-
-    const getData = async ()=>{
+    const getData = useCallback(async ()=>{
         
         let {what, where} = queryString.parse(search);
         
         await axios.get(`/api/v1/locals?${what ? `what=${what}` : ''}&where=${where}&limit=${limit}${offset ? `&offset=${offset}` : ''}`)
         .then(({data:{data, after}})=>{
-            setItems(currentItems=>[...currentItems, ...data])
+            console.log(data);
+            if(data && typeof data[Symbol.iterator] === 'function'){
+                setItems(currentItems=>[...currentItems, ...data])
+            }
             setOffset(after)
         })
         .catch(err=>{
@@ -51,7 +50,12 @@ export default compose(withUser, withRouter)(({user, location:{search}, madeSear
 
         setLoading(false);
         setMadeSearch(false); 
-    }
+    },[limit, offset, search, setMadeSearch])
+    
+    useEffect(()=>{  
+        getData()
+    },[getData, madeSearch])
+
 
     const NoItemsToDisplay = () =>(
         <div className="mx-6 container is-centered">

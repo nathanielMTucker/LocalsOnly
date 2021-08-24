@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
 import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+
 import { withFirebase } from '../Authentication';
 import { SignUpLink } from './SignUp';
-import { withUser } from '../User';
 import { GoogleSignIn } from './Buttons';
 import useToggle from '../Components/useHooks/useToggle';
-import RememberMe from './RememberMe';
+// import RememberMe from './RememberMe';
 import {getCookie, setCookie} from "../globals";
 
-const SignInPage = () => (<SignInForm />);
+
 
 const INITIAL_STATE = {
   email: '',
@@ -19,16 +18,24 @@ const INITIAL_STATE = {
 
 
 
-const SignInFormBase = ({firebase})=>{
+const SignIn = withRouter(withFirebase(({firebase, ...props})=>{
   
-    const [toggleError, setToggleError] = useToggle();
+    const [hasError, setHasError] = useState(false);
     let [state, setState] = useState(INITIAL_STATE);
-    const [rememberMe, setRememberMe] = useToggle(Boolean(getCookie("remember-me")) || false);
 
-    const setPersistentStorage = (persistence, callback)=>{
+    const setPersistentStorage = (persistence, email, password)=>{
       firebase.setPersistenceStorage(persistence)
         .then(()=>{
-          callback();
+          firebase
+        .signInWithEmailAndPassword(email, password)
+        .then((u) => {
+          firebase.setProvider(u.additionalUserInfo.providerID)
+          
+        })
+        .catch(error => {
+          setHasError(true)
+          setState({ ...state, error:error });
+        })
         })
         .catch(err=>{
           console.dir("Error in userCheckedRememberMe: " + err);
@@ -39,25 +46,9 @@ const SignInFormBase = ({firebase})=>{
       event.preventDefault();
       // console.log(rememberMe);
       const { email, password } = state;
-      const signInWithEmail = firebase
-        .signInWithEmailAndPassword(email, password)
-        .then((u) => {
-
-          setState({INITIAL_STATE });
-        })
-        .catch(error => {
-          setState({ ...state, error:error });
-        })
       
-      if(rememberMe){
-        console.log("Remember Me");
-        setCookie("remember-me", true, 30);
-        setPersistentStorage(firebase.persistenceLocal, signInWithEmail);
-        return;
-      }
-      console.log("Dont Remember Me");
-      setCookie("remember-me", "", -1);
-      setPersistentStorage(firebase.persistenceNone, signInWithEmail);
+      setPersistentStorage(firebase.persistenceLocal(), email, password);
+        
     }
 
     const onChange = ({target: {name, value}}) => {
@@ -68,67 +59,65 @@ const SignInFormBase = ({firebase})=>{
     let {error} = state;
     const isInvalid = password === '' && email === '';
 
-    return (<div>
+    return (<div className={props.className}>
       
-      <form onSubmit={onSubmit} className="container">
+      <form onSubmit={onSubmit} className="form">
        {/* <div className="section px-0 pt-6 pb-5">
         <GoogleSignIn setUser={props.setUser}/>
        </div>
        <div className="text-has-line"><span>or</span></div> */}
-        <div className="field pt-6">
-          <div className="control">
-            <label htmlFor="email" className="label">
-              Email
-            </label>
+        <div className="field">
+          <p className="control has-icons-left">
             <input
               name="email"
               value={email}
               onChange={onChange}
               type="text"
               className="input"
+              placeholder="Email"
             />
-          </div>
+            <span className="icon is-small is-left">
+              <i className="fas fa-envelope has-text-link"/>
+            </span>
+          </p>
         </div>
+
         <div className="field">
-          <div className="control">
-            <label htmlFor="password" className="label">
-              Password
-            </label>
+          <p className="control has-icons-left">
+            
             <input
               name="password"
               value={password}
               onChange={onChange}
               type="password"
               className="input"
+              placeholder="Password"
             />
-          </div>
+            <span className="icon is-small is-left">
+              <i className="fas fa-lock has-text-link"/>
+            </span>
+          </p>
         </div>
-        <RememberMe rememberMe={rememberMe} setRememberMe={setRememberMe}/>
-        <div className="field">
-          <div className="columns is-centered section mt-1">
-            <button className={`column pt-2  button ${isInvalid ? 'is-danger' : 'is-primary'}`} disabled={isInvalid} type="submit">
+        {/* <RememberMe rememberMe={rememberMe} setRememberMe={setRememberMe}/> */}
+        
+          <div className="pt-3">
+            <button className={`pt-2  is-fullwidth is-outlined button ${isInvalid ? 'is-danger' : 'is-info'}`} disabled={isInvalid} type="submit">
             Sign In
             </button>
           </div>
+        
           <div className="section">
           <SignUpLink/>
           </div>
-        </div>
       </form>
-        {error && <div className={`box is-danger is-outlined ${toggleError && "is-hidden"}`} onClick={e=>{
-          e.preventDefault();
-          setToggleError();
-        }}>{error.message}</div>}
+        {hasError && (<span className={`notification is-danger is-outlined`} onClick={e=>{
+          // e.preventDefault();
+          setHasError(false);
+        }}>{error.message}</span>)}
     </div>
     );
- }
+ }))
 
-const SignInForm = compose(
-  withUser,
-  withRouter,
-  withFirebase,
-)(SignInFormBase);
 
-export default SignInPage;
 
-export { SignInForm };
+export default SignIn;

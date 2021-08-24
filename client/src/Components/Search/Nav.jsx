@@ -44,7 +44,7 @@ export default withRouter(({setMadeSearch, location:{search:urlQuery}})=>{
   return (
       <nav 
         id="main-nav"
-        className={`navbar level is-mobile pr-2 pl-2 pt-0 is-fixed-top ivory`} 
+        className={`navbar level is-mobile  is-fixed-top`} 
         role="navigation">
           <div className="level-left">
             <div className="level-item">

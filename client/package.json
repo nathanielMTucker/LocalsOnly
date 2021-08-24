@@ -35,7 +35,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "stage": "NODE_ENV=staging npm start",
+    "build": "react-scripts build && cp -avr build ../server",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

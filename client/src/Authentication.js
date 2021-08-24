@@ -37,8 +37,8 @@ export default class Firebase {
     this.provider = provider
   }
   setPersistenceStorage = persistence => this.auth.setPersistence(persistence);
-  persistenceLocal = ()=> firebase.auth().Auth.Persistence.LOCAL
-  persistenceNone = ()=> firebase.auth().Auth.Persistence.NONE
+  persistenceLocal = ()=> firebase.auth.Auth.Persistence.LOCAL
+  persistenceNone = ()=> firebase.auth.Auth.Persistence.NONE
 
   createUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);

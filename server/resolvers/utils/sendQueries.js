@@ -1,5 +1,5 @@
 const axios = require('axios');
-require('dotenv').config();
+const {environment} = require("../../config");
 
 module.exports = async (query, variables)=>{
     const {data : {data, errors}} = await axios({
@@ -7,7 +7,7 @@ module.exports = async (query, variables)=>{
         method: 'POST',
         headers:{
             "content-type" : "application/json",
-            Authorization: `Bearer ${process.env.FAUNA_KEY}`
+            Authorization: `Bearer ${environment().database}`
         },
         data:{
             query,

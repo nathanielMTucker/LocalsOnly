@@ -1,22 +1,16 @@
 import React from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import SignIn from '../Components/SignIn';
 
-function Copyright() {
+function Copyright(props) {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        LocalsOnly
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
+    <span className={`icon-text ${props.className}`}>
+      <span>Copyright</span> 
+      <span className="icon">
+        <i className="far fa-copyright"/>
+      </span>
+      <span>LocalsOnly {new Date().getFullYear()}</span>
+    </span>
   );
 }
 
@@ -25,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
   },
   image: {
-    backgroundImage: 'url(https://source.unsplash.com/weekly?travel,nature)',
+    backgroundImage: 'url(https://source.unsplash.com/weekly?city,nature,travel)',
     backgroundRepeat: 'repeat',
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
@@ -38,37 +32,40 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     borderRadius: '50px'
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+  }
 }));
 
 const Opening = ({setUser})=>{
   const classes = useStyles();
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={`${classes.paper} home-logo`}>
-          <img src="LocalsOnly.png" className="is-hidden-mobile" style={{height:'25vh',width: '13vw'}} alt=""/>
-          <img src="LocalsOnly.png" className="is-hidden-tablet mb-1" style={{height:'25vh',width: '45vw'}} alt=""/>
-          <SignIn setUser={setUser}/>
+    <main id="opening">
+      <section  className={`${classes.image} columns is-hidden-mobile is-centered p-0 my-0 mx-0`} style={{height:"100vh",width:"100vw"}}>
+        <div className="column my-4 is-half box is-frosted container">
+        <section className="section container">
+        <div className="has-text-centered"><img src="LocalsOnly.png"  style={{width:'10vw', borderRadius:"15px"}} alt=""/></div>
+        <div className={`${classes.paper}`}>
+        <SignIn setUser={setUser}/>
+        </div>
+        <div className="has-text-centered">
+        <Copyright className="content has-text-grey-light"/>
+        </div>
+        </section>
+        </div>
+      </section>
+    <section className="is-hidden-tablet">
+      <div style={{position:'relative',left:0,top:0}} className=" mb-1" >
+          <img src='https://source.unsplash.com/weekly?travel,nature' alt="" style={{ width:"200%", position:"relative", top:0, left:0}}/>
+          <img src="LocalsOnly.png" style={{height:'75%', position:"absolute", top:"50%", left:"25%"}} alt=""/>
+      </div>
+      <div className={classes.paper + " mt-6"}>
+        <SignIn setUser={setUser} text="black"/>
         </div>
         <Copyright/>
-      </Grid>
-    </Grid>
+    </section>
+    </main>
   );
 }
 
 export default Opening;
+

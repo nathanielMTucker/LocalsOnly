@@ -1,17 +1,16 @@
-import React, {useState} from "react";
+import React from "react";
 import queryString from 'query-string';
 import ImageForm from "../Components/ImageForm";
 import axios from "axios";
 import { withUser } from '../User'
-import {compose} from 'recompose';
 
-const ImageUpload = ({user, location : {search}})=>{
-  const [localID] = useState(queryString.parse(search).id);
-  const [name] = useState(queryString.parse(search).name);
+const ImageUpload = withUser(({user, location : {search}})=>{
+
+  const {id:localID, name} = queryString.parse(search);
   
   const uploadURLs = async (imageIDs)=>{
     console.dir(imageIDs)
-    await axios.post(`/api/v1/images/locals/${localID}/users/${user.ownerID}`,{
+    await axios.post(`/api/v1/images/locals/${localID}/users/${user.getID()}`,{
       images:imageIDs
     }).then(res=>{
       console.log(res.status);
@@ -28,6 +27,6 @@ const ImageUpload = ({user, location : {search}})=>{
       <ImageForm folder={"local"} multiple={true} callback={uploadURLs}/>
     </section>
   </main>
-}
+})
 
-export default compose(withUser)(ImageUpload);
+export default ImageUpload;

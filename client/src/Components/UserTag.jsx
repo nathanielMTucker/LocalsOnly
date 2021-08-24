@@ -26,7 +26,8 @@ const CEOTag = () =>
 </span>
 
 const UserTag = withUser(({user, role})=>{
-  const r = role || user.role;
+  const r = role || user.getRole();
+  
   console.log(r);
   if(r === "CEO"){
     return <CEOTag/>

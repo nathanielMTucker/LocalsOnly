@@ -12,7 +12,7 @@ export const withUser = Component => props => (
 
 const updateLocal = async (_id)=>{
     if(getCookie("local-update-on") === undefined && getCookie("local-update") !== undefined){
-      console.log(getCookie("local-update"));
+      // console.log(getCookie("local-update"));
       await axios.patch(`/api/v1/users/${_id}/local-to`,{
         localTo:getCookie("local-update")
       }).then((res)=>{
@@ -21,38 +21,68 @@ const updateLocal = async (_id)=>{
     }}
 
 export default class User{
+    #ownerID;
+    #email;
+    #name;
+    #localTo;
+    #role;
+    #avatar;
+    #handler;
+
     constructor(){
-        this.ownerID = "";
-        this.email = "";
-        this.name = "";
-        this.localTo = "";
-        this.softLocalTo = [];
-        this.role = "";
-        this.avatar = "";
-        this.handler = "";
+        this.#ownerID = "";
+        this.#email = "";
+        this.#name = "";
+        this.#localTo = "";
+        this.#role = "";
+        this.#avatar = [];
+        this.#handler = "";
     }
     
-    isSet(){
-      return !!this.ownerID;
+    getID=()=>this.#ownerID;
+    getEmail=()=>this.#email;
+    getName=()=>this.#name;
+    getLocalTo=()=>this.#localTo;
+    getRole=()=>this.#role;
+    getAllAvatars=()=>this.#avatar;
+    getAvatar=()=>{
+      // console.log(this.#avatar);
+      if(Array.isArray(this.#avatar) && this.#avatar.length && 'url' in this.#avatar[0]){
+        return this.#avatar[0].url;
+      }
+      return null
+    };
+    getHandler=()=>this.#handler;
+    
+    isSet=()=>{
+      console.log(!!this.getID());
+      return !!this.getID();
     }
     
     isLocalTo(local){
-      return local && (!local.localsOnly || `${local.address.state}:${local.address.city.replace(" ","_")}` === this.localTo || this.isUnrestricted())
+      return local && (!local.localsOnly || this.isLocalToCity(local.address.state, local.address.city.replace(" ","_")))
     }
 
-    isUnrestricted(){
-      return this.role !== "user"
+    isLocalToCity(state, city){
+      if(state.length !== 2){
+        throw new Error("State must be 2 digit code")
+      }
+      return `${state.toLowerCase()}:${city.replace(" ","_")}` === this.#localTo || !this.isRestricted()
+    }
+
+    isRestricted(){
+      return this.getRole() === "user"
     }
     
     set(user){
-      this.ownerID = user.ownerID;
-      this.email = user.email;
-      this.name = user.name;
-      this.localTo = user.localTo;
-      this.softLocalTo = user.softLocalTo;
-      this.role = user.role;
-      this.avatar = user.avatar;
-      this.handler = user.handler;
+      this.#ownerID = user.ownerID;
+      this.#email = user.email;
+      this.#name = user.name;
+      this.#localTo = user.localTo;
+      this.#role = user.role;
+      this.#avatar = user.avatar;
+      this.#handler = user.handler;
+      console.log(this.getID());
       updateLocal(user.ownerID);
     }
 }

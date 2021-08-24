@@ -18,6 +18,7 @@ import { compose } from "recompose";
 import { withUser } from "./User";
 
 
+import Opening from "./Pages/Opening";
 
 
 // Pages
@@ -26,7 +27,6 @@ const Home = lazy(()=>import("./Pages/Home"));
 const Local = lazy(()=>import("./Pages/Local"));
 const NewLocal = lazy(()=>import("./Pages/NewLocal"));
 const Registration = lazy(()=>import("./Pages/Registration"));
-const Opening = lazy(()=>import("./Pages/Opening"));
 const Profile = lazy(()=>import("./Pages/Profile"));
 const Upcoming = lazy(()=>import("./Pages/Upcoming"));
 const ImageUpload = lazy(()=>import("./Pages/ImageUpload"));
@@ -42,7 +42,9 @@ export default compose(
   const [userInfo, setUserInfo] = useState(null);
   const abortController = new AbortController();
 
-  const setUser = ({data}) => {
+  const setUser = (res) => {
+    console.log(res);
+    const {data} = res
     user.set({
       ownerID: data._id,
       name: data.name,
@@ -50,10 +52,11 @@ export default compose(
       localTo: data.localTo,
       role: data.role,
       softLocalTo: data.softLocalTo,
-      avatar: data.avatar.url,
+      avatar: data.avatar.data,
       handler: data.handle
     });
     setUserInfo(data);
+    console.log(user);
   };
 
   const setAuth = (auth) => {
@@ -61,7 +64,10 @@ export default compose(
     if (auth) {
       axios
         .get(`/api/v1/users/auth/${auth.uid}`)
-        .then(setUser)
+        .then(res=>{
+          console.log(res);
+          setUser(res)
+        })
         .catch((err) => {
           setUserInfo(null);
         });
@@ -77,8 +83,10 @@ export default compose(
       window.location.href = loc.replace("http://", "https://");
 
     const listener = firebase.auth.onAuthStateChanged(setAuth);
-   
+    
     return async function cleanup() {
+      console.dir(authUser);
+      console.dir(userInfo)
       await listener();
       
       abortController.abort();
@@ -114,14 +122,14 @@ export default compose(
 
   return (
     <Router>
+        <Switch>
+          <Route exact path={ROUTES.HOME} component={()=><Opening setUser={setUser}/>} />
       <Suspense  fallback={<div className="columns is-centered">
         <div className="column">Loading...</div>
         </div>}>
-        <Switch>
-          <Route exact path={ROUTES.HOME} component={()=><Opening setUser={setUser}/>} />
           <Route path={ROUTES.SIGNUP} component={Registration} />
-        </Switch>
       </Suspense>
+        </Switch>
     </Router>
   );
 });
