@@ -32,13 +32,13 @@ const UserTag = withUser(({user, role})=>{
   if(r === "CEO"){
     return <CEOTag/>
   }
-  if(r === "admin"){
+  if(r === "ADMIN"){
     return <DevTag/>
   }
-  if(r === "ebet"){
+  if(r === "EBETA"){
     return <BetaTag/>
   }
-  if(r === "prem"){
+  if(r === "PREM"){
     return <PremiumTag/>
   }
   return null;
