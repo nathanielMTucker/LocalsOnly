@@ -53,16 +53,20 @@ const Opening = ({setUser})=>{
         </section>
         </div>
       </section>
-    <section className="is-hidden-tablet">
-      <div style={{position:'relative',left:0,top:0}} className=" mb-1" >
-          <img src='https://source.unsplash.com/weekly?travel,nature' alt="" style={{ width:"200%", position:"relative", top:0, left:0}}/>
-          <img src="LocalsOnly.png" style={{height:'75%', position:"absolute", top:"50%", left:"25%"}} alt=""/>
-      </div>
-      <div className={classes.paper + " mt-6"}>
-        <SignIn setUser={setUser} text="black"/>
+      <section className="is-hidden-tablet">
+        <div style={{height:"90vw"}}>
+        <div style={{position:'relative',left:0,top:0}} className=" mb-1" >
+            <img src='https://source.unsplash.com/weekly?travel,nature' alt="" style={{ width:"200%", position:"relative", top:0, left:0}}/>
+            <img src="LocalsOnly.png" style={{height:'75%', position:"absolute", top:"50%", left:"25%", borderRadius:"15px"}} alt=""/>
         </div>
-        <Copyright/>
-    </section>
+        </div>
+        <div className={classes.paper + " content has-text-centered"}>
+          
+          <SignIn setUser={setUser} text="black"/>
+          <Copyright/>
+          </div>
+        
+      </section>
     </main>
   );
 }
