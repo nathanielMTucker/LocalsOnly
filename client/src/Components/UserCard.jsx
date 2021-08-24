@@ -38,7 +38,8 @@ const SmallUserCard = props =>
 
 const UserCard = (props)=>{
   
-  return props.sm ? <SmallUserCard {...props}>{props.children}</SmallUserCard> : <LargeUserCard {...props}>{props.children}</LargeUserCard>
+  return props.sm ? <SmallUserCard {...props}>{props.children}</SmallUserCard> : 
+  <LargeUserCard {...props}>{props.children}</LargeUserCard>
 }
 
 export default UserCard;

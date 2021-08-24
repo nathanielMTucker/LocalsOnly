@@ -9,7 +9,15 @@ const ServerError = ({status, message})=>{
     </article>
   )
 }
-
+const Error = props =>{
+  <div className="error-screen">
+    {props.children}
+    <div className="error-message has-background-danger">
+      This is an error message
+    </div>
+  </div>
+}
+export default Error;
 export {
   ServerError
 }

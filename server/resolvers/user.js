@@ -35,15 +35,18 @@ router.route('/users/auth/:userID').get(async (req, res)=>{
 
 
 router.route('/users').post(async (req, res)=>{
-    const {authID, email, name, localTo, birthday, avatar} = req.body;
-    
+    const {authID, email, name, localTo, promo} = req.body;
+    let role = "USER"
+    if(prop === "TuckerSentMe"){
+        role = "EBETA"
+    }
+
     const variables = {
         name,
         email,
         localTo,
-        role : "USER",
         authID,
-        birthday
+        role
     }
     try {        
         const {createUser: createdUser} = await sendQuery(CREATE_USER, variables);

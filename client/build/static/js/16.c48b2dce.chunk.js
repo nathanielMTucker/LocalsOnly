@@ -1,0 +1,2 @@
+(this.webpackJsonplocalsonly=this.webpackJsonplocalsonly||[]).push([[16],{377:function(n,s,c){"use strict";c.r(s);c(1);var e=c(0);s.default=function(){return Object(e.jsx)("main",{children:"Upcoming Features Page"})}}}]);
+//# sourceMappingURL=16.c48b2dce.chunk.js.map

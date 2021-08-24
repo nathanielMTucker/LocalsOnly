@@ -17,7 +17,7 @@ import { compose } from "recompose";
 
 import { withUser } from "./User";
 
-
+import Error from "./Components/Error";
 import Opening from "./Pages/Opening";
 
 

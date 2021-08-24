@@ -11,6 +11,7 @@ import Alert from '../Components/Alert';
 const getCities = require('countrycitystatejson').getCities
 
 const RegistrationBase = ({firebase, history})=>{
+    const [promo, setPromo] = useState(null);
     const isCity = (state, city)=>{
         const isCity = getCities('US', state).includes(city)
         if(isCity){
@@ -82,7 +83,7 @@ const RegistrationBase = ({firebase, history})=>{
                 email:user.email,
                 name: user.name,
                 localTo: `${getAbbrs(local.state)}:${local.city.toLowerCase().replace(' ', '_')}`,
-                birthday : birthday
+                promo
             })
             
             .then(()=>{
@@ -124,6 +125,10 @@ const RegistrationBase = ({firebase, history})=>{
         
         return !(verPass && verAddress);
     }
+    const onChangePromo = e =>{
+        e.preventDefault();
+        setPromo(e.target.value);
+    }
     return (
     <main className="registration section">
         <div className="columns is-centered">
@@ -162,6 +167,12 @@ const RegistrationBase = ({firebase, history})=>{
                                 </div>
                             </div>
                         </label>
+                        <div>
+                            <label htmlFor="promo-code" className="label">
+                                Promo Code
+                            </label>
+                            <input name="promo-code" type="text" placeholder="Promo Code" onChange={onChangePromo} value={promo}/>
+                        </div>
                         <div className="level">
                             <div className="level-left">
                             <button id="sign-up-button" className="level-item button is-primary" disabled={isDisabled()} type="submit">Sign Up</button>

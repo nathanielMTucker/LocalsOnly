@@ -97,7 +97,7 @@ const ReviewCard = ({review, user}) =>{
     const [upvoteUsers, setUpvoteUsers] = useState(review.userUpvoted)
     const [upvote, setUpvote] = useState(review.upvote);
     const [active, setActive] = useState("is-light");
-    const [error, setError] = useState({});
+
     useEffect(()=>{
         console.dir(upvoteUsers);
         if(review && upvoteUsers === true){
@@ -105,11 +105,6 @@ const ReviewCard = ({review, user}) =>{
         }
 
     },[setActive, upvoteUsers, user, setUpvote, review])
-
-    const removeError = e =>{
-        e.preventDefault();
-        document.getElementById("error-popup").style.display = "none"
-    }
 
     const onLike = e =>{
         e.preventDefault();
@@ -133,7 +128,6 @@ const ReviewCard = ({review, user}) =>{
             }).catch(err=>{
                 console.dir(err);
                 document.getElementById("error-popup").style.display = "block";
-                setError({status:err.response.status,message:err.response.statusText})
                 like();
             })
             return
@@ -155,8 +149,8 @@ const ReviewCard = ({review, user}) =>{
         }
         
     }
-
-    return <UserCard sm avatar={review.reviewer.avatar.data[0].url} name={review.reviewer.name} role={review.reviewer.role} handle={review.reviewer.handle}>
+    const avatar = review.reviewer.avatar.data;
+    return <UserCard sm avatar={avatar && avatar[0] && avatar[0].url} name={review.reviewer.name} role={review.reviewer.role} handle={review.reviewer.handle}>
         <div className="container content pt-2">
             <StarRating rating={review.rating}/>
             <p>
